@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock  %}
+
+{% block content %}
+    <style>
+        .main-content {
+            width: 100%;
+        }
+
+        h2 {
+            margin: 0px 0px 15px 5px;
+            font-size: 2em;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+            justify-content: space-around;
+            
+        }
+
+        .button-group .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #3498db;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            
+        }
+        .btn a{
+            text-decoration: none;
+            color: white;
+        }
+        
+
+        .button-group .btn:hover {
+            background-color: #2980b9;
+        }
+
+        .button-group i {
+            margin-right: 10px;
+        }
+    </style>
+
+    <div class="main-content">
+        <h2>Dashboard</h2>
+        <div class="button-group">
+            <li class="btn">
+                <a href="">Saldo Atual</a> 
+                <i class="fas fa-wallet"></i>
+            </li>
+        </div>
+    </div>
+{% endblock  %}
+

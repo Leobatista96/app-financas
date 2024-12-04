@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}Transações{% endblock %}
+
+
+{% block content %}
+    <style>
+        .main-content {
+            width: 100%;
+        }
+
+        h2 {
+            margin: 0px 0px 15px 5px;
+            font-size: 2em;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+            justify-content: space-evenly;
+            
+        }
+
+        .button-group .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #3498db;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            
+        }
+        .btn a{
+            text-decoration: none;
+            color: white;
+        }
+        
+
+        .button-group .btn:hover {
+            background-color: #2980b9;
+        }
+
+        .button-group i {
+            margin-right: 10px;
+        }
+
+        .table-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+
+        table {
+            width: fit-content;
+            border-collapse: collapse;
+            margin-top: 20px;
+            
+            
+        }
+
+        th, td {
+            border: 1px solid #0a0a0a;
+            padding: 8px;
+            text-align: center;
+            color: black;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: rgb(7, 7, 7);
+        }
+
+    </style>
+    <div class="main-content">
+        <h2>Transações</h2>
+        <div class="button-group">
+            <li class="btn">
+                <a href="">Receitas</a>
+                <i class="fas fa-arrow-up"></i>
+            </li>
+            <li class="btn">
+                <a href="">Despesas</a>
+                <i class="fas fa-arrow-down"></i>
+            </li>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Categoria</th>
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                        <th>Tipo de Categoria</th>
+                    </tr>
+                </thead>
+                {% for transaction in transactions %}
+                <tbody>
+                    <tr>
+                        <td>{{ transaction.category }}</td>
+                        <td>{{ transaction.description }}</td>
+                        <td>{{ transaction.value }}</td>
+                        <td>{{ transaction.category.type }}</td>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+
+
+
