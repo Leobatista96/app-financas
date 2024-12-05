@@ -16,11 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from finances.views import dashboard_view, TransactionListView
+from finances.views import dashboard_view, TransactionListView, TransactionCreateView
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('dashboard/', dashboard_view, name='dashboard-url'),
-    path('transactions/', TransactionListView.as_view(), name='transaction-url')
+    path('transactions/', TransactionListView.as_view(), name='transaction-list'),
+    path('new_transaction/', TransactionCreateView.as_view(),
+         name='transaction-create'),
 ]

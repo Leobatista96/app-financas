@@ -25,9 +25,7 @@
 
         .button-group {
             display: flex;
-            gap: 20px;
-            margin-top: 20px;
-            justify-content: space-evenly;
+            justify-content: center;
             
         }
 
@@ -37,12 +35,14 @@
             justify-content: center;
             background-color: #3498db;
             color: white;
-            padding: 15px 30px;
-            border-radius: 25px;
-            font-size: 18px;
+            border-radius: 4px;
+            font-size: 14px;
             border: none;
             cursor: pointer;
             transition: background-color 0.3s;
+            margin-top: 25px;
+            width: auto;
+            height: 2em;
             
         }
         .btn a{
@@ -55,9 +55,11 @@
             background-color: #2980b9;
         }
 
-        .button-group i {
-            margin-right: 10px;
+        .button-content {
+            display: flex;
+            justify-content: center;
         }
+
 
         .table-container {
             display: flex;
@@ -124,10 +126,13 @@
         }
 
     </style>
-    <form method="GET" action="{% url 'transaction-url' %}">
-        <input type="text" name="search" placeholder="Busque pela Categoria">
-        <button type="submit">Buscar</button>
-      </form>
+    <div class="button-group">
+        <form method="GET" action="{% url 'transaction-list' %}">
+            <input type="text" name="search" placeholder="Busque pela Categoria">
+            <button type="submit">Buscar</button>
+        </form>
+        <button class="btn"><a href="{% url 'transaction-create' %}">Adicionar Nova Transação</a></button>
+    </div>
     <div class="main-content">
         {% if transactions %}
             <h2>Transações</h2>
