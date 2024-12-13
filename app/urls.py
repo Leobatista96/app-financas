@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from finances.views import dashboard_view, TransactionListView, TransactionCreateView, TransactionUpdateView
+from finances.views import dashboard_view, TransactionListView, TransactionCreateView, TransactionUpdateView, TransactionDeleteView
 
 
 urlpatterns = [
@@ -27,4 +27,6 @@ urlpatterns = [
          name='transaction-create'),
     path('transaction/<int:pk>/update/',
          TransactionUpdateView.as_view(), name='transaction-update'),
+    path('transaction/<int:pk>/delete/',
+         TransactionDeleteView.as_view(), name='transaction-delete'),
 ]

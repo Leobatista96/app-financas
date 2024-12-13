@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from finances.models import Transaction
 from finances.forms import TransactionModelForm
 
@@ -40,3 +40,9 @@ class TransactionUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('transaction-list')
+
+
+class TransactionDeleteView(DeleteView):
+    model = Transaction
+    template_name = 'transaction_delete.html'
+    success_url = '/transactions/'
