@@ -4,235 +4,266 @@
 
 
 {% block content %}
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tabela de Transações</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background-color: #212121;
-            color: #eaeaea;
-        }
-        .table-container {
-            width: 90%;
-            margin: auto;
-            margin-top: 20px;
-            background-color: #2c2c2c;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-        }
-        .table-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: #9c6eff;
-            font-size: 18px;
-            margin-bottom: 15px;
-        }
-        .table-header button {
-            background: transparent;
-            border: none;
-            color: #9c6eff;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #2c2c2c;
-            color: #eaeaea;
-        }
-        thead th {
-            text-align: left;
-            padding: 12px;
-            background-color: #383838;
-            color: #a0a0a0;
-            font-size: 14px;
-        }
-        tbody tr {
-            border-bottom: 1px solid #383838;
-        }
-        tbody tr:hover {
-            background-color: #333333;
-        }
-        td {
-            padding: 12px;
-            font-size: 14px;
-        }
-        .icon {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .icon i {
-            font-size: 16px;
-            color: #9c6eff;
-        }
-        .status {
-            color: red;
-            font-size: 16px;
-        }
-        .value-negative {
-            color: #f05252;
-            font-weight: bold;
-        }
-        .value-positive {
-            color: #52f0a2;
-            font-weight: bold;
-        }
-        .actions button {
-            text-decoration: none;
-            background: none;
-            border: none;
-            color: #9c6eff;
-            cursor: pointer;
-            margin-left: 8px;
-        }
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background-color: #212121;
+        color: #eaeaea;
+    }
+    .table-container {
+        width: 90%;
+        margin: auto;
+        margin-top: 20px;
+        background-color: #2c2c2c;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    }
+    .table-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #9c6eff;
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+    .table-header button {
+        background: transparent;
+        border: none;
+        color: #9c6eff;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #2c2c2c;
+        color: #eaeaea;
+    }
+    thead th {
+        text-align: left;
+        padding: 12px;
+        background-color: #383838;
+        color: #a0a0a0;
+        font-size: 14px;
+    }
+    tbody tr {
+        border-bottom: 1px solid #383838;
+    }
+    tbody tr:hover {
+        background-color: #333333;
+    }
+    td {
+        padding: 12px;
+        font-size: 14px;
+    }
+    .icon {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .icon i {
+        font-size: 16px;
+        color: #9c6eff;
+    }
+    .status {
+        color: red;
+        font-size: 16px;
+    }
+    .value-negative {
+        color: #f05252;
+        font-weight: bold;
+    }
+    .value-positive {
+        color: #52f0a2;
+        font-weight: bold;
+    }
+    .actions button {
+        text-decoration: none;
+        background: none;
+        border: none;
+        color: #9c6eff;
+        cursor: pointer;
+        margin-left: 8px;
+    }
 
-        a {
-            text-decoration: none;
-            color: #9c6eff;
-        }
-        .footer {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px;
-            background-color: #383838;
-            color: #a0a0a0;
-            font-size: 14px;
-        }
-        .pagination {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        .pagination button {
-            background: transparent;
-            border: none;
-            color: #9c6eff;
-            cursor: pointer;
-        }
+    a {
+        text-decoration: none;
+        color: #9c6eff;
+    }
+    .footer {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px;
+        background-color: #383838;
+        color: #a0a0a0;
+        font-size: 14px;
+    }
+    .pagination {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+    .pagination button {
+        background: transparent;
+        border: none;
+        color: #9c6eff;
+        cursor: pointer;
+    }
 
-        .dropdown {
-            position: relative;
-            display: inline-block;
-            margin-left: 60px;
-            margin-top: 20px;
-        }
-        .button {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background-color: #9c6eff;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            border: none;
-            border-radius: 20px;
-            padding: 10px 20px;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        .button:hover {
-            background-color: #8a5de6;
-            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
-        }
-        .button i {
-            font-size: 12px;
-            transform: rotate(90deg);
-        }
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #2c2c2c;
-            min-width: 160px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
-            border-radius: 8px;
-            overflow: hidden;
-            z-index: 1;
-        }
-        .dropdown-content a {
-            display: block;
-            color: white;
-            padding: 10px 15px;
-            text-decoration: none;
-            background-color: #2c2c2c;
-            font-size: 14px;
-            transition: background-color 0.2s ease;
-        }
-        .dropdown-content a:hover {
-            background-color: #383838;
-        }
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-    </style>
-</head>
-<body>
-    <div class="dropdown">
-        <button class="button">
-            <i>▼</i> Transações
-        </button>
-        <div class="dropdown-content">
-            <a href="#">Receitas</a>
-            <a href="#">Despesas</a>
-        </div>
-    </div>
-<div class="table-container">
-    <div class="table-header">
-        <button>&lt;</button>
-        <span>Dezembro 2024</span>
-        <button>&gt;</button>
-    </div>
-    <table>
-        <thead>
-            <tr>
-                <th>Situação</th>
-                <th>Data</th>
-                <th>Descrição</th>
-                <th>Categoria</th>
-                <th>Conta</th>
-                <th>Valor</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        {% for transaction in transactions  %}
-            <tbody>
-                <tr>
-                    <td><span class="status">●</span></td>
-                    <td>01/12/2024</td>
-                    <td>{{ transaction.description }}</td>
-                    <td class="icon"><i></i> {{ transaction.category }} </td>
-                    <td>{{ transaction.account }} </td>
-                    <td class="value-positive">{{ transaction.value }} </td>
-                    <td class="actions">
-                        <button><a href="{% url "transaction-create" %}">✎</a></button>
-                        <button>🖇</button>
-                        <button>🗑</button>
-                    </td>
-                </tr>
-            </tbody>
-        {% endfor %}
-    </table>
-    <div class="footer">
-        <span>Saldo do Final do Dia: 0,00</span>
-        <div class="pagination">
-            <span>Linhas por página:</span>
-            <button>50</button>
-            <span>1-2 de 2</span>
-            <button>&lt;</button>
-            <button>&gt;</button>
-        </div>
+    .dropdown {
+        position: relative;
+        display: inline-block;
+        margin-left: 60px;
+        margin-top: 20px;
+    }
+    .button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background-color: #9c6eff;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 20px;
+        padding: 10px 20px;
+        cursor: pointer;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .button:hover {
+        background-color: #8a5de6;
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+    }
+    .button i {
+        font-size: 12px;
+        transform: rotate(90deg);
+    }
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #2c2c2c;
+        min-width: 160px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+        border-radius: 8px;
+        overflow: hidden;
+        z-index: 1;
+    }
+    .dropdown-content a {
+        display: block;
+        color: white;
+        padding: 10px 15px;
+        text-decoration: none;
+        background-color: #2c2c2c;
+        font-size: 14px;
+        transition: background-color 0.2s ease;
+    }
+    .dropdown-content a:hover {
+        background-color: #383838;
+    }
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-content {
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .modal-content input, .modal-content select, .modal-content button {
+    width: 95%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+  }
+
+  .modal-content button {
+    background-color: #9c6eff;
+    color: black;
+    cursor: pointer;
+  }
+
+  .close-modal {
+    color: black;
+    cursor: pointer;
+  }
+
+  .save-modal a{
+    color: black;
+    cursor: pointer;
+  }
+</style>
+
+
+
+<div class="dropdown">
+    <button class="button">
+        <i>▼</i> Transações
+    </button>
+    <div class="dropdown-content">
+        <a href="#">Receitas</a>
+        <a href="#">Despesas</a>
     </div>
 </div>
-</body>
-</html>
+<div class="table-container">
+    {% if transactions %}
+        <div class="table-header">
+            <button>&lt;</button>
+            <span>Dezembro 2024</span>
+            <button>&gt;</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Situação</th>
+                    <th>Data</th>
+                    <th>Descrição</th>
+                    <th>Categoria</th>
+                    <th>Conta</th>
+                    <th>Valor</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                        <tr>
+                            <td><span class="status">●</span></td>
+                            <td>01/12/2024</td>
+                            <td>{{ transaction.description }}</td>
+                            <td class="icon"><i></i> {{ transaction.category }} </td>
+                            <td>{{ transaction.account }} </td>
+                            <td class="value-positive">{{ transaction.value }} </td>
+                            <td class="actions">
+                                <button><a href=" {% url 'transaction-update' pk=transaction.pk %}">✎</a></button>
+                                <button>🖇</button>
+                                <button>🗑</button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+        </table>
+        
+    {% endif %}
+</div>
+
 {% endblock %}
 
 

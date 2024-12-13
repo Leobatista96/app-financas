@@ -1,7 +1,6 @@
-from typing import Any
-from django.db.models.query import QuerySet
 from django.shortcuts import render
-from django.views.generic import ListView, CreateView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView, UpdateView
 from finances.models import Transaction
 from finances.forms import TransactionModelForm
 
@@ -32,3 +31,12 @@ class TransactionCreateView(CreateView):
     form_class = TransactionModelForm
     template_name = 'new_transaction.html'
     success_url = '/transactions/'
+
+
+class TransactionUpdateView(UpdateView):
+    model = Transaction
+    form_class = TransactionModelForm
+    template_name = 'transaction_update.html'
+
+    def get_success_url(self):
+        return reverse_lazy('transaction-list')
