@@ -1,79 +1,154 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        /* Estilos gerais */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #f7f7f7;
+            color: rgb(2, 0, 0);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Garante que o corpo ocupe pelo menos a altura da tela */
+        }
+
+        header {
+            background-color: #313030;
+            color: white;
+            text-align: center;
+        }
+
+        main {
+            flex: 1; /* Faz o main ocupar todo o espaço disponível */
+            padding: 1rem;
+        }
+
+        .nav-content {
+            background-color: #302f2f;
+            color: white;
+            height: auto; /* Ajusta a altura automaticamente */
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+        }
+
+        .list-content {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap; /* Ajusta os itens automaticamente em telas menores */
+            justify-content: center; /* Centraliza os itens */
+        }
+
+        nav ul li {
+            margin: 0 10px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px 15px;
+            transition: all 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: #b8adad;
+        }
+
+        nav ul li.active a {
+            background-color: #666;
+        }
+
+        nav ul li.active a:hover {
+            background-color: #999;
+        }
+
+        .footer {
+            background-color: rgb(248, 2, 2);
+            color: white;
+            width: 100%;
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .nav-content {
+                flex-direction: column; /* Alinha os itens verticalmente em telas menores */
+                text-align: center;
+            }
+
+            nav ul {
+                flex-direction: column; /* Deixa o menu em forma de lista vertical */
+                padding: 0;
+            }
+
+            nav ul li {
+                margin: 5px 0;
+            }
+
+            nav ul li a {
+                font-size: 14px; /* Reduz um pouco o tamanho da fonte */
+            }
+
+            main {
+                padding: 0.5rem; /* Reduz margens internas para telas menores */
+            }
+
+            .footer {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav ul li a {
+                font-size: 12px; /* Adapta para telas muito pequenas */
+                padding: 8px;
+            }
+
+            .footer {
+                font-size: 12px;
+            }
+        }
+    </style>
 </head>
-
-<style>
-    body {
-        font-family: 'Open Sans', sans-serif;
-        background-color: #f7f7f7;
-        color: rgb(2, 0, 0);
-        margin: 0;
-        padding: 0;
-    }
-    
-    header {
-        background-color: #313030;
-        color: white;
-        text-align: center;
-    }
-
-    nav {
-        background-color: #302f2f;
-        color: white;
-        height: 50px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    nav ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-    }
-
-    nav ul li {
-        margin: 0 10px;
-    }
-
-    nav ul li a{
-        color: white;
-        text-decoration: none;
-        font-size: 16px;
-        padding: 15px;
-        transition: all 0.3s ease;
-    }
-
-    nav ul li a:hover {
-        background-color: #b8adad;
-    }
-
-    nav ul li.active a {
-        background-color: #666;
-    }
-
-    nav ul li.active a:hover {
-        background-color: #999
-    }
-</style>
 <body>
     <header>
-        <nav>
-            <ul>
-                <li><a href="{% url 'dashboard-url'%}">Dashboard</a></li>
-                <li><a href="{% url 'transaction-list'%}">Transações</a></li>
-                <li><a href="">Contas</a></li>
-            </ul>
-        </nav>
+        <div class="nav-content">
+            <nav>
+                <div class="list-content">
+                    <ul>
+                        <li><a href="{% url 'dashboard-url'%}">Dashboard</a></li>
+                        <li><a href="{% url 'transaction-list'%}">Transações</a></li>
+                        <li><a href="#">Contas</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div> 
     </header>
     <main>
         {% block content %}
         {% endblock %}
     </main>
+    <footer>
+        <div class="footer">
+            <h1>footer</h1>
+        </div>
+    </footer>
 </body>
 </html>

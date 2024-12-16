@@ -15,15 +15,18 @@ class TransactionListView(ListView):
     model = Transaction
     template_name = 'transaction.html'
     context_object_name = 'transactions'
+    paginate_by = 6
 
+    # def get_queryset(self):
+    #     transactions = super().get_queryset()
+    #     search = self.request.GET.get('search')
+    #     if search:
+    #         transactions = transactions.filter(
+    #             category__category__icontains=search)
+    #         return transactions
+    #     return Transaction.objects.all()
     def get_queryset(self):
-        transactions = super().get_queryset()
-        search = self.request.GET.get('search')
-        if search:
-            transactions = transactions.filter(
-                category__category__icontains=search)
-            return transactions
-        return Transaction.objects.all()
+        return Transaction.objects.all().order_by('id')
 
 
 class TransactionCreateView(CreateView):

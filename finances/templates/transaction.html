@@ -177,9 +177,28 @@
         display: block;
     }
 
+
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+    .pagination a {
+        text-decoration: none;
+        padding: 5px 10px;
+        background-color: #007bff;
+        color: white;
+        border-radius: 5px;
+    }
+    .pagination a:hover {
+        background-color: #0056b3;
+    }
+    .pagination span {
+        font-weight: bold;
+    }
+
 </style>
-
-
 
 <div class="dropdown">
     <button class="button">
@@ -226,7 +245,7 @@
                             <td>{{ transaction.account }} </td>
                             <td class="value-positive">{{ transaction.value }} </td>
                             <td class="actions">
-                                <button><a href=" {% url 'transaction-update' pk=transaction.pk %}">Editar</a></button>
+                                <button><a href="{% url 'transaction-update' pk=transaction.pk %}">Editar</a></button>
                                 <button> <a href="{% url 'transaction-delete' pk=transaction.pk %}">Excluir</a></button>
                             </td>
                         </tr>
@@ -234,6 +253,20 @@
                 </tbody>
         </table>
         
+    {% endif %}
+</div>
+
+<div class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page=1">Primeira</a>
+        <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+    {% endif %}
+
+    <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Próxima</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Última</a>
     {% endif %}
 </div>
 
