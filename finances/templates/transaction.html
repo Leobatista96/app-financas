@@ -67,10 +67,16 @@
         font-size: 16px;
         color: #9c6eff;
     }
-    .status {
+    .status-negative {
         color: red;
         font-size: 16px;
     }
+
+    .status-positive {
+        color: green;
+        font-size: 16px;
+    }
+
     .value-negative {
         color: #f05252;
         font-weight: bold;
@@ -92,25 +98,7 @@
         text-decoration: none;
         color: #9c6eff;
     }
-    .footer {
-        display: flex;
-        justify-content: space-between;
-        padding: 12px;
-        background-color: #383838;
-        color: #a0a0a0;
-        font-size: 14px;
-    }
-    .pagination {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-    }
-    .pagination button {
-        background: transparent;
-        border: none;
-        color: #9c6eff;
-        cursor: pointer;
-    }
+   
 
     .dropdown {
         position: relative;
@@ -177,25 +165,31 @@
         display: block;
     }
 
+    .table-footer {
+        display: flex;
+        padding: 3px;
+        justify-content: space-between;
+        background-color: #383838;
+        color: #a0a0a0;
+        font-size: 14px;
+    }
 
+    .footer-value {
+        display: flex;
+        margin-right: 13rem;
+    }
 
     .pagination {
         display: flex;
-        justify-content: center;
         gap: 10px;
+        margin-left: 11rem;
+        align-items: center;
     }
-    .pagination a {
-        text-decoration: none;
-        padding: 5px 10px;
-        background-color: #007bff;
-        color: white;
-        border-radius: 5px;
-    }
-    .pagination a:hover {
-        background-color: #0056b3;
-    }
-    .pagination span {
-        font-weight: bold;
+    .pagination button {
+        background: transparent;
+        border: none;
+        color: #9c6eff;
+        cursor: pointer;
     }
 
 </style>
@@ -220,7 +214,7 @@
     {% if transactions %}
         <div class="table-header">
             <button>&lt;</button>
-            <span>Dezembro 2024</span>
+            <input type="date" name="" id="">
             <button>&gt;</button>
         </div>
         <table>
@@ -238,12 +232,22 @@
                 <tbody>
                     {% for transaction in transactions %}
                         <tr>
-                            <td><span class="status">●</span></td>
-                            <td>01/12/2024</td>
+                            <td>
+                                {% if transaction.category.category == 'Receita' %}
+                                    <span class="status-positive">●</span>
+                                {% elif transaction.category.category == 'Despesa' %}
+                                    <span class="status-negative">●</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ transaction.created_at }}</td>
                             <td>{{ transaction.description }}</td>
-                            <td class="icon"><i></i> {{ transaction.category }} </td>
+                            <td>{{ transaction.category }} </td>
                             <td>{{ transaction.account }} </td>
-                            <td class="value-positive">{{ transaction.value }} </td>
+                                {% if transaction.category.category == 'Receita' %}
+                                    <td class="value-positive">{{ transaction.value }} </td>
+                                {% else %}    
+                                    <td class="value-negative">{{ transaction.value }} </td>
+                                {% endif %}
                             <td class="actions">
                                 <button><a href="{% url 'transaction-update' pk=transaction.pk %}">Editar</a></button>
                                 <button> <a href="{% url 'transaction-delete' pk=transaction.pk %}">Excluir</a></button>
@@ -252,22 +256,24 @@
                     {% endfor %}
                 </tbody>
         </table>
-        
-    {% endif %}
-</div>
-
-<div class="pagination">
-    {% if page_obj.has_previous %}
-        <a href="?page=1">Primeira</a>
-        <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
     {% endif %}
 
-    <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+    <div class="table-footer">
+        <div class="pagination">
+            <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_previous %}
+            <a href="?page=1">&lt;&lt;</a>
+            <a href="?page={{ page_obj.previous_page_number }}">&lt;</a>
+            {% endif %}
 
-    {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">Próxima</a>
-        <a href="?page={{ page_obj.paginator.num_pages }}">Última</a>
-    {% endif %}
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">&gt;</a>
+            {% endif %}
+        </div>
+        <div class="footer-value">
+            <span>Total: {{ total_value }} </span>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

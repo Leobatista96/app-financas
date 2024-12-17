@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.db.models import Sum
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from finances.models import Transaction
 from finances.forms import TransactionModelForm
@@ -15,7 +16,7 @@ class TransactionListView(ListView):
     model = Transaction
     template_name = 'transaction.html'
     context_object_name = 'transactions'
-    paginate_by = 6
+    paginate_by = 10
 
     # def get_queryset(self):
     #     transactions = super().get_queryset()
@@ -27,6 +28,13 @@ class TransactionListView(ListView):
     #     return Transaction.objects.all()
     def get_queryset(self):
         return Transaction.objects.all().order_by('id')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_value'] = Transaction.objects.aggregate(
+            total_value=Sum('value')
+        )['total_value'] or 0
+        return context
 
 
 class TransactionCreateView(CreateView):
