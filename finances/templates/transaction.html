@@ -1,6 +1,6 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
-{% block title %}Transações{% endblock %}
+{% block title %} Transações {% endblock title %}
 
 
 {% block content %}
@@ -8,7 +8,6 @@
     body {
         font-family: Arial, sans-serif;
         margin: 0;
-        background-color: #212121;
         color: #eaeaea;
     }
     .table-container {
@@ -96,15 +95,14 @@
 
     a {
         text-decoration: none;
-        color: #9c6eff;
+        color: white;
     }
    
 
     .dropdown {
         position: relative;
         display: inline-block;
-        margin-left: 60px;
-        margin-top: 20px;
+        
     }
 
     .btn-new-transaction {
@@ -192,25 +190,46 @@
         cursor: pointer;
     }
 
+    .buttons-table-content{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .btn-color{
+        background-color: #2c2c2c;
+        border-color: #2c2c2c;
+    }
+    .btn-color:hover{
+        background-color: #161616;
+        border-color: #161616;
+    }
+
 </style>
 
-<div class="dropdown">
-    <button class="button">
-        ▼ Transações
-    </button>
-    <div class="dropdown-content">
-        <a href="">Receitas</a>
-        <a href="">Despesas</a>
-    </div>
-</div>
 
-<div class="dropdown btn-new-transaction">
-    <button class="button">
-        <a href=" {% url 'transaction-create' %}">Nova Transação</a>
-    </button>
-</div>
 
 <div class="table-container">
+
+    <div class="buttons-table-content">
+        <div class="dropdown">
+            <button class="btn-color btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Selecione a Categoria
+            </button>
+                <ul class="dropdown-menu dropdown-menu-lg-center">
+                <li><a class="dropdown-item" href="#">Receitas</a></li>
+                <li><a class="dropdown-item" href="#">Despesas</a></li>
+                </ul>
+        </div>
+
+        <div class="btn-content">
+            <button class="btn-color btn btn-primary">
+                <a href=" {% url 'transaction-create' %}">Nova Transação</a>
+            </button>
+        </div>
+    </div>
+
+
     {% if transactions %}
         <div class="table-header">
             <button>&lt;</button>
