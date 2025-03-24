@@ -1,6 +1,10 @@
-from django.shortcuts import render
+import json
+from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.db.models import Sum
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from finances.models import Transaction
 from finances.forms import TransactionModelForm
@@ -44,6 +48,7 @@ class TransactionCreateView(CreateView):
     success_url = '/transactions/'
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class TransactionUpdateView(UpdateView):
     model = Transaction
     form_class = TransactionModelForm
@@ -51,6 +56,34 @@ class TransactionUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('transaction-list')
+
+    def get(self, request, *args, **kwargs):
+        transaction = get_object_or_404(Transaction, pk=self.kwargs['pk'])
+        return JsonResponse({
+            "id": transaction.id,
+            "description": transaction.description,
+            "category_id": transaction.category.id,
+            "category_name": transaction.category.category,
+            "account_id": transaction.account.id,
+            "account_name": transaction.account.name,
+            "value": transaction.value,
+            "created_at": transaction.created_at.strftime('%Y-%m-%d'),
+        })
+
+    def post(self, request, *args, **kwargs):
+        transaction = get_object_or_404(Transaction, pk=self.kwargs['pk'])
+        data = json.loads(request.body)
+
+        transaction.description = data.get(
+            "description", transaction.description)
+        transaction.category_id = data.get("category", transaction.category.id)
+        transaction.account_id = data.get("account", transaction.account.id)
+        transaction.value = data.get("value", transaction.value)
+        transaction.created_at = data.get("created_at", transaction.created_at)
+
+        transaction.save()
+
+        return JsonResponse({"message": "Transacao atualizada com sucesso"})
 
 
 class TransactionDeleteView(DeleteView):
