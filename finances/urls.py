@@ -4,7 +4,7 @@ from finances.views import dashboard_view, TransactionListView, TransactionCreat
 
 
 urlpatterns = [
-    path('/', dashboard_view, name='dashboard-url'),
+    path('', dashboard_view, name='dashboard-url'),
     path('transactions/', TransactionListView.as_view(), name='transaction-list'),
     path('new_transaction/', TransactionCreateView.as_view(),
          name='transaction-create'),
