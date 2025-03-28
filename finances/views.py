@@ -12,10 +12,6 @@ from finances.forms import TransactionModelForm
 # Create your views here.
 
 
-def dashboard_view(request):
-    return render(request, 'dashboard.html')
-
-
 class TransactionListView(ListView):
     model = Transaction
     template_name = 'transaction.html'

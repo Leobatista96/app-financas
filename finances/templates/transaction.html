@@ -209,93 +209,237 @@
         background-color: #6e2bf3;
     }
 
+    .main-container {
+        display: flex; /* Usaremos flexbox para a sidebar e o conteúdo */
+        width: 100%;
+        min-height: 100vh; /* Ocupar a altura total da tela */
+    }
+
+    .sidebar {
+        width: 200px; /* Largura da sidebar */
+        background-color: f8f8f8; /* Cor de fundo da sidebar (exemplo) */
+        color: black;
+        padding: 20px;
+        height: 100%;
+    }
+
+    aside ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    aside ul li {
+        padding: 10px;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-bottom: 5px;
+    }
+
+
+    aside ul li a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: black;
+    }
+
+    aside ul li a i {
+        margin-right: 10px;
+        width: 20px;
+        text-align: center;
+    }
+
+    .menu-options {
+        list-style: none;
+    }
+
+    .menu-list-item {
+        padding: 10px 0 0 0;
+    }
+
+    .menu-item:hover{
+        background-color: #dfdede;
+    }
+
+    .content {
+        background-color: rgba(245, 245, 245, 0.87);
+        flex: 1; /* O conteúdo principal ocupa o espaço restante */
+        padding: 20px;
+    }
+
+    /* Estilos para a tabela responsiva */
+    .table-container {
+        width: 90%;
+        margin: auto;
+        margin-top: 20px;
+        background-color: #2c2c2c;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        overflow-x: auto; /* Adicionado para rolagem horizontal em telas menores */
+    }
+        table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #2c2c2c;
+        color: #eaeaea;
+        min-width: 600px; /* Ajuste conforme necessário */
+    }
+
+    /* Media query para telas menores */
+    @media (max-width: 768px) {
+        .main-container {
+            flex-direction: column; /* A sidebar fica acima do conteúdo em telas menores */
+        }
+
+        .sidebar {
+            width: 100%; /* A sidebar ocupa a largura total em telas menores */
+        }
+
+        .content {
+            padding: 10px; /* Reduz o padding em telas menores */
+        }
+        table {
+            min-width: auto; /* Remove a largura mínima para permitir a quebra em telas menores */
+            display: block; /* Converte a tabela em bloco para permitir o overflow */
+            overflow-x: auto; /* Adiciona rolagem horizontal */
+    }
+        thead {
+            display: none; /* Oculta o cabeçalho da tabela em telas menores */
+    }
+
+    tbody tr {
+        display: block; /* Exibe cada linha como um bloco */
+        margin-bottom: 15px; /* Adiciona margem entre as linhas */
+    }
+
+    td {
+        display: flex; /* Coloca o título e o valor lado a lado */
+        padding: 8px;
+        text-align: left;
+    }
+
+    td:before {
+        content: attr(data-label); /* Exibe o nome da coluna */
+        font-weight: bold;
+        width: 50%; /* Ajuste conforme necessário */
+        display: inline-block;
+    }
+
+    td:last-child {
+        border-bottom: none; /* Remove a borda da última célula */
+    }
+
+    }
 
 </style>
 
 
 
-<div class="container">
-    <div class="table-container">
 
-        <div class="buttons-table-content">
-            <div class="dropdown">
-                <button class=" btn btn-color dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                    Selecione a Categoria
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Receitas</a></li>
-                    <li><a class="dropdown-item" href="#">Despesas</a></li>
-                </ul>
-            </div>
+<div class="main-container">
+    <div class="sidebar">
+        <aside>
+            <ul class="menu-options">
+                <li><a class="menu-item" href="#"><i class=" fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+                <li><a class="menu-item" href="#"><i class=" fas fa-university"></i><span>Contas</span></a></li>
+                <li><a class="menu-item" href="#"><i class=" fas fa-exchange-alt"></i><span>Transações</span></a></li>
+                <li><a class="menu-item" href="#"><i class=" far fa-credit-card"></i><span>Cartões de Crédito</span></a></li>
+                <li><a class="menu-item" href="#"><i class=" fas fa-chart-line"></i><span>Planejamento</span></a></li>
+                <li><a class="menu-item" href="#"><i class=" fas fa-chart-pie"></i><span>Relatórios</span></a></li>
+                <li><a class="menu-item" href="#"><i class=" fas fa-ellipsis-h"></i><span>Mais opções</span></a></li>
+                <li><a class="menu-item" href="#"><i class=" fas fa-cog"></i><span>Configurações</span></a></li>
+                <li><a class="menu-item" href="#"><i class=" far fa-question-circle"></i><span>Central de Ajuda</span></a></li>
+            </ul>
+        </aside>
+    </div>
 
-            <div class="btn-content">
-                <button class="btn-color btn ">
-                    <a href=" {% url 'transaction-create' %}">Nova Transação</a>
-                </button>
-            </div>
-        </div>
+    <div class="content">
+        <div class="container">
+            <div class="table-container">
+                <!-- Seu código da tabela aqui -->
+                <div class="buttons-table-content">
+                    <div class="dropdown">
+                        <button class=" btn btn-color dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            Selecione a Categoria
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Receitas</a></li>
+                            <li><a class="dropdown-item" href="#">Despesas</a></li>
+                        </ul>
+                    </div>
 
+                    <div class="btn-content">
+                        <button class="btn-color btn ">
+                            <a href=" {% url 'transaction-create' %}">Nova Transação</a>
+                        </button>
+                    </div>
+                </div>
 
-        {% if transactions %}
-            <table>
-                <thead>
-                    <tr>
-                        <th>Situação</th>
-                        <th>Data</th>
-                        <th>Descrição</th>
-                        <th>Categoria</th>
-                        <th>Conta</th>
-                        <th>Valor</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
+                {% if transactions %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Situação</th>
+                            <th>Data</th>
+                            <th>Descrição</th>
+                            <th>Categoria</th>
+                            <th>Conta</th>
+                            <th>Valor</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
                     <tbody>
                         {% for transaction in transactions %}
-                            <tr>
-                                <td>
-                                    {% if transaction.category.category == 'Receita' %}
-                                        <span class="status-positive">●</span>
-                                    {% elif transaction.category.category == 'Despesa' %}
-                                        <span class="status-negative">●</span>
-                                    {% endif %}
-                                </td>
-                                <td>{{ transaction.created_at }}</td>
-                                <td>{{ transaction.description }}</td>
-                                <td>{{ transaction.category }} </td>
-                                <td>{{ transaction.account }} </td>
-                                    {% if transaction.category.category == 'Receita' %}
-                                        <td class="value-positive">{{ transaction.value }} </td>
-                                    {% else %}    
-                                        <td class="value-negative">{{ transaction.value }} </td>
-                                    {% endif %}
-                                <td class="actions">
-                                    <button class="edit-btn" data-id="{{ transaction.pk }}" data-category-name="{{ transaction.category.category }}">Editar</button>
-                                    <button> <a href="{% url 'transaction-delete' pk=transaction.pk %}">Excluir</a></button>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td>
+                                {% if transaction.category.category == 'Receita' %}
+                                <span class="status-positive">●</span>
+                                {% elif transaction.category.category == 'Despesa' %}
+                                <span class="status-negative">●</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ transaction.created_at }}</td>
+                            <td>{{ transaction.description }}</td>
+                            <td>{{ transaction.category }} </td>
+                            <td>{{ transaction.account }} </td>
+                            {% if transaction.category.category == 'Receita' %}
+                            <td class="value-positive">{{ transaction.value }} </td>
+                            {% else %}
+                            <td class="value-negative">{{ transaction.value }} </td>
+                            {% endif %}
+                            <td class="actions">
+                                <button class="edit-btn" data-id="{{ transaction.pk }}"
+                                    data-category-name="{{ transaction.category.category }}">Editar</button>
+                                <button> <a href="{% url 'transaction-delete' pk=transaction.pk %}">Excluir</a></button>
+                            </td>
+                        </tr>
                         {% endfor %}
                     </tbody>
-            </table>
-        {% endif %}
-
-        <div class="table-footer">
-            <div class="pagination">
-                <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
-                {% if page_obj.has_previous %}
-                <a href="?page=1">&lt;&lt;</a>
-                <a href="?page={{ page_obj.previous_page_number }}">&lt;</a>
+                </table>
                 {% endif %}
 
-                {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}">&gt;</a>
-                {% endif %}
-            </div>
-            <div class="footer-value">
-                <span>Total: {{ total_value }} </span>
+                <div class="table-footer">
+                    <div class="pagination">
+                        <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+                        {% if page_obj.has_previous %}
+                        <a href="?page=1">&lt;&lt;</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">&lt;</a>
+                        {% endif %}
+
+                        {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">&gt;</a>
+                        {% endif %}
+                    </div>
+                    <div class="footer-value">
+                        <span>Total: {{ total_value }} </span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
 
 <!-- Modal de Edição -->
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
