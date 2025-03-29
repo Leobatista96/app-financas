@@ -1,6 +1,6 @@
 import json
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.db.models import Sum
 from django.views.decorators.csrf import csrf_exempt
@@ -16,7 +16,7 @@ class TransactionListView(ListView):
     model = Transaction
     template_name = 'transaction.html'
     context_object_name = 'transactions'
-    paginate_by = 10
+    paginate_by = 15
 
     # def get_queryset(self):
     #     transactions = super().get_queryset()
@@ -27,7 +27,7 @@ class TransactionListView(ListView):
     #         return transactions
     #     return Transaction.objects.all()
     def get_queryset(self):
-        return Transaction.objects.all().order_by('id')
+        return Transaction.objects.all().order_by('-created_at')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -41,7 +41,7 @@ class TransactionCreateView(CreateView):
     model = Transaction
     form_class = TransactionModelForm
     template_name = 'new_transaction.html'
-    success_url = '/transactions/'
+    success_url = '/'
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -85,4 +85,4 @@ class TransactionUpdateView(UpdateView):
 class TransactionDeleteView(DeleteView):
     model = Transaction
     template_name = 'transaction_delete.html'
-    success_url = '/transactions/'
+    success_url = '/'

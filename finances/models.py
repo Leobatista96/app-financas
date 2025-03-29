@@ -6,6 +6,9 @@ class Accounts(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name='Criado em')
 
+    class Meta:
+        ordering = ['-created_at']
+
     def __str__(self):
         return self.name
 
@@ -28,6 +31,9 @@ class Transaction(models.Model):
                                 related_name='transaction_accounts', verbose_name='Conta')
     category = models.ForeignKey(Categories, on_delete=models.PROTECT,
                                  related_name='transaction_categories', verbose_name='Categoria')
+
+    class Meta:
+        ordering = ['-created_at']
 
     def __str__(self):
         return self.description
