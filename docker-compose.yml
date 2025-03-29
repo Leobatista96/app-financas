@@ -1,9 +1,0 @@
-services:
-
-    app-financas:
-        build: .
-        restart: always
-        ports:
-            - 8002:8002
-        volumes:
-            - ./app-financas
