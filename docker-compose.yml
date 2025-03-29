@@ -1,6 +1,7 @@
 services:
 
     app-financas:
+        image: easypanel/apps/financas:latest
         build: .
         restart: always
         ports:
