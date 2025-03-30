@@ -16,7 +16,7 @@ class TransactionListView(ListView):
     model = Transaction
     template_name = 'transaction.html'
     context_object_name = 'transactions'
-    paginate_by = 15
+    paginate_by = 10
 
     # def get_queryset(self):
     #     transactions = super().get_queryset()
@@ -41,6 +41,7 @@ class TransactionCreateView(CreateView):
     model = Transaction
     form_class = TransactionModelForm
     template_name = 'new_transaction.html'
+    context_object_name = 'transaction'
     success_url = '/'
 
 
@@ -86,3 +87,31 @@ class TransactionDeleteView(DeleteView):
     model = Transaction
     template_name = 'transaction_delete.html'
     success_url = '/'
+
+    def get(self, request, *args, **kwargs):
+        transaction = get_object_or_404(Transaction, pk=self.kwargs['pk'])
+        return JsonResponse({
+            "id": transaction.id,
+            "description": transaction.description,
+            "category_id": transaction.category.id,
+            "category_name": transaction.category.category,
+            "account_id": transaction.account.id,
+            "account_name": transaction.account.name,
+            "value": transaction.value,
+            "created_at": transaction.created_at.strftime('%Y-%m-%d'),
+        })
+
+    def post(self, request, *args, **kwargs):
+        transaction = get_object_or_404(Transaction, pk=self.kwargs['pk]'])
+        data = json.loads(request.body)
+
+        transaction.description = data.get(
+            "description", transaction.description)
+        transaction.category_id = data.get("category", transaction.category.id)
+        transaction.account_id = data.get("account", transaction.account.id)
+        transaction.value = data.get("value", transaction.value)
+        transaction.created_at = data.get("created_at", transaction.created_at)
+
+        transaction.save()
+
+        return JsonResponse({"message": "Transacao excluida com sucesso"})

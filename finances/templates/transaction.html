@@ -6,8 +6,8 @@
 {% block content %}
 
 <div class="table-responsive">
-    <table class="table table-bordered border border-black border-2 table-hover">
-        <thead class="text-center">
+    <table class="table table-sm table-bordered table-striped table-hover">
+        <thead>
             <tr>
                 <th>Situação</th>
                 <th>Descrição</th>
@@ -17,7 +17,8 @@
                 <th>Ações</th>
             </tr>
         </thead>
-        <tbody>
+
+        <tbody class="table-group-divider">
             {% for transaction in transactions %}
             <tr>
                 <td></td>
@@ -26,19 +27,27 @@
                 <td>{{ transaction.account }}</td>
                 <td>{{ transaction.value }}</td>
                 <td>
-                    <a href="{% url 'transaction-update' pk=transaction.pk %}" class="text-decoration-none">
+                    <button id="edit-btn" class="btn btn-primary btn-sm" data-id="{{ transaction.pk }}"
+                        data-category-name="{{ transaction.category.category }}">
                         <i class="bi bi-pencil-square"></i>
-                    </a>
-                    <a class="text-decoration-none" href="{% url 'transaction-delete' pk=transaction.pk %} ">
+                    </button>
+                    <button id="delete-btn" class="btn btn-danger btn-sm" data-id=" {{ transaction.pk }}">
                         <i class="bi bi-trash3"></i>
-                    </a>
+                    </button>
+                    <button id="delete-btn" class="btn btn-danger btn-sm">
+                        <a href="{% url 'transaction-delete' pk=transaction.pk %}">
+                            <i class="bi bi-trash3"></i>
+                        </a>
+                    </button>
                 </td>
             </tr>
             {% endfor %}
+
+        <tfoot class="table-group-divider">
             <tr>
-                <td>
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination">
+                <td colspan="6">
+                    <nav aria-label="">
+                        <ul class="pagination pagination-sm justify-content-center">
                             <li class="page-item"><a class="page-link">Página {{ page_obj.number }} de
                                     {{page_obj.paginator.num_pages }}</a>
                             </li>
@@ -62,12 +71,151 @@
                     </nav>
                 </td>
             </tr>
+        </tfoot>
 
         </tbody>
-
-
-
     </table>
 </div>
+
+<!-- Modal de edicao -->
+<div class="modal fade" id="ModalChange" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm" method="POST">
+                    <input type="hidden" id="transactionId">
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Descrição</label>
+                        <input type="text" class="form-control" id="description">
+                    </div>
+                    <div class="mb-3" hidden="false">
+                        <label for="category_id" class="form-label">ID da Categoria</label>
+                        <input class="form-control" id="category_id" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label for="category_name" class="form-label">Nome da Categoria</label>
+                        <input class="form-control" id="category_name">
+                    </div>
+                    <div class="mb-3" hidden="false">
+                        <label for="account_id" class="form-label">ID da Conta</label>
+                        <input type="text" class="form-control" id="account_id" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label for="account_name" class="form-label">Nome da Conta</label>
+                        <input type="text" class="form-control" id="account_name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="value" class="form-label">Valor</label>
+                        <input type="number" step="0.01" class="form-control" id="value">
+                    </div>
+                    <div class="mb-3" hidden="false">
+                        <label for="created_at" class="form-label">Data</label>
+                        <input type="date" class="form-control" id="created_at" disabled>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="saveChanges">Salvar</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de exclusao-->
+<div class="modal fade" id="ModalDelete" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Exclusao de Item</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <span id="span-delete" for="description" class="form-label">Deseja realmente excluir o registro
+                        ?</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Excluir</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll("#edit-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                const transactionId = this.getAttribute("data-id");
+
+                fetch(`/transactions/${transactionId}/update/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById("transactionId").value = data.id;
+                        document.getElementById("description").value = data.description;
+                        document.getElementById("category_id").value = data.category_id;
+                        document.getElementById("category_name").value = data.category_name;
+                        document.getElementById("account_id").value = data.account_id;
+                        document.getElementById("account_name").value = data.account_name;
+                        document.getElementById("value").value = data.value;
+                        document.getElementById("created_at").value = data.created_at;
+
+                        new bootstrap.Modal(document.getElementById("ModalChange")).show();
+                    });
+            });
+        });
+
+        document.getElementById("saveChanges").addEventListener("click", function () {
+            const transactionId = document.getElementById("transactionId").value;
+            const description = document.getElementById("description").value;
+            const category_id = document.getElementById("category_id").value;
+            const category_name = document.getElementById("category_name").value;
+            const account_id = document.getElementById("account_id").value;
+            const account_name = document.getElementById("account_name").value;
+            const value = document.getElementById("value").value;
+
+            fetch(`/transactions/${transactionId}/update/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    description: description,
+                    category_id: category_id,
+                    account: account_id,
+                    value: value,
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert("Transação atualizada com sucesso!");
+                    location.reload();
+                });
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll("#delete-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                const transactionId = this.getAttribute("data-id");
+
+                new bootstrap.Modal(document.getElementById("ModalDelete")).show();
+            });
+        });
+    });
+    // });
+</script>
+
+
+
 
 {% endblock %}

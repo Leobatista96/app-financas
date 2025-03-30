@@ -14,13 +14,52 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{% url 'transaction-create' %}" class="nav-link px-0 align-middle">
+                        <a href="{% url 'transaction-list' %}" class="nav-link px-0 align-middle">
                             <i class="bi bi-arrow-down-left-square fs-4"></i>
-                            <span class="ms-1">Nova Transação</span>
+                            <span class="ms-1">Transações</span>
                         </a>
+                    </li>
+                    <li>
+                        <button id="newTransactionButton">
+                            <a class="nav-link px-0 align-middle">
+                                <i class="bi bi-plus-square fs-4"></i>
+                                <span class="ms-1">Adicionar Transação</span>
+                            </a>
+                        </button>
                     </li>
                 </ul>
             </div>
-            <hr>
         </div>
     </div>
+
+    <div class="modal fade" id="Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Nova Transação</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll("#newTransactionButton").forEach(button => {
+                button.addEventListener("click", function () {
+
+                    new bootstrap.Modal(document.getElementById("Modal")).show();
+                });
+            });
+        });
+    </script>
