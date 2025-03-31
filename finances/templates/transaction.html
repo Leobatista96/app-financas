@@ -20,7 +20,7 @@
 
         <tbody class="table-group-divider">
             {% for transaction in transactions %}
-            <tr>
+            <tr id="transaction-row-{{ transaction.id }}">
                 <td></td>
                 <td>{{ transaction.description }}</td>
                 <td>{{ transaction.category }}</td>
@@ -31,13 +31,9 @@
                         data-category-name="{{ transaction.category.category }}">
                         <i class="bi bi-pencil-square"></i>
                     </button>
-                    <button id="delete-btn" class="btn btn-danger btn-sm" data-id=" {{ transaction.pk }}">
+                    <button class="btn btn-danger btn-sm delete-btn" data-id="{{transaction.pk}}" data-bs-toggle="modal"
+                        data-bs-target="#ModalDelete">
                         <i class="bi bi-trash3"></i>
-                    </button>
-                    <button id="delete-btn" class="btn btn-danger btn-sm">
-                        <a href="{% url 'transaction-delete' pk=transaction.pk %}">
-                            <i class="bi bi-trash3"></i>
-                        </a>
                     </button>
                 </td>
             </tr>
@@ -139,12 +135,11 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <span id="span-delete" for="description" class="form-label">Deseja realmente excluir o registro
-                        ?</span>
+                    <span class="form-label">Deseja realmente excluir o registro?</span>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Excluir</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">Excluir</button>
             </div>
         </div>
     </div>
@@ -203,16 +198,47 @@
         });
     });
 
-    document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll("#delete-btn").forEach(button => {
-            button.addEventListener("click", function () {
-                const transactionId = this.getAttribute("data-id");
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     document.querySelectorAll("#delete-btn").forEach(button => {
+    //         button.addEventListener("click", function () {
+    //             const transactionId = this.getAttribute("data-id");
 
-                new bootstrap.Modal(document.getElementById("ModalDelete")).show();
-            });
+    //             new bootstrap.Modal(document.getElementById("ModalDelete")).show();
+    //         });
+    //     });
+    // });
+
+    let transactionIdToDelete = null;
+
+    document.querySelectorAll(".delete-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            transactionIdToDelete = this.getAttribute("data-id");
         });
     });
-    // });
+
+    document.getElementById("confirmDelete").addEventListener("click", function () {
+        if (transactionIdToDelete) {
+            fetch(`/transaction/${transactionIdToDelete}/delete/`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById(`transaction-row-${transactionIdToDelete}`).remove();
+                    } else {
+                        alert("Erro ao excluir a transação.");
+                    }
+                    transactionIdToDelete = null;
+                    let modal = bootstrap.Modal.getInstance(document.getElementById("deleteModal"));
+                    location.reload();
+                })
+            // .catch(error => console.error("Erro:", error));
+        }
+    });
 </script>
 
 

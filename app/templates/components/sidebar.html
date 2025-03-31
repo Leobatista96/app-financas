@@ -20,12 +20,10 @@
                         </a>
                     </li>
                     <li>
-                        <button id="newTransactionButton">
-                            <a class="nav-link px-0 align-middle">
-                                <i class="bi bi-plus-square fs-4"></i>
-                                <span class="ms-1">Adicionar Transação</span>
-                            </a>
-                        </button>
+                        <a id="newTransactionButton" class="nav-link px-0 align-middle" style="cursor: pointer;">
+                            <i class="bi bi-plus-square fs-4"></i>
+                            <span class="ms-1">Adicionar Transação</span>
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -41,13 +39,11 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST">
+                    <form id="transactionForm">
                         {% csrf_token %}
                         {{ form.as_p }}
+                        <button type="submit" class="btn btn-success" id="saveTransaction">Salvar</button>
                     </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Salvar</button>
                 </div>
             </div>
         </div>
@@ -61,5 +57,31 @@
                     new bootstrap.Modal(document.getElementById("Modal")).show();
                 });
             });
+        });
+    </script>
+    <script>
+        document.getElementById("saveTransaction").addEventListener("click", function () {
+            let form = document.getElementById("transactionForm");
+            let formData = new FormData(form);
+            let jsonData = {};
+
+            formData.forEach((value, key) => jsonData[key] = value); // Converte FormData em JSON
+
+            fetch("{% url 'transaction-create' %}", {
+                method: "POST",
+                body: JSON.stringify(jsonData), // Envia os dados como JSON
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Transação salva com sucesso!");
+                        window.location.reload();  // Atualiza a página
+                    }
+                })
+                .catch(error => console.error("Erro:", error));
         });
     </script>
