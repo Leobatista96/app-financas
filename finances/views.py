@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.db.models import Sum
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from finances.models import Transaction
 from finances.forms import TransactionModelForm
@@ -12,7 +13,7 @@ from finances.forms import TransactionModelForm
 # Create your views here.
 
 
-class TransactionListView(ListView):
+class TransactionListView(LoginRequiredMixin, ListView):
     model = Transaction
     template_name = 'transaction.html'
     context_object_name = 'transactions'
@@ -27,7 +28,7 @@ class TransactionListView(ListView):
         return context
 
 
-class TransactionCreateView(CreateView):
+class TransactionCreateView(LoginRequiredMixin, CreateView):
     model = Transaction
     form_class = TransactionModelForm
     success_url = '/'
@@ -47,7 +48,7 @@ class TransactionCreateView(CreateView):
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class TransactionUpdateView(UpdateView):
+class TransactionUpdateView(LoginRequiredMixin, UpdateView):
     model = Transaction
     form_class = TransactionModelForm
 
@@ -83,7 +84,7 @@ class TransactionUpdateView(UpdateView):
         return JsonResponse({"message": "Transacao atualizada com sucesso"})
 
 
-class TransactionDeleteView(DeleteView):
+class TransactionDeleteView(LoginRequiredMixin, DeleteView):
     model = Transaction
     success_url = reverse_lazy()
 
