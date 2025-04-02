@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class Accounts(models.Model):
+class Account(models.Model):
     name = models.CharField(max_length=100, verbose_name='Nome da Conta')
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name='Criado em')
@@ -13,9 +13,8 @@ class Accounts(models.Model):
         return self.name
 
 
-class Categories(models.Model):
-    category = models.CharField(max_length=100, choices=[(
-        'Receita', 'Receita'), ('Despesa', 'Despesa')], verbose_name='Categoria', default='')
+class Categorie(models.Model):
+    category = models.CharField(max_length=100, verbose_name='Categoria')
 
     def __str__(self):
         return self.category
@@ -27,9 +26,9 @@ class Transaction(models.Model):
         max_length=150, blank=True, default='', verbose_name='Descrição')
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name='Criado em')
-    account = models.ForeignKey(Accounts, on_delete=models.PROTECT,
+    account = models.ForeignKey(Account, on_delete=models.PROTECT,
                                 related_name='transaction_accounts', verbose_name='Conta')
-    category = models.ForeignKey(Categories, on_delete=models.PROTECT,
+    category = models.ForeignKey(Categorie, on_delete=models.PROTECT,
                                  related_name='transaction_categories', verbose_name='Categoria')
 
     class Meta:

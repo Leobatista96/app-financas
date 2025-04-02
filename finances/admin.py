@@ -1,5 +1,5 @@
 from django.contrib import admin
-from finances.models import Accounts, Transaction, Categories
+from finances.models import Account, Transaction, Categorie
 
 
 class AccountsAdmin(admin.ModelAdmin):
@@ -17,6 +17,6 @@ class CategoriesAdmin(admin.ModelAdmin):
     search_fields = ['category']
 
 
-admin.site.register(Accounts, AccountsAdmin)
+admin.site.register(Account, AccountsAdmin)
 admin.site.register(Transaction, TransactionAdmin)
-admin.site.register(Categories, CategoriesAdmin)
+admin.site.register(Categorie, CategoriesAdmin)
