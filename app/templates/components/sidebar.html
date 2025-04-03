@@ -67,9 +67,8 @@
                         <div class="mb-4">
                             <span>
                                 Conta: {{form.account}}
-                                <a class=" addcategoriebutton addaccountbutton text-decoration-none btn"
-                                    data-bs-toggle="tooltip" data-bs-placement="right"
-                                    data-bs-custom-class="custom-tooltip"
+                                <a class="addaccountbutton text-decoration-none btn" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-custom-class="custom-tooltip"
                                     data-bs-title="Clique aqui para criar uma nova conta">
                                     <i class="bi bi-plus-circle"></i>
                                 </a>
@@ -78,9 +77,8 @@
                         <div class="mb-4">
                             <span>
                                 Categoria: {{form.category}}
-                                <a class=" addcategoriebutton addaccountbutton text-decoration-none btn"
-                                    data-bs-toggle="tooltip" data-bs-placement="right"
-                                    data-bs-custom-class="custom-tooltip"
+                                <a class=" addcategoriebutton text-decoration-none btn" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-custom-class="custom-tooltip"
                                     data-bs-title="Clique aqui para criar uma nova categoria">
                                     <i class="bi bi-plus-circle"></i>
                                 </a>
@@ -174,7 +172,8 @@
             document.querySelectorAll(".addcategoriebutton").forEach(button => {
                 button.addEventListener("click", function () {
 
-                    new bootstrap.Modal(document.getElementById("ModalCategorie")).show();
+                    modalCategorie = new bootstrap.Modal(document.getElementById("ModalCategorie"));
+                    modalCategorie.show();
                 });
             });
         });

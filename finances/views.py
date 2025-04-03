@@ -100,7 +100,6 @@ class TransactionDeleteView(LoginRequiredMixin, DeleteView):
 class CategorieCreateView(CreateView):
     model = Categorie
     form_class = CategorieModelForm
-    success_url = '/'
 
     def post(self, request, *args, **kwargs):
         try:
