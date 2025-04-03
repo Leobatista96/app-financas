@@ -66,7 +66,7 @@ class TransactionUpdateView(LoginRequiredMixin, UpdateView):
             "account_id": transaction.account.id,
             "account_name": transaction.account.name,
             "value": transaction.value,
-            # "created_at": transaction.created_at.strftime('%Y-%m-%d'),
+            "created_at": transaction.created_at.strftime('%Y-%m-%d'),
         })
 
     def post(self, request, *args, **kwargs):
