@@ -7,8 +7,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from finances.models import Transaction
-from finances.forms import TransactionModelForm
+from finances.models import Transaction, Categorie, Account
+from finances.forms import TransactionModelForm, CategorieModelForm, AccountModelForm
 
 # Create your views here.
 
@@ -25,6 +25,8 @@ class TransactionListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["form"] = TransactionModelForm()
+        context["form_categories"] = CategorieModelForm()
+        context["form_accounts"] = AccountModelForm()
         return context
 
 
@@ -93,3 +95,40 @@ class TransactionDeleteView(LoginRequiredMixin, DeleteView):
         transaction.delete()
 
         return JsonResponse({"success": "True"})
+
+
+class CategorieCreateView(CreateView):
+    model = Categorie
+    form_class = CategorieModelForm
+    success_url = '/'
+
+    def post(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body)  # Decodifica JSON
+            form = self.form_class(data)
+
+            if form.is_valid():
+                form.save()
+                return JsonResponse({"success": True})
+
+            return JsonResponse({"success": False, "errors": form.errors}, status=400)
+        except json.JSONDecodeError:
+            return JsonResponse({"success": False, "error": "JSON inválido"}, status=400)
+
+
+class AccountCreateView(CreateView):
+    model = Account
+    form_class = AccountModelForm
+    success_url = '/'
+
+    def post(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body)
+            form = self.form_class(data)
+
+            if form.is_valid():
+                form.save()
+                return JsonResponse({"success": True})
+            return JsonResponse({"success": False, "errors": form.errors}, status=400)
+        except json.JSONDecodeError:
+            return JsonResponse({"success": False, "errors": "JSON inválido"}, status=400)
