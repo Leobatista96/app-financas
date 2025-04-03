@@ -31,6 +31,8 @@ ALLOWED_HOSTS = ['financas.leonardobatista96.com.br', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
