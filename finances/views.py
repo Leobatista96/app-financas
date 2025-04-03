@@ -49,7 +49,6 @@ class TransactionCreateView(LoginRequiredMixin, CreateView):
             return JsonResponse({"success": False, "error": "JSON inválido"}, status=400)
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class TransactionUpdateView(LoginRequiredMixin, UpdateView):
     model = Transaction
     form_class = TransactionModelForm
@@ -67,7 +66,7 @@ class TransactionUpdateView(LoginRequiredMixin, UpdateView):
             "account_id": transaction.account.id,
             "account_name": transaction.account.name,
             "value": transaction.value,
-            "created_at": transaction.created_at.strftime('%Y-%m-%d'),
+            # "created_at": transaction.created_at.strftime('%Y-%m-%d'),
         })
 
     def post(self, request, *args, **kwargs):
@@ -79,7 +78,6 @@ class TransactionUpdateView(LoginRequiredMixin, UpdateView):
         transaction.category_id = data.get("category", transaction.category.id)
         transaction.account_id = data.get("account", transaction.account.id)
         transaction.value = data.get("value", transaction.value)
-        transaction.created_at = data.get("created_at", transaction.created_at)
 
         transaction.save()
 
@@ -100,6 +98,7 @@ class TransactionDeleteView(LoginRequiredMixin, DeleteView):
 class CategorieCreateView(CreateView):
     model = Categorie
     form_class = CategorieModelForm
+    success_url = '/'
 
     def post(self, request, *args, **kwargs):
         try:
