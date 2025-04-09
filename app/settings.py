@@ -90,7 +90,7 @@ DATABASES = {
         "NAME": config("POSTGRESDB"),
         "USER": config("POSTGRESUSER"),
         "PASSWORD": config("POSTGRESPASSWORD"),
-        "HOST": "finances_db",
+        "HOST": "financas_db",
         "PORT": "5432",
     },
 
