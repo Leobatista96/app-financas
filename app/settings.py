@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-a2@bd6298lt(d$hg*p7^l3f)xxk19^!=o*j)qnubbcg&z%q=r7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['financas.leonardobatista96.com.br', '127.0.0.1']
+ALLOWED_HOSTS = ['financas.leonardobatista96.com.br', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -94,7 +94,7 @@ DATABASES = {
         "PORT": "5432",
     },
 
-    'sqlite': {
+    'dev': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
