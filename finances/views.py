@@ -20,7 +20,7 @@ class TransactionListView(LoginRequiredMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return Transaction.objects.all().order_by('-created_at')
+        return Transaction.objects.filter(user=self.request.user).order_by('-created_at')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -41,7 +41,9 @@ class TransactionCreateView(LoginRequiredMixin, CreateView):
             form = self.form_class(data)
 
             if form.is_valid():
-                form.save()
+                transaction = form.save(commit=False)
+                transaction.user = request.user
+                transaction.save()
                 return JsonResponse({"success": True})
 
             return JsonResponse({"success": False, "errors": form.errors}, status=400)
@@ -55,6 +57,9 @@ class TransactionUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('transaction-list')
+
+    def get_object(self):
+        return get_object_or_404(Transaction, pk=self.kwargs['pk'], user=self.request.user)
 
     def get(self, request, *args, **kwargs):
         transaction = get_object_or_404(Transaction, pk=self.kwargs['pk'])
@@ -89,7 +94,7 @@ class TransactionDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy()
 
     def delete(self, request, *args, **kwargs):
-        transaction = get_object_or_404(Transaction, pk=self.kwargs['pk'])
+        transaction = get_object_or_404(Transaction, pk=self.kwargs['pk'], user=self.request.user)
         transaction.delete()
 
         return JsonResponse({"success": "True"})

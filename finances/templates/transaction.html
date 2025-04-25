@@ -7,25 +7,25 @@
 
 <div class="table-responsive">
     <table class="table table-sm table-bordered table-striped table-hover">
-        <thead>
+        <thead class="text-center">
             <tr>
-                <th>Situação</th>
                 <th>Descrição</th>
                 <th>Categoria</th>
                 <th>Conta</th>
                 <th>Valor</th>
+                <th>Data de Criação</th>
                 <th>Ações</th>
             </tr>
         </thead>
 
-        <tbody class="table-group-divider">
+        <tbody class="table-group-divider text-center">
             {% for transaction in transactions %}
             <tr id="transaction-row-{{ transaction.id }}">
-                <td></td>
                 <td>{{ transaction.description }}</td>
                 <td>{{ transaction.category }}</td>
                 <td>{{ transaction.account }}</td>
-                <td>{{ transaction.value }}</td>
+                <td>R$ {{ transaction.value|floatformat:"2g" }}</td>
+                <td>{{ transaction.created_at|date:"SHORT_DATE_FORMAT"}}</td>
                 <td>
                     <button id="edit-btn" class="btn btn-primary btn-sm" data-id="{{ transaction.pk }}"
                         data-category-name="{{ transaction.category.category }}">

@@ -6,6 +6,7 @@ class TransactionModelForm(forms.ModelForm):
     class Meta:
         model = Transaction
         fields = '__all__'
+        exclude = ['user']
 
 
 class CategorieModelForm(forms.ModelForm):

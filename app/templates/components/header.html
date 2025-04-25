@@ -2,4 +2,12 @@
     <div class="container-fluid justify-content-center">
         <a class="navbar-brand text-white fs-4 " href="#">Gestão de Finanças Pessoais</a>
     </div>
+
+    <div class="container justify-content-end">
+        <div class="text-white ">
+            {% if user.is_authenticated %}
+            <span>Olá, {{ request.user.username | capfirst}}</span>
+            {% endif %}
+        </div>
+    </div>
 </nav>
