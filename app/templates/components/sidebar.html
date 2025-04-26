@@ -1,243 +1,250 @@
-<div class="row flex-nowrap">
-    <div class="col-auto col-md-3 col-xl-1 px-sm-1 px-1 bg-dark">
-        <div class="d-flex flex-column align-items-center align-items-sm-start px-1 pt-2 text-white min-vh-100">
-            <button class="btn btn-dark d-block d-sm-none mb-3" type="button" data-bs-toggle="collapse"
-                data-bs-target="#menuCollapse" aria-expanded="false" aria-controls="menuCollapse">
-                <i class="bi bi-list fs-4"></i>
-            </button>
-            <div class="collapse d-sm-block" id="menuCollapse">
-                <ul class="nav flex-column align-items-start" id="menu">
-                    <li>
-                        <a href="#" class="nav-link px-0 align-middle" hidden="True">
-                            <i class="bi bi-speedometer2 fs-4"></i>
-                            <span class="ms-1">Dashboard</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'transaction-list' %}" class="nav-link px-0 align-middle">
-                            <i class="bi bi-arrow-down-left-square fs-4"></i>
-                            <span class="ms-1">Transações</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a id="newTransactionButton" class="nav-link px-0 align-middle" style="cursor: pointer;">
-                            <i class="bi bi-plus-square fs-4"></i>
-                            <span class="ms-1">Adicionar Transação</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        {% if user.is_authenticated %}
-                        <form action="{% url 'logout' %}" method="post" id="logout-form"
-                            class="nav-link px-0 align-middle">
-                            {% csrf_token %}
-                            <button type="submit"
-                                class="btn btn-link text-decoration-none text-reset nav-link px-0 align-middle">
-                                <i class="bi bi-box-arrow-right fs-4 align-middle"></i>
-                                <span class="ms-1 align-middle">Sair</span>
-                            </button>
-                        </form>
-                        {% endif %}
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
+<div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
+    <div class="offcanvas-md offcanvas-end bg-body-tertiary" tabindex="1" id="sidebarMenuLabel"
+        aria-labelledby="sidebarMenuLabel">
 
-    <div class="modal fade" id="ModalTransaction" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Nova Transação</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="transactionForm">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="sidebarMenuLabel">Sistema de Finanças</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenuLabel"
+                aria-label="Close"></button>
+        </div>
+
+        <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
+
+            <ul class="nav flex-column" id="menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link d-flex align-items-center gap-2" aria-current="page">
+                        <i class="bi bi-speedometer2 fs-4"></i>
+                        <span class="ms-1">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'transaction-list' %}" class="nav-link d-flex align-items-center gap-2">
+                        <i class="bi bi-arrow-down-left-square fs-4"></i>
+                        <span class="ms-1">Transações</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a id="newTransactionButton" class="nav-link d-flex align-items-center gap-2"
+                        style="cursor: pointer;">
+                        <i class="bi bi-plus-square fs-4"></i>
+                        <span class="ms-1">Adicionar Transação</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    {% if user.is_authenticated %}
+                    <form action="{% url 'logout' %}" method="post" id="logout-form">
                         {% csrf_token %}
-                        <div class="mb-4">
-                            <span>
-                                Valor: {{form.value}}
-                            </span>
-                        </div>
-                        <div class="mb-4">
-                            <span>
-                                Descrição: {{form.description}}
-                            </span>
-                        </div>
-                        <div class="mb-4">
-                            <span>
-                                Conta: {{form.account}}
-                                <a class="addaccountbutton text-decoration-none btn" data-bs-toggle="tooltip"
-                                    data-bs-placement="right" data-bs-custom-class="custom-tooltip"
-                                    data-bs-title="Clique aqui para criar uma nova conta">
-                                    <i class="bi bi-plus-circle"></i>
-                                </a>
-                            </span>
-                        </div>
-                        <div class="mb-4">
-                            <span>
-                                Categoria: {{form.category}}
-                                <a class=" addcategoriebutton text-decoration-none btn" data-bs-toggle="tooltip"
-                                    data-bs-placement="right" data-bs-custom-class="custom-tooltip"
-                                    data-bs-title="Clique aqui para criar uma nova categoria">
-                                    <i class="bi bi-plus-circle"></i>
-                                </a>
-                            </span>
-                        </div>
-                        <button type="submit" class="btn btn-success" id="saveTransaction">Salvar</button>
+                        <button type="submit" class="nav-link d-flex align-items-center gap-2 pt-2">
+                            <i class="bi bi-box-arrow-right fs-4 align-middle"></i>
+                            <span class="ms-1 align-middle">Sair</span>
+                        </button>
                     </form>
-                </div>
+                    {% endif %}
+                </li>
+            </ul>
+            <hr class="my-3">
+            <ul class="nav flex-column">
+                <li class="nav-item">Teste</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ModalTransaction" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Nova Transação</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="transactionForm">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <span>
+                            Valor: {{form.value}}
+                        </span>
+                    </div>
+                    <div class="mb-4">
+                        <span>
+                            Descrição: {{form.description}}
+                        </span>
+                    </div>
+                    <div class="mb-4">
+                        <span>
+                            Conta: {{form.account}}
+                            <a class="addaccountbutton text-decoration-none btn" data-bs-toggle="tooltip"
+                                data-bs-placement="right" data-bs-custom-class="custom-tooltip"
+                                data-bs-title="Clique aqui para criar uma nova conta">
+                                <i class="bi bi-plus-circle"></i>
+                            </a>
+                        </span>
+                    </div>
+                    <div class="mb-4">
+                        <span>
+                            Categoria: {{form.category}}
+                            <a class=" addcategoriebutton text-decoration-none btn" data-bs-toggle="tooltip"
+                                data-bs-placement="right" data-bs-custom-class="custom-tooltip"
+                                data-bs-title="Clique aqui para criar uma nova categoria">
+                                <i class="bi bi-plus-circle"></i>
+                            </a>
+                        </span>
+                    </div>
+                    <button type="submit" class="btn btn-success" id="saveTransaction">Salvar</button>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
 
-    <div class="modal fade" id="ModalCategorie" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Criar Nova Categoria</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="categorieForm">
-                        {% csrf_token %}
-                        {{form_categories.as_p}}
-                        <button type="submit" class="btn btn-success" id="saveCategorie">Salvar</button>
-                    </form>
-                </div>
+<div class="modal fade" id="ModalCategorie" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Criar Nova Categoria</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="categorieForm">
+                    {% csrf_token %}
+                    {{form_categories.as_p}}
+                    <button type="submit" class="btn btn-success" id="saveCategorie">Salvar</button>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="modal fade" id="ModalAccounts" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Criar Nova Conta</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="accountsForm">
-                        {% csrf_token %}
-                        {{form_accounts.as_p}}
-                        <button type="submit" class="btn btn-success" id="saveAccounts">Salvar</button>
-                    </form>
-                </div>
+<div class="modal fade" id="ModalAccounts" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Criar Nova Conta</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="accountsForm">
+                    {% csrf_token %}
+                    {{form_accounts.as_p}}
+                    <button type="submit" class="btn btn-success" id="saveAccounts">Salvar</button>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
 
 
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            document.querySelectorAll("#newTransactionButton").forEach(button => {
-                button.addEventListener("click", function () {
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll("#newTransactionButton").forEach(button => {
+            button.addEventListener("click", function () {
 
-                    new bootstrap.Modal(document.getElementById("ModalTransaction")).show();
-                });
+                new bootstrap.Modal(document.getElementById("ModalTransaction")).show();
             });
         });
-        document.getElementById("saveTransaction").addEventListener("click", function () {
-            let form = document.getElementById("transactionForm");
-            let formData = new FormData(form);
-            let jsonData = {};
+    });
+    document.getElementById("saveTransaction").addEventListener("click", function () {
+        let form = document.getElementById("transactionForm");
+        let formData = new FormData(form);
+        let jsonData = {};
 
-            formData.forEach((value, key) => jsonData[key] = value); // Converte FormData em JSON
+        formData.forEach((value, key) => jsonData[key] = value); // Converte FormData em JSON
 
-            fetch("{% url 'transaction-create' %}", {
-                method: "POST",
-                body: JSON.stringify(jsonData), // Envia os dados como JSON
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert("Transação salva com sucesso!");
-                        window.location.reload();  // Atualiza a página
-                    }
-                })
-                .catch(error => console.error("Erro:", error));
-        });
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            document.querySelectorAll(".addcategoriebutton").forEach(button => {
-                button.addEventListener("click", function () {
-
-                    modalCategorie = new bootstrap.Modal(document.getElementById("ModalCategorie"));
-                    modalCategorie.show();
-                });
-            });
-        });
-        document.getElementById("saveCategorie").addEventListener("click", function () {
-            let form = document.getElementById("categorieForm");
-            let formData = new FormData(form);
-            let jsonData = {};
-
-            formData.forEach((value, key) => jsonData[key] = value);
-
-            fetch("{% url 'categorie-create' %}", {
-                method: "POST",
-                body: JSON.stringify(jsonData),
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert("Categoria criada com sucesso");
-                        window.location.reload();
-                    }
-                })
-                .catch(error => console.error("Erro:", error));
+        fetch("{% url 'transaction-create' %}", {
+            method: "POST",
+            body: JSON.stringify(jsonData), // Envia os dados como JSON
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+            }
         })
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            document.querySelectorAll(".addaccountbutton").forEach(button => {
-                button.addEventListener("click", function () {
-
-                    new bootstrap.Modal(document.getElementById("ModalAccounts")).show();
-                });
-            });
-        });
-        document.getElementById("saveAccounts").addEventListener("click", function () {
-            let form = document.getElementById("accountsForm");
-            let formData = new FormData(form);
-            let jsonData = {};
-
-            formData.forEach((value, key) => jsonData[key] = value);
-
-            fetch("{% url 'account-create' %}", {
-                method: "POST",
-                body: JSON.stringify(jsonData),
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Transação salva com sucesso!");
+                    window.location.reload();  // Atualiza a página
                 }
             })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert("Conta criada com sucesso");
-                        window.location.reload();
-                    }
-                })
-                .catch(error => console.error("Erro:", error));
-        })
-    </script>
+            .catch(error => console.error("Erro:", error));
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".addcategoriebutton").forEach(button => {
+            button.addEventListener("click", function () {
 
-    <script>
-        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-    </script>
+                modalCategorie = new bootstrap.Modal(document.getElementById("ModalCategorie"));
+                modalCategorie.show();
+            });
+        });
+    });
+    document.getElementById("saveCategorie").addEventListener("click", function () {
+        let form = document.getElementById("categorieForm");
+        let formData = new FormData(form);
+        let jsonData = {};
+
+        formData.forEach((value, key) => jsonData[key] = value);
+
+        fetch("{% url 'categorie-create' %}", {
+            method: "POST",
+            body: JSON.stringify(jsonData),
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Categoria criada com sucesso");
+                    window.location.reload();
+                }
+            })
+            .catch(error => console.error("Erro:", error));
+    })
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".addaccountbutton").forEach(button => {
+            button.addEventListener("click", function () {
+
+                new bootstrap.Modal(document.getElementById("ModalAccounts")).show();
+            });
+        });
+    });
+    document.getElementById("saveAccounts").addEventListener("click", function () {
+        let form = document.getElementById("accountsForm");
+        let formData = new FormData(form);
+        let jsonData = {};
+
+        formData.forEach((value, key) => jsonData[key] = value);
+
+        fetch("{% url 'account-create' %}", {
+            method: "POST",
+            body: JSON.stringify(jsonData),
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Conta criada com sucesso");
+                    window.location.reload();
+                }
+            })
+            .catch(error => console.error("Erro:", error));
+    })
+</script>
+
+<script>
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+</script>

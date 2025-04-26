@@ -9,9 +9,9 @@ class AccountsAdmin(admin.ModelAdmin):
 
 class TransactionAdmin(admin.ModelAdmin):
     list_display = ['description', 'value',
-                    'category', 'created_at', 'updated_at',]
+                    'category', 'created_at', 'updated_at', 'user',]
     search_fields = ['category', 'value',
-                     'description', 'created_at', 'updated_at',]
+                     'description', 'created_at', 'updated_at', 'user',]
 
 
 class CategoriesAdmin(admin.ModelAdmin):

@@ -5,73 +5,79 @@
 
 {% block content %}
 
-<div class="table-responsive">
-    <table class="table table-sm table-bordered table-striped table-hover">
-        <thead>
-            <tr>
-                <th>Situação</th>
-                <th>Descrição</th>
-                <th>Categoria</th>
-                <th>Conta</th>
-                <th>Valor</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
+<main>
+    <div
+        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="text-center">Transações</h1>
+    </div>
 
-        <tbody class="table-group-divider">
-            {% for transaction in transactions %}
-            <tr id="transaction-row-{{ transaction.id }}">
-                <td></td>
-                <td>{{ transaction.description }}</td>
-                <td>{{ transaction.category }}</td>
-                <td>{{ transaction.account }}</td>
-                <td>{{ transaction.value }}</td>
-                <td>
-                    <button id="edit-btn" class="btn btn-primary btn-sm" data-id="{{ transaction.pk }}"
-                        data-category-name="{{ transaction.category.category }}">
-                        <i class="bi bi-pencil-square"></i>
-                    </button>
-                    <button class="btn btn-danger btn-sm delete-btn" data-id="{{transaction.pk}}" data-bs-toggle="modal"
-                        data-bs-target="#ModalDelete">
-                        <i class="bi bi-trash3"></i>
-                    </button>
-                </td>
-            </tr>
-            {% endfor %}
+    <div class="table-responsive small">
+        <table class="table table-sm table-bordered table-striped table-hover">
+            <thead class="text-center">
+                <tr>
+                    <th>Descrição</th>
+                    <th>Categoria</th>
+                    <th>Conta</th>
+                    <th>Valor</th>
+                    <th>Data de Criação</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
 
-        <tfoot class="table-group-divider">
-            <tr>
-                <td colspan="6">
-                    <nav aria-label="">
-                        <ul class="pagination pagination-sm justify-content-center">
-                            <li class="page-item"><a class="page-link">Página {{ page_obj.number }} de
-                                    {{page_obj.paginator.num_pages }}</a>
-                            </li>
-                            {% if page_obj.has_previous %}
-                            <li class="page-item"><a class="page-link"
-                                    href="?page={{ page_obj.previous_page_number }}">Anterior</a>
-                            </li>
-                            {% else %}
-                            <li class="page-item disabled"><a class="page-link" href="?page=1">Anterior</a>
-                            </li>
-                            {% endif %}
-                            {% if page_obj.has_next %}
-                            <li class="page-item"><a class="page-link"
-                                    href="?page={{ page_obj.next_page_number }}">Próxima</a>
-                            </li>
-                            {% else %}
-                            <li class="page-item disabled"><a class="page-link" href="#">Próxima</a>
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </nav>
-                </td>
-            </tr>
-        </tfoot>
+            <tbody class="table-group-divider text-center">
+                {% for transaction in transactions %}
+                <tr id="transaction-row-{{ transaction.id }}">
+                    <td>{{ transaction.description }}</td>
+                    <td>{{ transaction.category }}</td>
+                    <td>{{ transaction.account }}</td>
+                    <td>R$ {{ transaction.value|floatformat:"2g" }}</td>
+                    <td>{{ transaction.created_at|date:"SHORT_DATE_FORMAT"}}</td>
+                    <td>
+                        <button id="edit-btn" class="btn btn-primary btn-sm" data-id="{{ transaction.pk }}"
+                            data-category-name="{{ transaction.category.category }}">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm delete-btn" data-id="{{transaction.pk}}"
+                            data-bs-toggle="modal" data-bs-target="#ModalDelete">
+                            <i class="bi bi-trash3"></i>
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
 
-        </tbody>
-    </table>
-</div>
+            <tfoot class="table-group-divider">
+                <tr>
+                    <td colspan="6">
+                        <nav aria-label="">
+                            <ul class="pagination pagination-sm justify-content-center">
+                                <li class="page-item"><a class="page-link">Página {{ page_obj.number }} de
+                                        {{page_obj.paginator.num_pages }}</a>
+                                </li>
+                                {% if page_obj.has_previous %}
+                                <li class="page-item"><a class="page-link"
+                                        href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                                </li>
+                                {% else %}
+                                <li class="page-item disabled"><a class="page-link" href="?page=1">Anterior</a>
+                                </li>
+                                {% endif %}
+                                {% if page_obj.has_next %}
+                                <li class="page-item"><a class="page-link"
+                                        href="?page={{ page_obj.next_page_number }}">Próxima</a>
+                                </li>
+                                {% else %}
+                                <li class="page-item disabled"><a class="page-link" href="#">Próxima</a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</main>
 
 <!-- Modal de edicao -->
 <div class="modal fade" id="ModalChange" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -144,6 +150,7 @@
         </div>
     </div>
 </div>
+{% endblock %}
 
 
 <script>
@@ -241,8 +248,3 @@
         }
     });
 </script>
-
-
-
-
-{% endblock %}

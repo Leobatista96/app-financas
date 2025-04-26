@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-a2@bd6298lt(d$hg*p7^l3f)xxk19^!=o*j)qnubbcg&z%q=r7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['financas.leonardobatista96.com.br', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['localhost', 'financas.leonardobatista96.com.br',
+                 '127.0.0.1',]
 
 
 # Application definition
@@ -84,21 +85,28 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": config("POSTGRESDB"),
-        "USER": config("POSTGRESUSER"),
-        "PASSWORD": config("POSTGRESPASSWORD"),
-        "HOST": "financas_db",
-        "PORT": "5432",
-    },
+DJANGO_ENV = config('DJANGO_ENV')
 
-    'dev': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DJANGO_ENV == 'production':
+
+    DATABASES = {
+        'default': {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": config("POSTGRESDB"),
+            "USER": config("POSTGRESUSER"),
+            "PASSWORD": config("POSTGRESPASSWORD"),
+            "HOST": "financas_db",
+            "PORT": "5432",
+        }
     }
-}
+
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
