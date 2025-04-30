@@ -12,7 +12,7 @@ class EvolutionAPI:
         self.number = config('NUMBER')
         self.evolution_api_key = config('EVOLUTION_API_KEY')
 
-    def send_whatsapp_message(self, message):
+    def send_whatsapp_message(self, message, number):
 
         headers = {
             "apikey": self.evolution_api_key,
@@ -20,7 +20,7 @@ class EvolutionAPI:
         }
 
         payload = {
-            "number": self.number,
+            "number": f'55{number}',
             "text": message,
         }
 

@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'django_celery_results',
+    'django_celery_beat',
+
     'finances',
 ]
 
@@ -153,3 +156,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_TRUSTED_ORIGINS = [
     "https://financas.leonardobatista96.com.br",
 ]
+
+
+CELERY_TIMEZONE = 'America/Sao_Paulo'
+
+CELERY_BROKER_URL = 'amqp://'
+
+CELERY_RESULT_BACKEND = 'django-db'
