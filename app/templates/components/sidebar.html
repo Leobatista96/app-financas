@@ -12,19 +12,19 @@
 
             <ul class="nav flex-column" id="menu">
                 <li class="nav-item">
-                    <a href="#" class="nav-link d-flex align-items-center gap-2" aria-current="page">
+                    <a href="#" class="nav-link d-flex align-items-center gap-1 text-black" aria-current="page">
                         <i class="bi bi-speedometer2 fs-4"></i>
                         <span class="ms-1">Dashboard</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{% url 'transaction-list' %}" class="nav-link d-flex align-items-center gap-2">
+                    <a href="{% url 'transaction-list' %}" class="nav-link d-flex align-items-center gap-1 text-black">
                         <i class="bi bi-arrow-down-left-square fs-4"></i>
                         <span class="ms-1">Transações</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a id="newTransactionButton" class="nav-link d-flex align-items-center gap-2"
+                    <a id="newTransactionButton" class="nav-link d-flex align-items-center gap-1 text-black"
                         style="cursor: pointer;">
                         <i class="bi bi-plus-square fs-4"></i>
                         <span class="ms-1">Adicionar Transação</span>
@@ -34,18 +34,15 @@
                     {% if user.is_authenticated %}
                     <form action="{% url 'logout' %}" method="post" id="logout-form">
                         {% csrf_token %}
-                        <button type="submit" class="nav-link d-flex align-items-center gap-2 pt-2">
-                            <i class="bi bi-box-arrow-right fs-4 align-middle"></i>
-                            <span class="ms-1 align-middle">Sair</span>
+                        <button type="submit" class="nav-link d-flex align-items-center gap-1 text-black">
+                            <i class="bi bi-box-arrow-right fs-4"></i>
+                            <span class="ms-1">Sair</span>
                         </button>
                     </form>
                     {% endif %}
                 </li>
             </ul>
             <hr class="my-3">
-            <ul class="nav flex-column">
-                <li class="nav-item">Teste</li>
-            </ul>
         </div>
     </div>
 </div>

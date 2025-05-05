@@ -163,3 +163,5 @@ CELERY_TIMEZONE = 'America/Sao_Paulo'
 CELERY_BROKER_URL = 'amqp://'
 
 CELERY_RESULT_BACKEND = 'django-db'
+
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
