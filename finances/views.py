@@ -9,6 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from finances.models import Transaction, Categorie, Account
 from finances.forms import TransactionModelForm, CategorieModelForm, AccountModelForm
+from app import metrics
 
 # Create your views here.
 
@@ -94,7 +95,8 @@ class TransactionDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy()
 
     def delete(self, request, *args, **kwargs):
-        transaction = get_object_or_404(Transaction, pk=self.kwargs['pk'], user=self.request.user)
+        transaction = get_object_or_404(
+            Transaction, pk=self.kwargs['pk'], user=self.request.user)
         transaction.delete()
 
         return JsonResponse({"success": "True"})
@@ -135,3 +137,25 @@ class AccountCreateView(CreateView):
             return JsonResponse({"success": False, "errors": form.errors}, status=400)
         except json.JSONDecodeError:
             return JsonResponse({"success": False, "errors": "JSON inválido"}, status=400)
+
+
+class DashboardListView(LoginRequiredMixin, ListView):
+    model = Transaction
+    template_name = 'dashboard.html'
+    context_object_name = 'transactions'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+    def sum_values(self):
+        transactions = Transaction.objects.all()
+        total_value = sum(transaction.value for transaction in transactions)
+        return total_value
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = TransactionModelForm()
+        context["form_categories"] = CategorieModelForm()
+        context["form_accounts"] = AccountModelForm()
+        context["transactions_metrics"] = metrics.get_transactions_value()
+        return context

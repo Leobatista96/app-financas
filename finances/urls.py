@@ -1,6 +1,6 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from finances.views import TransactionListView, TransactionCreateView, TransactionUpdateView, TransactionDeleteView, CategorieCreateView, AccountCreateView
+from finances.views import TransactionListView, TransactionCreateView, TransactionUpdateView, TransactionDeleteView, CategorieCreateView, AccountCreateView, DashboardListView
 
 
 urlpatterns = [
@@ -15,4 +15,5 @@ urlpatterns = [
     path('new_categorie/', CategorieCreateView.as_view(), name='categorie-create'),
 
     path('new_account/', AccountCreateView.as_view(), name='account-create'),
+    path('dashboard/', DashboardListView.as_view(), name='dashboard-list'),
 ]

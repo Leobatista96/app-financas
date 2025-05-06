@@ -33,7 +33,7 @@
                     <td>{{ transaction.due_date|date:"SHORT_DATE_FORMAT"}}</td>
                     <td>
                         <button id="edit-btn" class="btn btn-primary btn-sm" data-id="{{ transaction.pk }}"
-                            data-category-name="{{ transaction.category.category }}">
+                            data-category-name="{{ transaction.category.category }}" data-bs-target="#ModalChange">
                             <i class="bi bi-pencil-square"></i>
                         </button>
                         <button class="btn btn-danger btn-sm delete-btn" data-id="{{transaction.pk}}"
@@ -149,7 +149,7 @@
         </div>
     </div>
 </div>
-{% endblock %}
+
 
 
 <script>
@@ -247,3 +247,4 @@
         }
     });
 </script>
+{% endblock %}
