@@ -28,6 +28,7 @@ class TransactionListView(LoginRequiredMixin, ListView):
         context["form"] = TransactionModelForm()
         context["form_categories"] = CategorieModelForm()
         context["form_accounts"] = AccountModelForm()
+        context["transactions_metrics"] = metrics.get_transactions_value()
         return context
 
 
@@ -71,6 +72,7 @@ class TransactionUpdateView(LoginRequiredMixin, UpdateView):
             "category_name": transaction.category.category,
             "account_id": transaction.account.id,
             "account_name": transaction.account.name,
+            "due_date": transaction.due_date,
             "value": transaction.value,
             "created_at": transaction.created_at.strftime('%Y-%m-%d'),
         })
@@ -83,11 +85,12 @@ class TransactionUpdateView(LoginRequiredMixin, UpdateView):
             "description", transaction.description)
         transaction.category_id = data.get("category", transaction.category.id)
         transaction.account_id = data.get("account", transaction.account.id)
+        transaction.due_date = data.get("due_date", transaction.due_date)
         transaction.value = data.get("value", transaction.value)
 
         transaction.save()
 
-        return JsonResponse({"message": "Transacao atualizada com sucesso"})
+        return JsonResponse({"message": "Transação atualizada com sucesso"})
 
 
 class TransactionDeleteView(LoginRequiredMixin, DeleteView):

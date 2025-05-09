@@ -13,22 +13,24 @@
 <body>
   {% include "components/header.html" %}
 
-  <div class="container-fluid">
-    <div class="row min-vh-100 ">
-      {% if user.is_authenticated %}
-      {% include "components/sidebar.html" %}
-      {% endif %}
-      <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-        {% block content %}
+  <main>
+    <div class="container-fluid">
+      <div class="row min-vh-100 ">
+        {% if user.is_authenticated %}
+        {% include "components/sidebar.html" %}
+        {% endif %}
+        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+          {% block content %}
 
-        {% endblock %}
+          {% endblock %}
+
+          {% include 'components/footer.html' %}
+        </div>
 
       </div>
 
-
     </div>
-
-  </div>
+  </main>
 
 </body>
 

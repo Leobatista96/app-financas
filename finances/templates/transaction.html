@@ -5,246 +5,130 @@
 
 {% block content %}
 
-<main>
-    <div class="d-flex justify-content-center flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1>Transações</h1>
-    </div>
+<div class="flex-md-nowrap align-items-center pt-3 pb-2 mb-3 ">
 
-    <div class="table-responsive small">
-        <table class="table table-sm table-bordered table-striped table-hover">
-            <thead class="text-center">
-                <tr>
-                    <th>Descrição</th>
-                    <th>Categoria</th>
-                    <th>Conta</th>
-                    <th>Valor</th>
-                    <th>Data de Vencimento</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
+    <div class="row justify-content-between">
 
-            <tbody class="table-group-divider text-center">
-                {% for transaction in transactions %}
-                <tr id="transaction-row-{{ transaction.id }}">
-                    <td>{{ transaction.description }}</td>
-                    <td>{{ transaction.category }}</td>
-                    <td>{{ transaction.account }}</td>
-                    <td>R$ {{ transaction.value|floatformat:"2g" }}</td>
-                    <td>{{ transaction.due_date|date:"SHORT_DATE_FORMAT"}}</td>
-                    <td>
-                        <button id="edit-btn" class="btn btn-primary btn-sm" data-id="{{ transaction.pk }}"
-                            data-category-name="{{ transaction.category.category }}" data-bs-target="#ModalChange">
-                            <i class="bi bi-pencil-square"></i>
-                        </button>
-                        <button class="btn btn-danger btn-sm delete-btn" data-id="{{transaction.pk}}"
-                            data-bs-toggle="modal" data-bs-target="#ModalDelete">
-                            <i class="bi bi-trash3"></i>
-                        </button>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-
-            <tfoot class="table-group-divider">
-                <tr>
-                    <td colspan="6">
-                        <nav aria-label="">
-                            <ul class="pagination pagination-sm justify-content-center">
-                                <li class="page-item"><a class="page-link">Página {{ page_obj.number }} de
-                                        {{page_obj.paginator.num_pages }}</a>
-                                </li>
-                                {% if page_obj.has_previous %}
-                                <li class="page-item"><a class="page-link"
-                                        href="?page={{ page_obj.previous_page_number }}">Anterior</a>
-                                </li>
-                                {% else %}
-                                <li class="page-item disabled"><a class="page-link" href="?page=1">Anterior</a>
-                                </li>
-                                {% endif %}
-                                {% if page_obj.has_next %}
-                                <li class="page-item"><a class="page-link"
-                                        href="?page={{ page_obj.next_page_number }}">Próxima</a>
-                                </li>
-                                {% else %}
-                                <li class="page-item disabled"><a class="page-link" href="#">Próxima</a>
-                                </li>
-                                {% endif %}
-                            </ul>
-                        </nav>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
-</main>
-
-<!-- Modal de edicao -->
-<div class="modal fade" id="ModalChange" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Atualizar Transação</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="editForm" method="POST">
-                    <input type="hidden" id="transactionId">
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Descrição</label>
-                        <input type="text" class="form-control" id="description">
-                    </div>
-                    <div class="mb-3" hidden="false">
-                        <label for="category_id" class="form-label">ID da Categoria</label>
-                        <input class="form-control" id="category_id" disabled>
-                    </div>
-                    <div class="mb-3">
-                        <label for="category_name" class="form-label">Nome da Categoria</label>
-                        <input class="form-control" id="category_name">
-                    </div>
-                    <div class="mb-3" hidden="false">
-                        <label for="account_id" class="form-label">ID da Conta</label>
-                        <input type="text" class="form-control" id="account_id" disabled>
-                    </div>
-                    <div class="mb-3">
-                        <label for="account_name" class="form-label">Nome da Conta</label>
-                        <input type="text" class="form-control" id="account_name">
-                    </div>
-                    <div class="mb-3">
-                        <label for="value" class="form-label">Valor</label>
-                        <input type="number" step="0.01" class="form-control" id="value">
-                    </div>
-                    <div class="mb-3" hidden="false">
-                        <label for="created_at" class="form-label">Data</label>
-                        <input type="date" class="form-control" id="created_at" disabled>
-                    </div>
-
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" id="saveChanges">Salvar</button>
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal de exclusao-->
-<div class="modal fade" id="ModalDelete" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Exclusao de Item</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <span class="form-label">Deseja realmente excluir o registro?</span>
+        <div class="col-3">
+            <div class="card text-center text-bg-info rounded-5">
+                <div class="card-body">
+                    <h4 class="card-title">Saldo</h4>
+                    <p class="card-text">R$ {{transactions_metrics.balance}}</p>
+                    <!-- <a href="#" class="btn btn-primary">
+                        <i class="bi bi-bank"></i>
+                    </a> -->
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" id="confirmDelete">Excluir</button>
+        </div>
+
+        <div class="col-3">
+            <div class="card text-center text-bg-secondary rounded-5">
+                <div class="card-body">
+                    <h4 class="card-title">Total</h4>
+                    <p class="card-text">R$ {{transactions_metrics.total_transactions_value}}</p>
+                    <!-- <a href="#" class="btn btn-primary">
+                        <i class="bi bi-bank"></i>
+                    </a> -->
+                </div>
             </div>
         </div>
+
+        <div class="col-3">
+            <div class="card text-center text-bg-success rounded-5">
+                <div class="card-body">
+                    <h4 class="card-title">Receitas</h4>
+                    <p class="card-text">R$ {{ transactions_metrics.total_categories_revenue }}</p>
+                    <!-- <a href="#" class="btn btn-success">
+                        <i class="bi bi-arrow-up"></i>
+                    </a> -->
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="card text-center text-bg-danger rounded-5">
+                <div class="card-body">
+                    <h4 class="card-title">Despesas</h4>
+                    <p class="card-text">R$ {{ transactions_metrics.total_categories_expense }}</p>
+                    <!-- <a href="#" class="btn btn-danger">
+                        <i class="bi bi-arrow-down"></i>
+                    </a> -->
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
+<div class="table-responsive small">
+    <table class="table table-sm table-bordered table-striped table-hover">
+        <thead class="text-center">
+            <tr>
+                <th>Descrição</th>
+                <th>Categoria</th>
+                <th>Conta</th>
+                <th>Valor</th>
+                <th>Data de Vencimento</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+
+        <tbody class="table-group-divider text-center">
+            {% for transaction in transactions %}
+            <tr id="transaction-row-{{ transaction.id }}">
+                <td>{{ transaction.description }}</td>
+                <td>{{ transaction.category }}</td>
+                <td>{{ transaction.account }}</td>
+                <td>R$ {{ transaction.value|floatformat:"2g" }}</td>
+                <td>{{ transaction.due_date|date:"SHORT_DATE_FORMAT"}}</td>
+                <td>
+                    <button id="edit-btn" class="btn btn-primary btn-sm" data-id="{{ transaction.pk }}"
+                        data-category-name="{{ transaction.category.category }}" data-bs-target="#ModalChange">
+                        <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <button class="btn btn-danger btn-sm delete-btn" data-id="{{transaction.pk}}" data-bs-toggle="modal"
+                        data-bs-target="#ModalDelete">
+                        <i class="bi bi-trash3"></i>
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+        <tfoot class="table-group-divider">
+            <tr>
+                <td colspan="6">
+                    <nav aria-label="">
+                        <ul class="pagination pagination-sm justify-content-center">
+                            <li class="page-item"><a class="page-link">Página {{ page_obj.number }} de
+                                    {{page_obj.paginator.num_pages }}</a>
+                            </li>
+                            {% if page_obj.has_previous %}
+                            <li class="page-item"><a class="page-link"
+                                    href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled"><a class="page-link" href="?page=1">Anterior</a>
+                            </li>
+                            {% endif %}
+                            {% if page_obj.has_next %}
+                            <li class="page-item"><a class="page-link"
+                                    href="?page={{ page_obj.next_page_number }}">Próxima</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled"><a class="page-link" href="#">Próxima</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
 
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll("#edit-btn").forEach(button => {
-            button.addEventListener("click", function () {
-                const transactionId = this.getAttribute("data-id");
+{% include 'components/partials/modal_delete.html' %}
+{% include 'components/partials/modal_edit.html' %}
 
-                fetch(`/transactions/${transactionId}/update/`)
-                    .then(response => response.json())
-                    .then(data => {
-                        document.getElementById("transactionId").value = data.id;
-                        document.getElementById("description").value = data.description;
-                        document.getElementById("category_id").value = data.category_id;
-                        document.getElementById("category_name").value = data.category_name;
-                        document.getElementById("account_id").value = data.account_id;
-                        document.getElementById("account_name").value = data.account_name;
-                        document.getElementById("value").value = data.value;
-                        document.getElementById("created_at").value = data.created_at;
-
-                        new bootstrap.Modal(document.getElementById("ModalChange")).show();
-                    });
-            });
-        });
-
-        document.getElementById("saveChanges").addEventListener("click", function () {
-            const transactionId = document.getElementById("transactionId").value;
-            const description = document.getElementById("description").value;
-            const category_id = document.getElementById("category_id").value;
-            const category_name = document.getElementById("category_name").value;
-            const account_id = document.getElementById("account_id").value;
-            const account_name = document.getElementById("account_name").value;
-            const value = document.getElementById("value").value;
-
-            fetch(`/transactions/${transactionId}/update/`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
-                },
-                body: JSON.stringify({
-                    description: description,
-                    category_id: category_id,
-                    account: account_id,
-                    value: value,
-                })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    alert("Transação atualizada com sucesso!");
-                    location.reload();
-                });
-        });
-    });
-
-    // document.addEventListener("DOMContentLoaded", function () {
-    //     document.querySelectorAll("#delete-btn").forEach(button => {
-    //         button.addEventListener("click", function () {
-    //             const transactionId = this.getAttribute("data-id");
-
-    //             new bootstrap.Modal(document.getElementById("ModalDelete")).show();
-    //         });
-    //     });
-    // });
-
-    let transactionIdToDelete = null;
-
-    document.querySelectorAll(".delete-btn").forEach(button => {
-        button.addEventListener("click", function () {
-            transactionIdToDelete = this.getAttribute("data-id");
-        });
-    });
-
-    document.getElementById("confirmDelete").addEventListener("click", function () {
-        if (transactionIdToDelete) {
-            fetch(`/transaction/${transactionIdToDelete}/delete/`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        document.getElementById(`transaction-row-${transactionIdToDelete}`).remove();
-                    } else {
-                        alert("Erro ao excluir a transação.");
-                    }
-                    transactionIdToDelete = null;
-                    let modal = bootstrap.Modal.getInstance(document.getElementById("deleteModal"));
-                    location.reload();
-                })
-            // .catch(error => console.error("Erro:", error));
-        }
-    });
-</script>
 {% endblock %}

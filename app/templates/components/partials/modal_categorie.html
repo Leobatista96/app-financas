@@ -1,0 +1,59 @@
+<div class="modal fade" id="ModalCategorie" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Criar Nova Categoria</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="categorieForm">
+                    {% csrf_token %}
+                    {{form_categories.as_p}}
+                    <button type="submit" class="btn btn-success" id="saveCategorie">Salvar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".addcategoriebutton").forEach(button => {
+            button.addEventListener("click", function () {
+
+                modalCategorie = new bootstrap.Modal(document.getElementById("ModalCategorie"));
+                modalCategorie.show();
+            });
+        });
+    });
+    document.getElementById("saveCategorie").addEventListener("click", function () {
+        let form = document.getElementById("categorieForm");
+        let formData = new FormData(form);
+        let jsonData = {};
+
+        formData.forEach((value, key) => jsonData[key] = value);
+
+        fetch("{% url 'categorie-create' %}", {
+            method: "POST",
+            body: JSON.stringify(jsonData),
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Categoria criada com sucesso");
+                    window.location.reload();
+                }
+            })
+            .catch(error => console.error("Erro:", error));
+    })
+</script>
+
+<script>
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+</script>
