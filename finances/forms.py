@@ -3,6 +3,10 @@ from finances.models import Transaction, Categorie, Account
 
 
 class TransactionModelForm(forms.ModelForm):
+
+    due_date = forms.DateField(
+        widget=forms.SelectDateWidget, required=True)
+
     class Meta:
         model = Transaction
         fields = '__all__'

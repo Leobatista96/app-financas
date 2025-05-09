@@ -23,7 +23,13 @@
 
                     <div class="mb-3">
                         <label for="category_name" class="form-label">Nome da Categoria</label>
-                        <input class="form-control" id="category_name">
+                        <select name="category_select" id="category_name" class="form-select">
+                            {% for categorie in categories %}
+                            <option>
+                                {{ categorie.category }}
+                            </option>
+                            {% endfor %}
+                        </select>
                     </div>
 
                     <div class="mb-3" hidden="false">
@@ -33,12 +39,18 @@
 
                     <div class="mb-3">
                         <label for="account_name" class="form-label">Nome da Conta</label>
-                        <input type="text" class="form-control" id="account_name">
+                        <select name="account_select" id="account_name" class="form-select">
+                            {% for account in accounts %}
+                            <option>
+                                {{ account.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
                     </div>
 
                     <div class="mb-3">
                         <label for="account_name" class="form-label">Data de Vencimento</label>
-                        <input type="text" class="form-control" id="due_date">
+                        <input type="date" class="form-control" id="due_date">
                     </div>
 
                     <div class="mb-3">
