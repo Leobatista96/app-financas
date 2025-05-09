@@ -1,0 +1,53 @@
+<!-- Modal de exclusao-->
+<div class="modal fade" id="ModalDelete" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Exclusao de Item</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <span class="form-label">Deseja realmente excluir o registro?</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="confirmDelete">Excluir</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let transactionIdToDelete = null;
+
+    document.querySelectorAll(".delete-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            transactionIdToDelete = this.getAttribute("data-id");
+        });
+    });
+
+    document.getElementById("confirmDelete").addEventListener("click", function () {
+        if (transactionIdToDelete) {
+            fetch(`/transaction/${transactionIdToDelete}/delete/`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById(`transaction-row-${transactionIdToDelete}`).remove();
+                    } else {
+                        alert("Erro ao excluir a transação.");
+                    }
+                    transactionIdToDelete = null;
+                    let modal = bootstrap.Modal.getInstance(document.getElementById("deleteModal"));
+                    location.reload();
+                })
+        }
+    });
+</script>

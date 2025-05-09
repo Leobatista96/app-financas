@@ -1,0 +1,119 @@
+<!-- Modal de edicao -->
+<div class="modal fade" id="ModalChange" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Atualizar Transação</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm" method="POST">
+                    <input type="hidden" id="transactionId">
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Descrição</label>
+                        <input type="text" class="form-control" id="description">
+                    </div>
+
+                    <div class="mb-3" hidden="false">
+                        <label for="category_id" class="form-label">ID da Categoria</label>
+                        <input class="form-control" id="category_id" disabled>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="category_name" class="form-label">Nome da Categoria</label>
+                        <input class="form-control" id="category_name">
+                    </div>
+
+                    <div class="mb-3" hidden="false">
+                        <label for="account_id" class="form-label">ID da Conta</label>
+                        <input type="text" class="form-control" id="account_id" disabled>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="account_name" class="form-label">Nome da Conta</label>
+                        <input type="text" class="form-control" id="account_name">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="account_name" class="form-label">Data de Vencimento</label>
+                        <input type="text" class="form-control" id="due_date">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="value" class="form-label">Valor</label>
+                        <input type="number" step="0.01" class="form-control" id="value">
+                    </div>
+
+                    <div class="mb-3" hidden="false">
+                        <label for="created_at" class="form-label">Data</label>
+                        <input type="date" class="form-control" id="created_at" disabled>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="saveChanges">Salvar</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll("#edit-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                const transactionId = this.getAttribute("data-id");
+
+                fetch(`/transactions/${transactionId}/update/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById("transactionId").value = data.id;
+                        document.getElementById("description").value = data.description;
+                        document.getElementById("category_id").value = data.category_id;
+                        document.getElementById("category_name").value = data.category_name;
+                        document.getElementById("due_date").value = data.due_date;
+                        document.getElementById("account_id").value = data.account_id;
+                        document.getElementById("account_name").value = data.account_name;
+                        document.getElementById("value").value = data.value;
+                        document.getElementById("created_at").value = data.created_at;
+
+                        new bootstrap.Modal(document.getElementById("ModalChange")).show();
+                    });
+            });
+        });
+
+        document.getElementById("saveChanges").addEventListener("click", function () {
+            const transactionId = document.getElementById("transactionId").value;
+            const description = document.getElementById("description").value;
+            const category_id = document.getElementById("category_id").value;
+            const category_name = document.getElementById("category_name").value;
+            const due_date = document.getElementById("due_date").value;
+            const account_id = document.getElementById("account_id").value;
+            const account_name = document.getElementById("account_name").value;
+            const value = document.getElementById("value").value;
+
+            fetch(`/transactions/${transactionId}/update/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                },
+                body: JSON.stringify({
+                    description: description,
+                    category_id: category_id,
+                    account: account_id,
+                    due_date: due_date,
+                    value: value,
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert("Transação atualizada com sucesso!");
+                    location.reload();
+                });
+        });
+    });
+</script>
