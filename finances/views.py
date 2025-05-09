@@ -29,6 +29,8 @@ class TransactionListView(LoginRequiredMixin, ListView):
         context["form_categories"] = CategorieModelForm()
         context["form_accounts"] = AccountModelForm()
         context["transactions_metrics"] = metrics.get_transactions_value()
+        context["categories"] = Categorie.objects.all()
+        context["accounts"] = Account.objects.all()
         return context
 
 

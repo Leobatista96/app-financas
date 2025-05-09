@@ -64,7 +64,7 @@ class Transaction(models.Model):
     updated_at = models.DateTimeField(
         auto_now=True, verbose_name='Última Atualização')
     due_date = models.DateField(
-        verbose_name='Data de Vencimento', blank=True, null=True)
+        verbose_name='Data de Vencimento')
     account = models.ForeignKey(Account, on_delete=models.PROTECT,
                                 related_name='transaction_accounts', verbose_name='Conta')
     category = models.ForeignKey(Categorie, on_delete=models.PROTECT,
