@@ -20,6 +20,8 @@ class Profile(models.Model):
 
 
 class Account(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.PROTECT, related_name='user_account', verbose_name='Usuário')
     name = models.CharField(max_length=100, unique=True,
                             verbose_name='Nome da Conta')
     created_at = models.DateTimeField(
@@ -37,6 +39,8 @@ class Account(models.Model):
 
 
 class Categorie(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.PROTECT, related_name='user_categorie', verbose_name='Usuário')
     category = models.CharField(
         max_length=100, unique=True, verbose_name='Categoria')
     created_at = models.DateTimeField(

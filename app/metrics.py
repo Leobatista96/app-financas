@@ -2,18 +2,15 @@ from django.db.models import Sum, Count
 from finances.models import Transaction
 
 
-def get_transactions_value():
-    total_transactions_values = Transaction.objects.all(
-    ).aggregate(Sum("value"))['value__sum']
-
-    check_category_is_none = Transaction.objects.aggregate(
-        Count('category'))['category__count']
+def get_transactions_value(user):
+    total_transactions_values = Transaction.objects.filter(
+        user=user).aggregate(Sum("value"))['value__sum']
 
     total_categories_revenues = Transaction.objects.filter(
-        category__category__icontains='Receita').aggregate(Sum('value'))['value__sum']
+        category__category__icontains='Receita', user=user).aggregate(Sum('value'))['value__sum']
 
     total_categories_expenses = Transaction.objects.filter(
-        category__category__icontains='Despesa').aggregate(Sum('value'))['value__sum']
+        category__category__icontains='Despesa', user=user).aggregate(Sum('value'))['value__sum']
 
     if total_categories_revenues is None:
         total_categories_revenues = 0
