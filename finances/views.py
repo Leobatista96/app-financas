@@ -2,9 +2,6 @@ import json
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.db.models import Sum
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from finances.models import Transaction, Categorie, Account
@@ -28,9 +25,11 @@ class TransactionListView(LoginRequiredMixin, ListView):
         context["form"] = TransactionModelForm()
         context["form_categories"] = CategorieModelForm()
         context["form_accounts"] = AccountModelForm()
-        context["transactions_metrics"] = metrics.get_transactions_value()
-        context["categories"] = Categorie.objects.all()
-        context["accounts"] = Account.objects.all()
+        context["transactions_metrics"] = metrics.get_transactions_value(
+            user=self.request.user)
+        context["categories"] = Categorie.objects.filter(
+            user=self.request.user)
+        context["accounts"] = Account.objects.filter(user=self.request.user)
         return context
 
 

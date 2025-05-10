@@ -11,6 +11,12 @@ class ProfileAdmin(admin.ModelAdmin):
 class AccountsAdmin(admin.ModelAdmin):
     list_display = ['name', 'created_at', 'updated_at',]
     search_fields = ['name', 'created_at', 'updated_at', ]
+    exclude = ['user',]
+
+    def save_model(self, request, obj, form, change):
+        if not obj.user_id:
+            obj.user = request.user
+        super().save_model(request, obj, form, change)
 
 
 class TransactionAdmin(admin.ModelAdmin):
@@ -29,6 +35,12 @@ class TransactionAdmin(admin.ModelAdmin):
 class CategoriesAdmin(admin.ModelAdmin):
     list_display = ['category', 'created_at', 'updated_at',]
     search_fields = ['category', 'created_at', 'updated_at',]
+    exclude = ['user',]
+
+    def save_model(self, request, obj, form, change):
+        if not obj.user_id:
+            obj.user = request.user
+        super().save_model(request, obj, form, change)
 
 
 admin.site.register(Account, AccountsAdmin)
