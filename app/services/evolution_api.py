@@ -7,7 +7,7 @@ class EvolutionAPI:
 
     def __init__(self):
         self.evolution_api_url = config('EVOLUTION_API_URL')
-        self.instance = config('INSTANCE_ID')
+        self.instance = config('INSTANCE_NAME')
         self.send_message_url = f'{self.evolution_api_url}/message/sendText/{self.instance}'
         self.number = config('NUMBER')
         self.evolution_api_key = config('EVOLUTION_API_KEY')
