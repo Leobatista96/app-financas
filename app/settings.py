@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-a2@bd6298lt(d$hg*p7^l3f)xxk19^!=o*j)qnubbcg&z%q=r7
 DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', 'financas.leonardobatista96.com.br',
-                 '127.0.0.1',]
+                 '127.0.0.1', '0.0.0.0']
 
 
 # Application definition
@@ -146,7 +146,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'app' / 'static',
+]
+
+# Media files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -160,10 +169,15 @@ CSRF_TRUSTED_ORIGINS = [
 
 CELERY_TIMEZONE = 'America/Sao_Paulo'
 
-RABBITMQUSER = config('RABBITMQUSER')
-RABBITMQPASS = config('RABBITMQPASSWORD')
+# Configuração do RabbitMQ para Celery
+RABBITMQUSER = config('RABBITMQUSER', default='guest')
+RABBITMQPASS = config('RABBITMQPASSWORD', default='guest')
 
-CELERY_BROKER_URL = f'amqp://{RABBITMQUSER}:{RABBITMQPASS}@rabbitmq:5672//'
+# Para desenvolvimento local, usar localhost; para produção, usar nome do container
+if DJANGO_ENV == 'production':
+    CELERY_BROKER_URL = f'amqp://{RABBITMQUSER}:{RABBITMQPASS}@rabbitmq:5672//'
+else:
+    CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 
 CELERY_RESULT_BACKEND = 'django-db'
 

@@ -15,7 +15,7 @@ class TransactionListView(LoginRequiredMixin, ListView):
     model = Transaction
     template_name = 'transaction.html'
     context_object_name = 'transactions'
-    paginate_by = 10
+    paginate_by = 7
 
     def get_queryset(self):
         return Transaction.objects.filter(user=self.request.user).order_by('-created_at')
@@ -161,5 +161,6 @@ class DashboardListView(LoginRequiredMixin, ListView):
         context["form"] = TransactionModelForm()
         context["form_categories"] = CategorieModelForm()
         context["form_accounts"] = AccountModelForm()
-        context["transactions_metrics"] = metrics.get_transactions_value()
+        context["transactions_metrics"] = metrics.get_transactions_value(
+            user=self.request.user)
         return context

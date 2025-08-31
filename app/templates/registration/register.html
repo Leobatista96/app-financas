@@ -1,27 +1,363 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Criar Conta - {{ block.super }}{% endblock %}
+
+{% block extra_head %}
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+    /* Ocultar header, sidebar e footer para páginas de autenticação */
+    header, .sidebar, footer {
+        display: none !important;
+    }
+    
+    /* Remover margens e paddings do layout principal */
+    .main-content {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .container-fluid {
+        padding: 0 !important;
+        max-width: none !important;
+    }
+    
+    .row {
+        margin: 0 !important;
+    }
+    
+    .col-md-9, .col-lg-10 {
+        padding: 0 !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+    
+    /* Estilos da página de autenticação */
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', sans-serif;
+        overflow-x: hidden;
+    }
+    
+    .auth-page-wrapper {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        position: relative;
+    }
+    
+    .auth-page-wrapper::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+            radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+        z-index: 1;
+    }
+    
+    .auth-card-container {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 500px;
+    }
+    
+    .auth-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 
+            0 25px 50px rgba(0, 0, 0, 0.1),
+            0 0 0 1px rgba(255, 255, 255, 0.05);
+        overflow: hidden;
+    }
+    
+    .auth-card-body {
+        padding: 2.5rem;
+    }
+    
+    .auth-icon-login {
+        color: #667eea;
+        filter: drop-shadow(0 4px 8px rgba(102, 126, 234, 0.3));
+    }
+    
+    .auth-title-login {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 0.75rem;
+        padding: 0.875rem 1rem;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.9);
+    }
+    
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        background: white;
+    }
+    
+    .auth-btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.875rem 1.5rem;
+        border-radius: 0.75rem;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+    
+    .auth-btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+        color: white;
+    }
+    
+    .auth-btn-outline {
+        border: 2px solid #667eea;
+        color: #667eea;
+        background: transparent;
+        font-weight: 600;
+        padding: 0.875rem 1.5rem;
+        border-radius: 0.75rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+    
+    .auth-btn-outline:hover {
+        background: #667eea;
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    }
+    
+    .input-group .btn {
+        border: 2px solid #e9ecef;
+        border-left: none;
+        background: rgba(255, 255, 255, 0.9);
+        color: #6c757d;
+        border-radius: 0 0.75rem 0.75rem 0;
+    }
+    
+    .input-group .btn:hover {
+        background: #f8f9fa;
+        color: #667eea;
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+    
+    .form-text {
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+    
+    /* Ocultar loading overlay e toast container */
+    #loadingOverlay, .toast-container {
+        display: none !important;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
+<div class="auth-page-wrapper">
+    <div class="auth-card-container">
+        <div class="auth-card">
+            <div class="auth-card-body">
+                <div class="text-center mb-4">
+                    <div class="auth-icon-login mb-3">
+                        <i class="fas fa-user-plus fa-3x"></i>
+                    </div>
+                    <h1 class="h3 fw-bold auth-title-login mb-2">Criar nova conta</h1>
+                    <p class="text-muted">Preencha os dados abaixo para criar sua conta</p>
+                </div>
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <h3 class="card-title text-center mb-4">
-                        Cadastre-se
-                    </h3>
-                    <form method="post" class="form">
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <button type="submit" class="btn btn-success mt-3">
-                            Cadastrar
+                {% if form.errors %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        {% endfor %}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endif %}
+
+                <form method="post" class="auth-form">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.username.id_for_label }}" class="form-label">
+                            <i class="fas fa-user me-2"></i>Nome de usuário
+                        </label>
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="{{ form.username.id_for_label }}" 
+                            name="{{ form.username.html_name }}" 
+                            placeholder="Digite seu nome de usuário"
+                            value="{{ form.username.value|default:'' }}"
+                            required
+                        >
+                        {% if form.username.help_text %}
+                            <div class="form-text">{{ form.username.help_text }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.email.id_for_label }}" class="form-label">
+                            <i class="fas fa-envelope me-2"></i>Email
+                        </label>
+                        <input 
+                            type="email" 
+                            class="form-control" 
+                            id="{{ form.email.id_for_label }}" 
+                            name="{{ form.email.html_name }}" 
+                            placeholder="Digite seu email"
+                            value="{{ form.email.value|default:'' }}"
+                            required
+                        >
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.first_name.id_for_label }}" class="form-label">
+                                <i class="fas fa-id-card me-2"></i>Nome
+                            </label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="{{ form.first_name.id_for_label }}" 
+                                name="{{ form.first_name.html_name }}" 
+                                placeholder="Digite seu nome"
+                                value="{{ form.first_name.value|default:'' }}"
+                                required
+                            >
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.last_name.id_for_label }}" class="form-label">
+                                <i class="fas fa-id-card me-2"></i>Sobrenome
+                            </label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="{{ form.last_name.id_for_label }}" 
+                                name="{{ form.last_name.html_name }}" 
+                                placeholder="Digite seu sobrenome"
+                                value="{{ form.last_name.value|default:'' }}"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.password1.id_for_label }}" class="form-label">
+                            <i class="fas fa-lock me-2"></i>Senha
+                        </label>
+                        <div class="input-group">
+                            <input 
+                                type="password" 
+                                class="form-control" 
+                                id="{{ form.password1.id_for_label }}" 
+                                name="{{ form.password1.html_name }}" 
+                                placeholder="Digite sua senha"
+                                required
+                            >
+                            <button class="btn" type="button" onclick="togglePassword('{{ form.password1.id_for_label }}', 'toggleIcon1')">
+                                <i class="fas fa-eye" id="toggleIcon1"></i>
+                            </button>
+                        </div>
+                        {% if form.password1.help_text %}
+                            <div class="form-text">{{ form.password1.help_text }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="{{ form.password2.id_for_label }}" class="form-label">
+                            <i class="fas fa-lock me-2"></i>Confirme a senha
+                        </label>
+                        <div class="input-group">
+                            <input 
+                                type="password" 
+                                class="form-control" 
+                                id="{{ form.password2.id_for_label }}" 
+                                name="{{ form.password2.html_name }}" 
+                                placeholder="Confirme sua senha"
+                                required
+                            >
+                            <button class="btn" type="button" onclick="togglePassword('{{ form.password2.id_for_label }}', 'toggleIcon2')">
+                                <i class="fas fa-eye" id="toggleIcon2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 mb-3">
+                        <button type="submit" class="btn auth-btn-primary">
+                            <i class="fas fa-user-plus me-2"></i>Criar conta
                         </button>
-                    </form>
+                    </div>
+
+                    <div class="text-center">
+                        <a href="{% url 'login' %}" class="btn auth-btn-outline w-100">
+                            <i class="fas fa-sign-in-alt me-2"></i>Já tenho uma conta
+                        </a>
+                    </div>
+                </form>
+
+                <div class="text-center mt-4">
+                    <small class="text-muted">
+                        Ao criar uma conta, você concorda com nossos 
+                        <a href="#" class="text-decoration-none" style="color: #667eea;">
+                            Termos de Uso
+                        </a>
+                    </small>
                 </div>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
 
-
+{% block extra_scripts %}
+<script>
+function togglePassword(inputId, iconId) {
+    const passwordInput = document.getElementById(inputId);
+    const toggleIcon = document.getElementById(iconId);
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+    }
+}
+</script>
 {% endblock %}

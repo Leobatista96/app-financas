@@ -1,52 +1,308 @@
-<div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
-    <div class="offcanvas-md offcanvas-end bg-body-tertiary" tabindex="1" id="sidebarMenuLabel"
-        aria-labelledby="sidebarMenuLabel">
-
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="sidebarMenuLabel">Sistema de Finanças</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenuLabel"
-                aria-label="Close"></button>
-        </div>
-
-        <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
-
+<!-- Desktop Sidebar -->
+<div class="modern-sidebar col-md-3 col-lg-2 d-md-block p-0 sidebar-desktop">
+    <div class="sidebar-content pt-3">
+        <nav class="flex-grow-1">
             <ul class="nav flex-column" id="menu">
                 <li class="nav-item">
-                    <a href="{% url 'dashboard-list' %}" class="nav-link d-flex align-items-center gap-1 text-black"
-                        aria-current="page">
-                        <i class="bi bi-speedometer2 fs-4"></i>
-                        <span class="ms-1">Dashboard</span>
+                    <a href="{% url 'dashboard-list' %}" class="nav-link d-flex align-items-center gap-2">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-speedometer2"></i>
+                        </div>
+                        <span>Dashboard</span>
                     </a>
                 </li>
+                
                 <li class="nav-item">
-                    <a href="{% url 'transaction-list' %}" class="nav-link d-flex align-items-center gap-1 text-black">
-                        <i class="bi bi-arrow-down-left-square fs-4"></i>
-                        <span class="ms-1">Transações</span>
+                    <a href="{% url 'transaction-list' %}" class="nav-link d-flex align-items-center gap-2">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-list-ul"></i>
+                        </div>
+                        <span>Transações</span>
                     </a>
                 </li>
+                
+                
                 <li class="nav-item">
-                    <a id="newTransactionButton" class="nav-link d-flex align-items-center gap-1 text-black"
-                        style="cursor: pointer;">
-                        <i class="bi bi-plus-square fs-4"></i>
-                        <span class="ms-1">Adicionar Transação</span>
+                    <a href="#" class="nav-link d-flex align-items-center gap-2">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-pie-chart"></i>
+                        </div>
+                        <span>Relatórios</span>
                     </a>
                 </li>
+            
+                
+                <li class="nav-item">
+                    <a href="#" class="nav-link d-flex align-items-center gap-2">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-credit-card"></i>
+                        </div>
+                        <span>Contas</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="#" class="nav-link d-flex align-items-center gap-2">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-tags"></i>
+                        </div>
+                        <span>Categorias</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Divider -->
+        <hr class="my-3 mx-3">
+
+        <!-- Bottom Section -->
+        <div class="sidebar-bottom">
+            <!-- Quick Stats -->
+            <div class="px-3 mb-3">
+                <div class="glass-effect rounded-modern p-3 text-center">
+                    <div class="small text-muted mb-1">Saldo Atual</div>
+                    <div class="fw-bold gradient-text fs-5">{{transactions_metrics.balance}}</div>
+                </div>
+            </div>
+
+            <!-- User Menu -->
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a href="#" class="nav-link d-flex align-items-center gap-2">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-gear"></i>
+                        </div>
+                        <span>Configurações</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="#" class="nav-link d-flex align-items-center gap-2">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-question-circle"></i>
+                        </div>
+                        <span>Ajuda</span>
+                    </a>
+                </li>
+                
                 <li class="nav-item">
                     {% if user.is_authenticated %}
-                    <form action="{% url 'logout' %}" method="post" id="logout-form">
+                    <form action="{% url 'logout' %}" method="post" id="logout-form" class="w-100">
                         {% csrf_token %}
-                        <button type="submit" class="nav-link d-flex align-items-center gap-1 text-black">
-                            <i class="bi bi-box-arrow-right fs-4"></i>
-                            <span class="ms-1">Sair</span>
+                        <button type="submit" class="nav-link d-flex align-items-center gap-2 w-100 border-0 bg-transparent text-start">
+                            <div class="icon-wrapper">
+                                <i class="bi bi-box-arrow-right"></i>
+                            </div>
+                            <span>Sair</span>
                         </button>
                     </form>
                     {% endif %}
                 </li>
             </ul>
-            <hr class="my-3">
         </div>
     </div>
 </div>
+
+<!-- Mobile Offcanvas Sidebar -->
+<div class="offcanvas offcanvas-start d-md-none" tabindex="-1" id="sidebarMenuLabel" aria-labelledby="sidebarMenuLabel">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title fw-bold" id="sidebarMenuLabel">
+            <i class="bi bi-graph-up-arrow me-2 text-primary"></i>
+            Menu Principal
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+
+    <div class="offcanvas-body p-0 pt-3 overflow-y-auto">
+        <!-- Navigation Menu -->
+        <nav class="flex-grow-1">
+            <ul class="nav flex-column" id="mobile-menu">
+                <li class="nav-item">
+                    <a href="{% url 'dashboard-list' %}" class="nav-link d-flex align-items-center gap-2">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-speedometer2"></i>
+                        </div>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="{% url 'transaction-list' %}" class="nav-link d-flex align-items-center gap-2">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-list-ul"></i>
+                        </div>
+                        <span>Transações</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="#" id="newTransactionButtonMobile" class="nav-link d-flex align-items-center gap-2">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-plus-circle"></i>
+                        </div>
+                        <span>Nova Transação</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="#" class="nav-link d-flex align-items-center gap-2">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-pie-chart"></i>
+                        </div>
+                        <span>Relatórios</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="#" class="nav-link d-flex align-items-center gap-2">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-piggy-bank"></i>
+                        </div>
+                        <span>Objetivos</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="#" class="nav-link d-flex align-items-center gap-2">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-credit-card"></i>
+                        </div>
+                        <span>Contas</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="#" class="nav-link d-flex align-items-center gap-2">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-tags"></i>
+                        </div>
+                        <span>Categorias</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Divider -->
+        <hr class="my-3 mx-3">
+
+        <!-- Bottom Section -->
+        <div class="mt-auto">
+            <!-- Quick Stats -->
+            <div class="px-3 mb-3">
+                <div class="glass-effect rounded-modern p-3 text-center">
+                    <div class="small text-muted mb-1">Saldo Atual</div>
+                    <div class="fw-bold gradient-text fs-5">R$ 5.247,80</div>
+                </div>
+            </div>
+
+            <!-- User Menu -->
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a href="#" class="nav-link d-flex align-items-center gap-2">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-gear"></i>
+                        </div>
+                        <span>Configurações</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="#" class="nav-link d-flex align-items-center gap-2">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-question-circle"></i>
+                        </div>
+                        <span>Ajuda</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    {% if user.is_authenticated %}
+                    <form action="{% url 'logout' %}" method="post" id="logout-form-mobile" class="w-100">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link d-flex align-items-center gap-2 w-100 border-0 bg-transparent text-start">
+                            <div class="icon-wrapper">
+                                <i class="bi bi-box-arrow-right"></i>
+                            </div>
+                            <span>Sair</span>
+                        </button>
+                    </form>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<style>
+.modern-sidebar .icon-wrapper {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.modern-sidebar .icon-wrapper i {
+    font-size: 1.1rem;
+    color: inherit;
+}
+
+.offcanvas .icon-wrapper {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.offcanvas .icon-wrapper i {
+    font-size: 1.1rem;
+    color: inherit;
+}
+
+/* Garantir contraste em textos do sidebar - Tema Escuro */
+.modern-sidebar .nav-link,
+.offcanvas .nav-link {
+    color: #cbd5e1 !important; /* Texto claro */
+}
+
+.modern-sidebar .nav-link:hover,
+.offcanvas .nav-link:hover {
+    color: #667eea !important;
+}
+
+.modern-sidebar .nav-link.active,
+.offcanvas .nav-link.active {
+    color: white !important;
+}
+
+/* Melhorar contraste do saldo atual */
+.glass-effect {
+    background: rgba(51, 65, 85, 0.7) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(203, 213, 225, 0.1);
+}
+
+.glass-effect .fw-bold {
+    color: #f1f5f9 !important;
+}
+
+.glass-effect .text-muted {
+    color: #94a3b8 !important;
+}
+
+/* Melhorar contraste do offcanvas header */
+.offcanvas-header {
+    background: #1e293b;
+    border-color: #475569;
+}
+
+.offcanvas-title {
+    color: #f1f5f9 !important;
+}
+</style>
 
 {% include 'components/partials/modal_transaction.html' %}
 {% include 'components/partials/modal_categorie.html' %}
