@@ -1,11 +1,368 @@
 {% extends 'base.html' %}
+{% load static %}
 
+{% block title %}Dashboard - Sistema de Finanças{% endblock %}
+
+{% block page_header %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h2 fw-bold gradient-text mb-1">Dashboard Financeiro</h1>
+        <p class="text-muted mb-0">Bem-vindo de volta, {{ user.username|title }}! Aqui está o resumo das suas finanças.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <button class="btn btn-modern btn-primary" data-bs-toggle="modal" data-bs-target="#newTransactionModal">
+            <i class="bi bi-plus-circle me-2"></i>Nova Transação
+        </button>
+        <button class="btn btn-outline-primary" onclick="window.print()">
+            <i class="bi bi-download me-2"></i>Exportar
+        </button>
+    </div>
+</div>
+{% endblock %}
 
 {% block content %}
+<div class="container-fluid p-0">
+    <!-- Quick Stats Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-6 col-xl-3">
+            <div class="metric-card success">
+                <div class="metric-icon">
+                    <i class="bi bi-arrow-up-circle"></i>
+                </div>
+                <div class="metric-value" data-counter="5247">R$ 0,00</div>
+                <div class="metric-label">Receitas do Mês</div>
+                <div class="mt-2 small opacity-75">
+                    <i class="bi bi-arrow-up me-1"></i>+12% vs mês anterior
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-xl-3">
+            <div class="metric-card danger">
+                <div class="metric-icon">
+                    <i class="bi bi-arrow-down-circle"></i>
+                </div>
+                <div class="metric-value" data-counter="3820">R$ 0,00</div>
+                <div class="metric-label">Despesas do Mês</div>
+                <div class="mt-2 small opacity-75">
+                    <i class="bi bi-arrow-down me-1"></i>-5% vs mês anterior
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-xl-3">
+            <div class="metric-card info">
+                <div class="metric-icon">
+                    <i class="bi bi-wallet2"></i>
+                </div>
+                <div class="metric-value" data-counter="1427">R$ 0,00</div>
+                <div class="metric-label">Saldo Atual</div>
+                <div class="mt-2 small opacity-75">
+                    <i class="bi bi-arrow-up me-1"></i>+8% vs mês anterior
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-xl-3">
+            <div class="metric-card warning">
+                <div class="metric-icon">
+                    <i class="bi bi-piggy-bank"></i>
+                </div>
+                <div class="metric-value" data-counter="2150">R$ 0,00</div>
+                <div class="metric-label">Economia do Mês</div>
+                <div class="mt-2 small opacity-75">
+                    <i class="bi bi-arrow-up me-1"></i>+15% vs mês anterior
+                </div>
+            </div>
+        </div>
+    </div>
 
-<div class="container pt-3">
+    <!-- Charts Section -->
+    <div class="row g-4 mb-5">
+        <!-- Revenue vs Expenses Chart -->
+        <div class="col-lg-6">
+            <div class="modern-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Receitas vs Despesas</h5>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                            Este Mês
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Esta Semana</a></li>
+                            <li><a class="dropdown-item" href="#">Este Mês</a></li>
+                            <li><a class="dropdown-item" href="#">Este Ano</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div style="height: 300px;">
+                        <canvas id="revenueExpenseChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <!-- Category Spending Chart -->
+        <div class="col-lg-6">
+            <div class="modern-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Gastos por Categoria</h5>
+                    <button class="btn btn-sm btn-outline-primary">Ver Todos</button>
+                </div>
+                <div class="card-body">
+                    <div style="height: 300px;">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- Monthly Evolution Chart -->
+    <div class="row g-4 mb-5">
+        <div class="col-12">
+            <div class="modern-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Evolução Mensal</h5>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-outline-success">Receitas</button>
+                        <button class="btn btn-sm btn-outline-danger">Despesas</button>
+                        <button class="btn btn-sm btn-primary">Ambos</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div style="height: 400px;">
+                        <canvas id="monthlyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Transactions & Quick Actions -->
+    <div class="row g-4">
+        <!-- Recent Transactions -->
+        <div class="col-lg-8">
+            <div class="modern-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Transações Recentes</h5>
+                    <a href="{% url 'transaction-list' %}" class="btn btn-sm btn-outline-primary">
+                        Ver Todas <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-modern mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Descrição</th>
+                                    <th>Categoria</th>
+                                    <th>Data</th>
+                                    <th>Valor</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="icon-wrapper me-3 bg-success bg-opacity-10 text-success rounded-circle p-2">
+                                                <i class="bi bi-arrow-up"></i>
+                                            </div>
+                                            <div>
+                                                <div class="fw-medium">Salário</div>
+                                                <small class="text-muted">Empresa XYZ</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-success bg-opacity-10 text-success">Receita</span></td>
+                                    <td>01/08/2025</td>
+                                    <td class="fw-bold text-success">+R$ 5.000,00</td>
+                                    <td><span class="badge bg-success">Confirmado</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="icon-wrapper me-3 bg-danger bg-opacity-10 text-danger rounded-circle p-2">
+                                                <i class="bi bi-arrow-down"></i>
+                                            </div>
+                                            <div>
+                                                <div class="fw-medium">Supermercado</div>
+                                                <small class="text-muted">Compras da semana</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-warning bg-opacity-10 text-warning">Alimentação</span></td>
+                                    <td>28/07/2025</td>
+                                    <td class="fw-bold text-danger">-R$ 285,50</td>
+                                    <td><span class="badge bg-success">Confirmado</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="icon-wrapper me-3 bg-danger bg-opacity-10 text-danger rounded-circle p-2">
+                                                <i class="bi bi-arrow-down"></i>
+                                            </div>
+                                            <div>
+                                                <div class="fw-medium">Conta de Luz</div>
+                                                <small class="text-muted">Enel Distribuição</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-info bg-opacity-10 text-info">Utilidades</span></td>
+                                    <td>25/07/2025</td>
+                                    <td class="fw-bold text-danger">-R$ 125,30</td>
+                                    <td><span class="badge bg-warning">Pendente</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions & Goals -->
+        <div class="col-lg-4">
+            <!-- Quick Actions -->
+            <div class="modern-card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Ações Rápidas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-modern btn-success" onclick="showNotification('Nova receita adicionada!', 'success')">
+                            <i class="bi bi-plus-circle me-2"></i>Adicionar Receita
+                        </button>
+                        <button class="btn btn-modern btn-danger">
+                            <i class="bi bi-dash-circle me-2"></i>Registrar Despesa
+                        </button>
+                        <button class="btn btn-modern btn-info">
+                            <i class="bi bi-arrow-left-right me-2"></i>Transferência
+                        </button>
+                        <button class="btn btn-outline-primary">
+                            <i class="bi bi-calendar-plus me-2"></i>Agendar Pagamento
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monthly Goal -->
+            <div class="modern-card">
+                <div class="card-header">
+                    <h5 class="mb-0">Meta do Mês</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <div class="progress-circle mx-auto mb-3" style="width: 100px; height: 100px;">
+                            <svg viewBox="0 0 36 36" class="circular-chart">
+                                <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#eee" stroke-width="2"/>
+                                <path class="circle" stroke-dasharray="68, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="url(#gradient)" stroke-width="2" stroke-linecap="round"/>
+                                <defs>
+                                    <linearGradient id="gradient">
+                                        <stop offset="0%" stop-color="#667eea"/>
+                                        <stop offset="100%" stop-color="#764ba2"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <div class="percentage">68%</div>
+                        </div>
+                        <div class="fw-bold">R$ 1.360 de R$ 2.000</div>
+                        <small class="text-muted">Meta de economia mensal</small>
+                    </div>
+                    <div class="d-flex justify-content-between small text-muted">
+                        <span>Faltam R$ 640</span>
+                        <span>12 dias restantes</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+<style>
+.progress-circle {
+    position: relative;
+}
+
+.circular-chart {
+    display: block;
+    margin: 10px auto;
+    max-width: 80%;
+    max-height: 250px;
+}
+
+.circle-bg {
+    fill: none;
+    stroke: #eee;
+    stroke-width: 3.8;
+}
+
+.circle {
+    fill: none;
+    stroke-width: 2.8;
+    stroke-linecap: round;
+    animation: progress 1s ease-out forwards;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+}
+
+.percentage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+@keyframes progress {
+    0% {
+        stroke-dasharray: 0 100;
+    }
+}
+
+.icon-wrapper {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Initialize dashboard-specific functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Refresh data every 5 minutes
+    setInterval(function() {
+        // Here you would typically fetch updated data via AJAX
+        console.log('Refreshing dashboard data...');
+    }, 300000);
+    
+    // Quick action buttons
+    document.querySelectorAll('[data-quick-action]').forEach(button => {
+        button.addEventListener('click', function() {
+            const action = this.getAttribute('data-quick-action');
+            handleQuickAction(action);
+        });
+    });
+});
+
+function handleQuickAction(action) {
+    switch(action) {
+        case 'add-income':
+            showNotification('Formulário de receita aberto!', 'info');
+            break;
+        case 'add-expense':
+            showNotification('Formulário de despesa aberto!', 'info');
+            break;
+        default:
+            showNotification('Ação não implementada ainda.', 'warning');
+    }
+}
+</script>
 {% endblock %}

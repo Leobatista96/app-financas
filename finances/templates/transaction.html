@@ -2,164 +2,267 @@
 
 {% block title %} Transações {% endblock title %}
 
+{% block page_header %}
+<div class="d-flex justify-content-between align-items-center">
+    <div>
+        <h1 class="h2 mb-0">
+            <i class="bi bi-list-ul me-2 text-primary"></i>
+            Transações
+        </h1>
+        <p class="text-muted small mb-0">Gerencie suas transações financeiras</p>
+    </div>
+    <button class="btn btn-modern btn-primary" id="newTransactionButton" data-bs-toggle="tooltip" 
+            data-bs-placement="left" title="Adicionar nova transação">
+        <i class="bi bi-plus-circle me-2"></i>Nova Transação
+    </button>
+</div>
+{% endblock %}
 
 {% block content %}
 
-<div class="flex-md-nowrap align-items-center pt-3 pb-2 mb-3 ">
-
-    <div class="row justify-content-between">
-
-
-
-
-        <div class="col-3">
-            <div class="card text-center text-bg-info rounded-5">
-                <div class="card-body">
-                    <h4 class="card-title">Saldo</h4>
-                    <p class="card-text">R$ {{transactions_metrics.balance}}</p>
-                    <!-- <a href="#" class="btn btn-primary">
-                        <i class="bi bi-bank"></i>
-                    </a> -->
+<!-- Métricas de Transações -->
+<div class="row g-2 mb-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="modern-card metric-card info">
+            <div class="d-flex align-items-center">
+                <div class="metric-icon me-3">
+                    <i class="bi bi-wallet2"></i>
+                </div>
+                <div>
+                    <div class="metric-label">Saldo</div>
+                    <div class="metric-value">R$ {{transactions_metrics.balance}}</div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="col-3">
-            <div class="card text-center text-bg-secondary rounded-5">
-                <div class="card-body">
-                    <h4 class="card-title">Total</h4>
-
-                    {% if transactions_metrics.total_transactions_value is None %}
-                    <p class="card-text">R$ 0</p>
-                    <!-- <a href="#" class="btn btn-primary">
-                        <i class="bi bi-bank"></i>
-                    </a> -->
-
-                    {% else %}
-                    <p class="card-text">R$ {{transactions_metrics.total_transactions_value}}</p>
-                    <!-- <a href="#" class="btn btn-primary">
-                        <i class="bi bi-bank"></i>
-                    </a> -->
-                    {% endif %}
+    <div class="col-xl-3 col-md-6">
+        <div class="modern-card metric-card">
+            <div class="d-flex align-items-center">
+                <div class="metric-icon me-3">
+                    <i class="bi bi-calculator"></i>
+                </div>
+                <div>
+                    <div class="metric-label">Total</div>
+                    <div class="metric-value">
+                        {% if transactions_metrics.total_transactions_value is None %}
+                            R$ 0,00
+                        {% else %}
+                            R$ {{transactions_metrics.total_transactions_value}}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="col-3">
-            <div class="card text-center text-bg-success rounded-5">
-                <div class="card-body">
-                    <h4 class="card-title">Receitas</h4>
-
-                    {% if transactions_metrics.total_categories_revenue is None %}
-                    <p class="card-text">R$ 0</p>
-                    <!-- <a href="#" class="btn btn-success">
-                        <i class="bi bi-arrow-up"></i>
-                    </a> -->
-
-                    {% else %}
-                    <p class="card-text">R$ {{ transactions_metrics.total_categories_revenue }}</p>
-                    <!-- <a href="#" class="btn btn-success">
-                        <i class="bi bi-arrow-up"></i>
-                    </a> -->
-
-                    {% endif %}
+    <div class="col-xl-3 col-md-6">
+        <div class="modern-card metric-card success">
+            <div class="d-flex align-items-center">
+                <div class="metric-icon me-3">
+                    <i class="bi bi-arrow-up-circle"></i>
+                </div>
+                <div>
+                    <div class="metric-label">Receitas</div>
+                    <div class="metric-value">
+                        {% if transactions_metrics.total_categories_revenue is None %}
+                            R$ 0,00
+                        {% else %}
+                            R$ {{ transactions_metrics.total_categories_revenue }}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="col-3">
-            <div class="card text-center text-bg-danger rounded-5">
-                <div class="card-body">
-                    <h4 class="card-title">Despesas</h4>
-
-                    {% if transactions_metrics.total_categories_expense is None %}
-                    <p class="card-text">R$ 0</p>
-                    <!-- <a href="#" class="btn btn-danger">
-                        <i class="bi bi-arrow-down"></i>
-                    </a> -->
-
-                    {% else %}
-                    <p class="card-text">R$ {{ transactions_metrics.total_categories_expense }}</p>
-                    <!-- <a href="#" class="btn btn-danger">
-                        <i class="bi bi-arrow-down"></i>
-                    </a> -->
-
-                    {% endif %}
+    <div class="col-xl-3 col-md-6">
+        <div class="modern-card metric-card danger">
+            <div class="d-flex align-items-center">
+                <div class="metric-icon me-3">
+                    <i class="bi bi-arrow-down-circle"></i>
+                </div>
+                <div>
+                    <div class="metric-label">Despesas</div>
+                    <div class="metric-value">
+                        {% if transactions_metrics.total_categories_expense is None %}
+                            R$ 0,00
+                        {% else %}
+                            R$ {{ transactions_metrics.total_categories_expense }}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="table-responsive small">
-    <table class="table table-sm table-bordered table-striped table-hover">
-        <thead class="text-center">
-            <tr>
-                <th>Descrição</th>
-                <th>Categoria</th>
-                <th>Conta</th>
-                <th>Valor</th>
-                <th>Data de Vencimento</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
+<!-- Tabela de Transações -->
+<div class="modern-card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+            <i class="bi bi-table me-2"></i>
+            Lista de Transações
+        </h5>
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-primary btn-sm" data-bs-toggle="tooltip" title="Filtrar">
+                <i class="bi bi-funnel"></i>
+            </button>
+        </div>
+    </div>
+    
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th><i class="bi bi-file-text me-1"></i>Descrição</th>
+                        <th><i class="bi bi-tags me-1"></i>Categoria</th>
+                        <th><i class="bi bi-credit-card me-1"></i>Conta</th>
+                        <th><i class="bi bi-currency-dollar me-1"></i>Valor</th>
+                        <th><i class="bi bi-calendar3 me-1"></i>Vencimento</th>
+                        <th class="text-center"><i class="bi bi-gear me-1"></i>Ações</th>
+                    </tr>
+                </thead>
 
-        <tbody class="table-group-divider text-center">
-            {% for transaction in transactions %}
-            <tr id="transaction-row-{{ transaction.id }}">
-                <td>{{ transaction.description }}</td>
-                <td>{{ transaction.category }}</td>
-                <td>{{ transaction.account }}</td>
-                <td>R$ {{ transaction.value|floatformat:"2g" }}</td>
-                <td>{{ transaction.due_date|date:"SHORT_DATE_FORMAT"}}</td>
-                <td>
-                    <button id="edit-btn" class="btn btn-primary btn-sm" data-id="{{ transaction.pk }}"
-                        data-category-name="{{ transaction.category.category }}" data-bs-target="#ModalChange">
-                        <i class="bi bi-pencil-square"></i>
-                    </button>
-                    <button class="btn btn-danger btn-sm delete-btn" data-id="{{transaction.pk}}" data-bs-toggle="modal"
-                        data-bs-target="#ModalDelete">
-                        <i class="bi bi-trash3"></i>
-                    </button>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-
-        <tfoot class="table-group-divider">
-            <tr>
-                <td colspan="6">
-                    <nav aria-label="">
-                        <ul class="pagination pagination-sm justify-content-center">
-                            <li class="page-item"><a class="page-link">Página {{ page_obj.number }} de
-                                    {{page_obj.paginator.num_pages }}</a>
+                <tbody>
+                    {% for transaction in transactions %}
+                    <tr id="transaction-row-{{ transaction.id }}" class="transaction-row">
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="transaction-indicator me-2"></div>
+                                <span class="fw-medium text-black">{{ transaction.description }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge rounded-pill 
+                            {% if transaction.category.category == 'Despesa' %}bg-danger{% else %}bg-success{% endif %}">
+                                {{ transaction.category }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-bank me-1 text-black"></i>
+                                <span class='text-black'>{{ transaction.account }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="fw-bold {% if transaction.category.category == 'Receita' %}text-success{% else %}text-danger{% endif %}">
+                                R$ {{ transaction.value|floatformat:"2" }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="text-black">{{ transaction.due_date|date:"d/m/Y"}}</span>
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group" role="group">
+                                <button id="edit-btn" class="btn btn-primary btn-sm" 
+                                        data-id="{{ transaction.pk }}"
+                                        data-category-name="{{ transaction.category.category }}" 
+                                        data-bs-target="#ModalChange"
+                                        data-bs-toggle="tooltip" title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm delete-btn" 
+                                        data-id="{{transaction.pk}}" 
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#ModalDelete"
+                                        data-bs-toggle="tooltip" title="Excluir">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5">
+                            <div class="text-muted">
+                                <i class="bi bi-inbox fs-1 d-block mb-3"></i>
+                                <h5>Nenhuma transação encontrada</h5>
+                                <p>Comece adicionando sua primeira transação.</p>
+                                <button class="btn btn-primary" id="newTransactionButtonEmpty">
+                                    <i class="bi bi-plus-circle me-2"></i>Nova Transação
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Paginação Moderna -->
+        {% if page_obj.paginator.num_pages > 1 %}
+        <div class="card-footer bg-transparent border-top">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="text-muted small">
+                    Página {{ page_obj.number }} de {{page_obj.paginator.num_pages }}
+                    ({{ page_obj.paginator.count }} transações)
+                </div>
+                <nav aria-label="Navegação de páginas">
+                    <ul class="pagination pagination-sm mb-0">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
                             </li>
-                            {% if page_obj.has_previous %}
-                            <li class="page-item"><a class="page-link"
-                                    href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">
+                                    <i class="bi bi-chevron-left"></i>
+                                </span>
                             </li>
-                            {% else %}
-                            <li class="page-item disabled"><a class="page-link" href="?page=1">Anterior</a>
+                        {% endif %}
+                        
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_obj.number }}</span>
+                        </li>
+                        
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
                             </li>
-                            {% endif %}
-                            {% if page_obj.has_next %}
-                            <li class="page-item"><a class="page-link"
-                                    href="?page={{ page_obj.next_page_number }}">Próxima</a>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">
+                                    <i class="bi bi-chevron-right"></i>
+                                </span>
                             </li>
-                            {% else %}
-                            <li class="page-item disabled"><a class="page-link" href="#">Próxima</a>
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </nav>
-                </td>
-            </tr>
-        </tfoot>
-    </table>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        {% endif %}
+    </div>
 </div>
 
 
 {% include 'components/partials/modal_delete.html' %}
 {% include 'components/partials/modal_edit.html' %}
+
+<script>
+// Inicializar tooltips
+document.addEventListener('DOMContentLoaded', function() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+    
+    // Conectar botão de transação vazia ao modal
+    const newTransactionButtonEmpty = document.getElementById('newTransactionButtonEmpty');
+    if (newTransactionButtonEmpty) {
+        newTransactionButtonEmpty.addEventListener('click', function() {
+            const newTransactionBtn = document.getElementById('newTransactionBtn');
+            if (newTransactionBtn) {
+                newTransactionBtn.click();
+            }
+        });
+    }
+});
+</script>
 
 {% endblock %}
