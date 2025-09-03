@@ -26,24 +26,14 @@
                     <div class="mb-4">
                         <span>
                             Conta: {{form.account}}
-                            <a class="addaccountbutton text-decoration-none btn" data-bs-toggle="tooltip"
-                                data-bs-placement="right" data-bs-custom-class="custom-tooltip"
-                                data-bs-title="Clique aqui para criar uma nova conta">
-                                <i class="bi bi-plus-circle"></i>
-                            </a>
                         </span>
                     </div>
                     <div class="mb-4">
                         <span>
                             Categoria: {{form.category}}
-                            <a class=" addcategoriebutton text-decoration-none btn" data-bs-toggle="tooltip"
-                                data-bs-placement="right" data-bs-custom-class="custom-tooltip"
-                                data-bs-title="Clique aqui para criar uma nova categoria">
-                                <i class="bi bi-plus-circle"></i>
-                            </a>
                         </span>
                     </div>
-                    <button type="submit" class="btn btn-success" id="saveTransaction">Salvar</button>
+                    <button type="submit" class="btn btn-success" id="saveTransaction" onclick="showNotification('Transação Cadastrada!', 'success')">Salvar</button>
                 </form>
             </div>
         </div>
@@ -115,6 +105,7 @@
 }
 </style>
 
+{% block extra_scripts %}
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll("#newTransactionButton").forEach(button => {
@@ -142,10 +133,10 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert("Transação salva com sucesso!");
-                    window.location.reload();  // Atualiza a página
+                    
                 }
             })
             .catch(error => console.error("Erro:", error));
     });
 </script>
+{% endblock %}

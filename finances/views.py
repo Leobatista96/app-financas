@@ -15,7 +15,7 @@ class TransactionListView(LoginRequiredMixin, ListView):
     model = Transaction
     template_name = 'transaction.html'
     context_object_name = 'transactions'
-    paginate_by = 7
+    paginate_by = 5
 
     def get_queryset(self):
         return Transaction.objects.filter(user=self.request.user).order_by('-created_at')
@@ -104,6 +104,19 @@ class TransactionDeleteView(LoginRequiredMixin, DeleteView):
         transaction.delete()
 
         return JsonResponse({"success": "True"})
+    
+
+class CategorieListView(LoginRequiredMixin, ListView):
+    model = Categorie
+    template_name = 'categories.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["transactions_metrics"] = metrics.get_transactions_value(
+            user=self.request.user)
+        context["form_categories"] = CategorieModelForm()
+        return context
+
 
 
 class CategorieCreateView(CreateView):
@@ -117,12 +130,26 @@ class CategorieCreateView(CreateView):
             form = self.form_class(data)
 
             if form.is_valid():
-                form.save()
+                categorie = form.save(commit=False)
+                categorie.user = request.user
+                categorie.save()
                 return JsonResponse({"success": True})
-
             return JsonResponse({"success": False, "errors": form.errors}, status=400)
+        
         except json.JSONDecodeError:
             return JsonResponse({"success": False, "error": "JSON inválido"}, status=400)
+        
+
+class AccountListView(LoginRequiredMixin, ListView):
+    model = Account
+    template_name = 'accounts.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["transactions_metrics"] = metrics.get_transactions_value(
+            user=self.request.user)
+        context["form_accounts"] = AccountModelForm()
+        return context
 
 
 class AccountCreateView(CreateView):
@@ -136,9 +163,12 @@ class AccountCreateView(CreateView):
             form = self.form_class(data)
 
             if form.is_valid():
-                form.save()
+                account = form.save(commit=False)
+                account.user = request.user
+                account.save()
                 return JsonResponse({"success": True})
             return JsonResponse({"success": False, "errors": form.errors}, status=400)
+        
         except json.JSONDecodeError:
             return JsonResponse({"success": False, "errors": "JSON inválido"}, status=400)
 
@@ -150,11 +180,6 @@ class DashboardListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-
-    def sum_values(self):
-        transactions = Transaction.objects.all()
-        total_value = sum(transaction.value for transaction in transactions)
-        return total_value
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

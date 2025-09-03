@@ -6,7 +6,6 @@
 <div class="d-flex justify-content-between align-items-center">
     <div>
         <h1 class="h2 mb-0">
-            <i class="bi bi-list-ul me-2 text-primary"></i>
             Transações
         </h1>
         <p class="text-muted small mb-0">Gerencie suas transações financeiras</p>
@@ -30,7 +29,7 @@
                 </div>
                 <div>
                     <div class="metric-label">Saldo</div>
-                    <div class="metric-value">R$ {{transactions_metrics.balance}}</div>
+                    <div class="metric-value">R$ {{transactions_metrics.balance | floatformat:"2"}}</div>
                 </div>
             </div>
         </div>
@@ -48,7 +47,7 @@
                         {% if transactions_metrics.total_transactions_value is None %}
                             R$ 0,00
                         {% else %}
-                            R$ {{transactions_metrics.total_transactions_value}}
+                            R$ {{transactions_metrics.total_transactions_value | floatformat:"2"}}
                         {% endif %}
                     </div>
                 </div>
@@ -68,7 +67,7 @@
                         {% if transactions_metrics.total_categories_revenue is None %}
                             R$ 0,00
                         {% else %}
-                            R$ {{ transactions_metrics.total_categories_revenue }}
+                            R$ {{ transactions_metrics.total_categories_revenue | floatformat:"2"}}
                         {% endif %}
                     </div>
                 </div>
@@ -88,7 +87,7 @@
                         {% if transactions_metrics.total_categories_expense is None %}
                             R$ 0,00
                         {% else %}
-                            R$ {{ transactions_metrics.total_categories_expense }}
+                            R$ {{ transactions_metrics.total_categories_expense | floatformat:"2"}}
                         {% endif %}
                     </div>
                 </div>
@@ -112,7 +111,7 @@
     </div>
     
     <div class="card-body p-0">
-        <div class="table-responsive">
+        <div class="table-responsive ">
             <table class="table table-hover mb-0">
                 <thead class="table-dark">
                     <tr>
@@ -130,7 +129,19 @@
                     <tr id="transaction-row-{{ transaction.id }}" class="transaction-row">
                         <td>
                             <div class="d-flex align-items-center">
-                                <div class="transaction-indicator me-2"></div>
+                                
+                                {% if transaction.category.category == 'Receita' %}
+                                    <div class="icon-wrapper me-3 bg-success bg-opacity-10 text-success rounded-circle p-1">
+                                        <i class="bi bi-arrow-up"></i>
+                                    </div>
+
+                                {% else %}
+                                    <div class="icon-wrapper me-3 bg-danger bg-opacity-10 text-danger rounded-circle p-1">
+                                        <i class="bi bi-arrow-down"></i>
+                                    </div>
+                                {% endif %}
+                                    
+                                
                                 <span class="fw-medium text-black">{{ transaction.description }}</span>
                             </div>
                         </td>
@@ -177,12 +188,9 @@
                     <tr>
                         <td colspan="6" class="text-center py-5">
                             <div class="text-muted">
-                                <i class="bi bi-inbox fs-1 d-block mb-3"></i>
-                                <h5>Nenhuma transação encontrada</h5>
-                                <p>Comece adicionando sua primeira transação.</p>
-                                <button class="btn btn-primary" id="newTransactionButtonEmpty">
-                                    <i class="bi bi-plus-circle me-2"></i>Nova Transação
-                                </button>
+                                <i class="bi bi-inbox fs-1 d-block mb-3 text-black"></i>
+                                <h5 class='text-black'>Nenhuma transação encontrada</h5>
+                                <p class='text-black'>Comece adicionando sua primeira transação.</p>
                             </div>
                         </td>
                     </tr>
