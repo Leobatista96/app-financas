@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+
+{% block title %} Contas {% endblock title %}
+
+{% block page_header %}
+
+<div class="d-flex justfi-content-between">
+    <div>
+        <h1 class='mb-0'>Contas</h1>
+    </div>
+</div>
+    
+{% endblock page_header %}
+    
+{% block content %}
+<div class="col-lg-4">
+    <div class="modern-card mb-4">
+        <div class="card-body">
+            <div class="d-grid gap-2">
+                <a class="addaccountbutton text-decoration-none btn" data-bs-toggle="tooltip"
+                    data-bs-placement="right" data-bs-custom-class="custom-tooltip"
+                    data-bs-title="Clique aqui para criar uma nova conta">
+                    <span class="text-white">Nova Conta</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+    
+    

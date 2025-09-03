@@ -33,7 +33,7 @@
             
                 
                 <li class="nav-item">
-                    <a href="#" class="nav-link d-flex align-items-center gap-2">
+                    <a href="{% url 'account-list' %}" class="nav-link d-flex align-items-center gap-2">
                         <div class="icon-wrapper">
                             <i class="bi bi-credit-card"></i>
                         </div>
@@ -42,7 +42,7 @@
                 </li>
                 
                 <li class="nav-item">
-                    <a href="#" class="nav-link d-flex align-items-center gap-2">
+                    <a href="{% url 'categorie-list' %}" class="nav-link d-flex align-items-center gap-2">
                         <div class="icon-wrapper">
                             <i class="bi bi-tags"></i>
                         </div>
@@ -61,7 +61,7 @@
             <div class="px-3 mb-3">
                 <div class="glass-effect rounded-modern p-3 text-center">
                     <div class="small text-muted mb-1">Saldo Atual</div>
-                    <div class="fw-bold gradient-text fs-5">{{transactions_metrics.balance}}</div>
+                    <div class="fw-bold gradient-text fs-5">R$ {{transactions_metrics.balance}}</div>
                 </div>
             </div>
 
@@ -136,15 +136,6 @@
                 </li>
                 
                 <li class="nav-item">
-                    <a href="#" id="newTransactionButtonMobile" class="nav-link d-flex align-items-center gap-2">
-                        <div class="icon-wrapper">
-                            <i class="bi bi-plus-circle"></i>
-                        </div>
-                        <span>Nova Transação</span>
-                    </a>
-                </li>
-                
-                <li class="nav-item">
                     <a href="#" class="nav-link d-flex align-items-center gap-2">
                         <div class="icon-wrapper">
                             <i class="bi bi-pie-chart"></i>
@@ -154,16 +145,7 @@
                 </li>
                 
                 <li class="nav-item">
-                    <a href="#" class="nav-link d-flex align-items-center gap-2">
-                        <div class="icon-wrapper">
-                            <i class="bi bi-piggy-bank"></i>
-                        </div>
-                        <span>Objetivos</span>
-                    </a>
-                </li>
-                
-                <li class="nav-item">
-                    <a href="#" class="nav-link d-flex align-items-center gap-2">
+                    <a href="{% url 'account-list' %}" class="nav-link d-flex align-items-center gap-2">
                         <div class="icon-wrapper">
                             <i class="bi bi-credit-card"></i>
                         </div>
@@ -172,7 +154,7 @@
                 </li>
                 
                 <li class="nav-item">
-                    <a href="#" class="nav-link d-flex align-items-center gap-2">
+                    <a href="{% url 'categorie-list' %}" class="nav-link d-flex align-items-center gap-2">
                         <div class="icon-wrapper">
                             <i class="bi bi-tags"></i>
                         </div>
@@ -191,7 +173,7 @@
             <div class="px-3 mb-3">
                 <div class="glass-effect rounded-modern p-3 text-center">
                     <div class="small text-muted mb-1">Saldo Atual</div>
-                    <div class="fw-bold gradient-text fs-5">R$ 5.247,80</div>
+                    <div class="fw-bold gradient-text fs-5">R$ {{transactions_metrics.balance}}</div>
                 </div>
             </div>
 
