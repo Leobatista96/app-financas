@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %} Transações {% endblock title %}
+
 
 {% block page_header %}
 <div class="d-flex justify-content-between align-items-center">
@@ -29,7 +29,7 @@
                 </div>
                 <div>
                     <div class="metric-label">Saldo</div>
-                    <div class="metric-value">R$ {{transactions_metrics.balance | floatformat:"2"}}</div>
+                    <div class="metric-value" data-counter="{{transactions_metrics.balance | floatformat:'2'}}"></div>
                 </div>
             </div>
         </div>
@@ -43,12 +43,7 @@
                 </div>
                 <div>
                     <div class="metric-label">Total</div>
-                    <div class="metric-value">
-                        {% if transactions_metrics.total_transactions_value is None %}
-                            R$ 0,00
-                        {% else %}
-                            R$ {{transactions_metrics.total_transactions_value | floatformat:"2"}}
-                        {% endif %}
+                    <div class="metric-value" data-counter=" {% if transactions_metric.total_transactions_value is None %} 0,00 {% else %} {{transactions_metrics.total_transactions_value | floatformat:'2'}} {% endif %}">
                     </div>
                 </div>
             </div>
@@ -63,12 +58,7 @@
                 </div>
                 <div>
                     <div class="metric-label">Receitas</div>
-                    <div class="metric-value">
-                        {% if transactions_metrics.total_categories_revenue is None %}
-                            R$ 0,00
-                        {% else %}
-                            R$ {{ transactions_metrics.total_categories_revenue | floatformat:"2"}}
-                        {% endif %}
+                    <div class="metric-value" data-counter=" {% if transactions_metrics.total_categories_revenue is None %} 0,00 {% else %} {{ transactions_metrics.total_categories_revenue | floatformat:'2'}} {% endif %} ">
                     </div>
                 </div>
             </div>
@@ -83,12 +73,7 @@
                 </div>
                 <div>
                     <div class="metric-label">Despesas</div>
-                    <div class="metric-value">
-                        {% if transactions_metrics.total_categories_expense is None %}
-                            R$ 0,00
-                        {% else %}
-                            R$ {{ transactions_metrics.total_categories_expense | floatformat:"2"}}
-                        {% endif %}
+                    <div class="metric-value" data-counter=" {% if transactions_metrics.total_categories_expense is None %} 0,00 {% else %} {{ transactions_metrics.total_categories_expense | floatformat:'2'}} {% endif %} ">
                     </div>
                 </div>
             </div>

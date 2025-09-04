@@ -101,6 +101,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }
+
+        
         
         // Gráfico de gastos por categoria
         const categoryCtx = document.getElementById('categoryChart');
@@ -108,10 +110,10 @@ document.addEventListener('DOMContentLoaded', function() {
             new Chart(categoryCtx, {
                 type: 'bar',
                 data: {
-                    labels: ['Alimentação', 'Transporte', 'Moradia', 'Lazer', 'Saúde'],
+                    labels: ['Receita', 'Despesa'],
                     datasets: [{
                         label: 'Gastos por Categoria',
-                        data: [1200, 800, 2000, 600, 400],
+                        data: [1200, 800],
                         backgroundColor: [
                             'rgba(102, 126, 234, 0.8)',
                             'rgba(240, 147, 251, 0.8)',

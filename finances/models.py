@@ -5,7 +5,12 @@ from django.contrib.auth.models import User
 class Profile(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.PROTECT, related_name='profile')
-    phone_number = models.CharField(max_length=15, verbose_name='Telefone')
+    phone_number = models.CharField(
+        max_length=15, 
+        verbose_name='Telefone',
+        help_text='Número de telefone (ex: 11999999999)',
+        default= ''
+    )
     created_at = models.DateTimeField(
         auto_now=True, verbose_name='Data de Criação')
     updated_at = models.DateTimeField(
