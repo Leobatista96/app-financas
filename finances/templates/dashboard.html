@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Dashboard - Sistema de Finanças{% endblock %}
+
 
 {% block page_header %}
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -29,12 +29,7 @@
                 <div class="metric-icon">
                     <i class="bi bi-arrow-up-circle"></i>
                 </div>
-                <div class="metric-value" data-counter="5247">
-                    {% if transactions_metrics.total_categories_revenue %}
-                        R$ {{ transactions_metrics.total_categories_revenue | floatformat:"2" }}
-                    {% else %}
-                        R$ 0,00
-                    {% endif %}
+                <div class="metric-value" data-counter="{% if transactions_metrics.total_categories_revenue is None %} 0,00 {% else %} {{ transactions_metrics.total_categories_revenue | floatformat:'2'}}  {% endif %}">
                 </div>
                 <div class="metric-label">Receitas do Mês</div>
             </div>
@@ -45,17 +40,9 @@
                 <div class="metric-icon">
                     <i class="bi bi-arrow-down-circle"></i>
                 </div>
-                <div class="metric-value" data-counter="3820">
-                    {% if transactions_metrics.total_categories_expense %}
-                       R$ {{transactions_metrics.total_categories_expense | floatformat:"2"}}
-                    {% else %}
-                        RS 0,00
-                    {% endif %}  
+                <div class="metric-value" data-counter="{% if transactions_metrics.total_categories_expense is None %} 0,00 {% else %} {{transactions_metrics.total_categories_expense | floatformat:'2'}} {% endif %}"> 
                 </div>
                 <div class="metric-label">Despesas do Mês</div>
-                {% comment %} <div class="mt-2 small opacity-75">
-                    <i class="bi bi-arrow-down me-1"></i>-5% vs mês anterior
-                </div> {% endcomment %}
             </div>
         </div>
         
@@ -64,12 +51,7 @@
                 <div class="metric-icon">
                     <i class="bi bi-wallet2"></i>
                 </div>
-                <div class="metric-value" data-counter="1427">
-                    {% if transactions_metrics.balance %}
-                        R$ {{transactions_metrics.balance | floatformat:"2"}}
-                    {% else %}
-                        R$ 0,00                        
-                    {% endif %}
+                <div class="metric-value" data-counter="{% if transactions_metrics.balance is None %} 0,00 {% else %} {{transactions_metrics.balance | floatformat:'2'}} {%endif%}">
                 </div>
                 <div class="metric-label">Saldo Atual</div>
             </div>
@@ -80,7 +62,7 @@
                 <div class="metric-icon">
                     <i class="bi bi-piggy-bank"></i>
                 </div>
-                <div class="metric-value" data-counter="2150">R$ 0,00</div>
+                <div class="metric-value">R$ 0,00</div>
                 <div class="metric-label">Economia do Mês</div>
             </div>
         </div>
@@ -344,6 +326,7 @@
 
 {% block extra_scripts %}
 <script>
+
 // Initialize dashboard-specific functionality
 document.addEventListener('DOMContentLoaded', function() {
     // Refresh data every 5 minutes
@@ -371,184 +354,6 @@ function handleQuickAction(action) {
             break;
         default:
             showNotification('Ação não implementada ainda.', 'warning');
-    }
-}
-
-function testCharts() {
-    console.log('=== TESTE DE GRÁFICOS ===');
-    
-    // Verificar se Chart.js está carregado
-    console.log('Chart.js disponível:', typeof Chart !== 'undefined');
-    if (typeof Chart !== 'undefined') {
-        console.log('Versão Chart.js:', Chart.version);
-    }
-    
-    // Verificar elementos canvas
-    const elements = [
-        'revenueExpenseChart',
-        'categoryChart', 
-        'monthlyChart'
-    ];
-    
-    elements.forEach(id => {
-        const element = document.getElementById(id);
-        console.log(`Elemento ${id}:`, element ? 'ENCONTRADO' : 'NÃO ENCONTRADO');
-        if (element) {
-            console.log(`  - Tipo: ${element.tagName}`);
-            console.log(`  - Visível: ${element.offsetWidth > 0 && element.offsetHeight > 0}`);
-            console.log(`  - CSS display: ${getComputedStyle(element).display}`);
-        }
-    });
-    
-    // Tentar reinicializar gráficos
-    if (typeof initializeCharts === 'function') {
-        console.log('Reinicializando gráficos...');
-        initializeCharts();
-    } else {
-        console.log('Função initializeCharts não encontrada');
-    }
-}
-
-// Teste direto dos gráficos
-setTimeout(function() {
-    console.log('=== TESTE DIRETO DOS GRÁFICOS ===');
-    
-    // Verificar Chart.js
-    console.log('Chart.js disponível:', typeof Chart !== 'undefined');
-    
-    if (typeof Chart === 'undefined') {
-        console.error('❌ Chart.js não carregado!');
-        return;
-    }
-    
-    console.log('✅ Chart.js versão:', Chart.version);
-    
-    // Configurar tema escuro
-    Chart.defaults.color = '#f1f5f9';
-    Chart.defaults.borderColor = '#334155';
-    
-    // Verificar elementos
-    const elements = ['revenueExpenseChart', 'categoryChart', 'monthlyChart'];
-    elements.forEach(id => {
-        const el = document.getElementById(id);
-        console.log(`${id}:`, el ? 'ENCONTRADO' : 'NÃO ENCONTRADO');
-        if (el) {
-            console.log(`  Dimensões: ${el.offsetWidth}x${el.offsetHeight}`);
-            console.log(`  Visível: ${el.offsetParent !== null}`);
-        }
-    });
-    
-    // Criar gráficos forçadamente
-    createChartsDirectly();
-    
-}, 2000);
-
-function createChartsDirectly() {
-    console.log('🔥 CRIANDO GRÁFICOS DIRETAMENTE...');
-    
-    // Gráfico 1
-    const ctx1 = document.getElementById('revenueExpenseChart');
-    if (ctx1) {
-        try {
-            // Destruir gráfico existente
-            const existing1 = Chart.getChart('revenueExpenseChart');
-            if (existing1) existing1.destroy();
-            
-            new Chart(ctx1, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Receitas', 'Despesas'],
-                    datasets: [{
-                        data: [65, 35],
-                        backgroundColor: ['#10b981', '#ef4444']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            labels: { color: '#f1f5f9' }
-                        }
-                    }
-                }
-            });
-            console.log('✅ Gráfico 1 criado!');
-        } catch (e) {
-            console.error('❌ Erro gráfico 1:', e);
-        }
-    }
-    
-    // Gráfico 2
-    const ctx2 = document.getElementById('categoryChart');
-    if (ctx2) {
-        try {
-            const existing2 = Chart.getChart('categoryChart');
-            if (existing2) existing2.destroy();
-            
-            new Chart(ctx2, {
-                type: 'bar',
-                data: {
-                    labels: ['A', 'B', 'C'],
-                    datasets: [{
-                        data: [10, 20, 30],
-                        backgroundColor: '#3b82f6'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        y: { ticks: { color: '#f1f5f9' } },
-                        x: { ticks: { color: '#f1f5f9' } }
-                    }
-                }
-            });
-            console.log('✅ Gráfico 2 criado!');
-        } catch (e) {
-            console.error('❌ Erro gráfico 2:', e);
-        }
-    }
-    
-    // Gráfico 3
-    const ctx3 = document.getElementById('monthlyChart');
-    if (ctx3) {
-        try {
-            const existing3 = Chart.getChart('monthlyChart');
-            if (existing3) existing3.destroy();
-            
-            new Chart(ctx3, {
-                type: 'line',
-                data: {
-                    labels: ['Jan', 'Fev', 'Mar'],
-                    datasets: [{
-                        label: 'Dados',
-                        data: [10, 20, 15],
-                        borderColor: '#10b981',
-                        backgroundColor: 'rgba(16, 185, 129, 0.1)'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            labels: { color: '#f1f5f9' }
-                        }
-                    },
-                    scales: {
-                        y: { ticks: { color: '#f1f5f9' } },
-                        x: { ticks: { color: '#f1f5f9' } }
-                    }
-                }
-            });
-            console.log('✅ Gráfico 3 criado!');
-        } catch (e) {
-            console.error('❌ Erro gráfico 3:', e);
-        }
     }
 }
 </script>

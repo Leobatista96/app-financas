@@ -20,16 +20,6 @@
                         <span>Transações</span>
                     </a>
                 </li>
-                
-                
-                <li class="nav-item">
-                    <a href="#" class="nav-link d-flex align-items-center gap-2">
-                        <div class="icon-wrapper">
-                            <i class="bi bi-pie-chart"></i>
-                        </div>
-                        <span>Relatórios</span>
-                    </a>
-                </li>
             
                 
                 <li class="nav-item">
@@ -52,9 +42,7 @@
             </ul>
         </nav>
 
-        <!-- Divider -->
-        <hr class="my-3 mx-3">
-
+        
         <!-- Bottom Section -->
         <div class="sidebar-bottom">
             <!-- Quick Stats -->
@@ -63,27 +51,10 @@
                     <div class="small text-muted mb-1">Saldo Atual</div>
                     <div class="fw-bold gradient-text fs-5">R$ {{transactions_metrics.balance}}</div>
                 </div>
-            </div>
-
-            <!-- User Menu -->
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a href="#" class="nav-link d-flex align-items-center gap-2">
-                        <div class="icon-wrapper">
-                            <i class="bi bi-gear"></i>
-                        </div>
-                        <span>Configurações</span>
-                    </a>
-                </li>
-                
-                <li class="nav-item">
-                    <a href="#" class="nav-link d-flex align-items-center gap-2">
-                        <div class="icon-wrapper">
-                            <i class="bi bi-question-circle"></i>
-                        </div>
-                        <span>Ajuda</span>
-                    </a>
-                </li>
+            </div>               
+            
+            <!-- Divider -->
+            <hr class="my-3 mx-3">
                 
                 <li class="nav-item">
                     {% if user.is_authenticated %}
@@ -136,15 +107,6 @@
                 </li>
                 
                 <li class="nav-item">
-                    <a href="#" class="nav-link d-flex align-items-center gap-2">
-                        <div class="icon-wrapper">
-                            <i class="bi bi-pie-chart"></i>
-                        </div>
-                        <span>Relatórios</span>
-                    </a>
-                </li>
-                
-                <li class="nav-item">
                     <a href="{% url 'account-list' %}" class="nav-link d-flex align-items-center gap-2">
                         <div class="icon-wrapper">
                             <i class="bi bi-credit-card"></i>
@@ -163,10 +125,7 @@
                 </li>
             </ul>
         </nav>
-
-        <!-- Divider -->
-        <hr class="my-3 mx-3">
-
+        
         <!-- Bottom Section -->
         <div class="mt-auto">
             <!-- Quick Stats -->
@@ -177,25 +136,11 @@
                 </div>
             </div>
 
+        <!-- Divider -->
+        <hr class="my-3 mx-3">
+
+
             <!-- User Menu -->
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a href="#" class="nav-link d-flex align-items-center gap-2">
-                        <div class="icon-wrapper">
-                            <i class="bi bi-gear"></i>
-                        </div>
-                        <span>Configurações</span>
-                    </a>
-                </li>
-                
-                <li class="nav-item">
-                    <a href="#" class="nav-link d-flex align-items-center gap-2">
-                        <div class="icon-wrapper">
-                            <i class="bi bi-question-circle"></i>
-                        </div>
-                        <span>Ajuda</span>
-                    </a>
-                </li>
                 
                 <li class="nav-item">
                     {% if user.is_authenticated %}

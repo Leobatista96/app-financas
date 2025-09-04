@@ -6,5 +6,11 @@ from finances.models import Profile
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
+    """
+    Signal para criar profile do usuário automaticamente.
+    Se o profile já existir (criado pelo form), não sobrescreve.
+    """
     if created:
-        Profile.objects.create(user=instance)
+        # Verifica se o profile já foi criado pelo formulário
+        if not hasattr(instance, 'profile'):
+            Profile.objects.get_or_create(user=instance)

@@ -1,5 +1,5 @@
 from django import forms
-from finances.models import Transaction, Categorie, Account
+from finances.models import Transaction, Categorie, Account, Profile
 
 
 class TransactionModelForm(forms.ModelForm):
