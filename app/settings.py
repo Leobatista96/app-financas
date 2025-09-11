@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from decouple import config
+from datetime import timedelta
+
+DJANGO_ENV = config('DJANGO_ENV')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,11 +23,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-a2@bd6298lt(d$hg*p7^l3f)xxk19^!=o*j)qnubbcg&z%q=r7'
 
+# SECURITY WARNING: keep the secret key used in production secret!
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if DJANGO_ENV == 'production':
+    DEBUG = False
+    SECRET_KEY = config('SECRET_KEY')
+else:
+    DEBUG = True
+    SECRET_KEY = 'django-insecure-a2@bd6298lt(d$hg*p7^l3f)xxk19^!=o*j)qnubbcg&z%q=r7'
 
 ALLOWED_HOSTS = ['localhost', 'financas.leonardobatista96.com.br',
                  '127.0.0.1', '0.0.0.0']
@@ -42,10 +49,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'rest_framework',
+    'rest_framework_simplejwt',
+
     'django_celery_results',
     'django_celery_beat',
 
     'finances',
+    'api',
+    'authentication',
 ]
 
 SESSION_COOKIE_AGE = 900
@@ -92,7 +104,7 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DJANGO_ENV = config('DJANGO_ENV')
+
 
 if DJANGO_ENV == 'production':
 
@@ -186,3 +198,15 @@ else:
 CELERY_RESULT_BACKEND = 'django-db'
 
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+SIMPLE_JWT = {
+    "ACESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1)
+}

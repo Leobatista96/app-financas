@@ -29,5 +29,9 @@ urlpatterns = [
 
     path('', include('finances.urls')),
 
+    path('api/v1/', include('api.urls')),
+
+    path('api/v1/', include('authentication.urls')),
+
 
 ]
