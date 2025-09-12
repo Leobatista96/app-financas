@@ -27,7 +27,8 @@ DJANGO_ENV = config('DJANGO_ENV')
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECURITY WARNING: don't run with debug turned on in production!
 if DJANGO_ENV == 'production':
-    DEBUG = False
+    DEBUG = True
+    # DEBUG = False
     SECRET_KEY = config('SECRET_KEY')
 else:
     DEBUG = True
@@ -165,9 +166,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# STATICFILES_DIRS = [
-#     BASE_DIR / 'app' / 'static',
-# ]
+STATICFILES_DIRS = [
+    BASE_DIR / 'app' / 'static',
+]
 
 # Media files
 MEDIA_URL = '/media/'
