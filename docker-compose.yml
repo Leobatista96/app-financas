@@ -1,0 +1,59 @@
+services:
+
+    financas:
+        build: .
+        restart: always
+        ports:
+            - 8002:8002
+        depends_on:
+            - financas_db
+
+    financas_db:
+        image: postgres
+        ports:
+            - 5433:5432
+        volumes:
+            - postgres_data:/var/lib/postgresql/data/
+        environment:
+            - POSTGRES_USER=${POSTGRESUSER}
+            - POSTGRES_PASSWORD=${POSTGRESPASSWORD}
+            - POSTGRES_DB=${POSTGRESDB}
+
+    rabbitmq:
+        image: rabbitmq:4-management
+        ports:
+            - 15672:15672
+            - 5672:5672
+        environment:
+            - RABBITMQ_DEFAULT_USER=${RABBITMQUSER}
+            - RABBITMQ_DEFAULT_PASS=${RABBITMQPASSWORD}
+
+    celery:
+        build: .
+        command: celery -A app worker --loglevel=info
+        volumes:
+            - .:/code
+        depends_on:
+            - financas
+            - rabbitmq
+            - financas_db
+        environment:
+            - DJANGO_SETTINGS_MODULE=app.settings
+            - CELERY_BROKER_URL=amqp://${RABBITMQUSER}:${RABBITMQPASSWORD}@rabbitmq:5672//
+            - CELERY_RESULT_BACKEND=django-db
+
+    celerybeat:
+        build: .
+        command: celery -A app beat --loglevel=info
+        volumes:
+            - .:/code
+        depends_on:
+            - financas
+            - rabbitmq
+            - financas_db
+        environment:
+            - DJANGO_SETTINGS_MODULE=app.settings
+            - CELERY_BROKER_URL=amqp://${RABBITMQUSER}:${RABBITMQPASSWORD}@rabbitmq:5672//
+            - CELERY_RESULT_BACKEND=django-db
+volumes:
+    postgres_data:
