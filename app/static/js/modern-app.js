@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeTooltips();
     initializeCharts();
     initializeNotifications();
+    getChartData();
     
     // Adicionar classes de animação aos elementos
     function initializeAnimations() {
@@ -60,18 +61,49 @@ document.addEventListener('DOMContentLoaded', function() {
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
     }
+
+    function getChartData() {
+        const scriptElement = document.getElementById('chart-data');
+        if (scriptElement) {
+            try {
+                const data = JSON.parse(scriptElement.textContent);
+                console.log('Dados dos gráficos carregados', data)
+                return data;
+            }
+            catch (e) {
+                console.error('Erro', e);
+                return null;
+            }
+        }
+    }
     
     // Inicializar gráficos (Chart.js)
     function initializeCharts() {
+        console.log('Iniciando gráficos');
+
+        if (typeof Chart === 'undefined'){
+            console.error('Chart.js não carregado');
+            return;
+        }
+        const chartData = getChartData();
+
+        if (!chartData) {
+            console.warn('Usando dados de exemplo');
+            return;
+        }
+
+
         // Gráfico de receitas vs despesas
         const revenueExpenseCtx = document.getElementById('revenueExpenseChart');
-        if (revenueExpenseCtx) {
+        if (revenueExpenseCtx && chartData.total_recipes) {
+            console.log('Criando gráficos com dados dinamicos');
+
             new Chart(revenueExpenseCtx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Receitas', 'Despesas'],
+                    labels: chartData.total_recipes.labels,
                     datasets: [{
-                        data: [65, 35],
+                        data: chartData.total_recipes.data,
                         backgroundColor: [
                             'rgba(74, 222, 128, 0.8)',
                             'rgba(239, 68, 68, 0.8)'
@@ -101,19 +133,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }
-
-        
         
         // Gráfico de gastos por categoria
         const categoryCtx = document.getElementById('categoryChart');
-        if (categoryCtx) {
+        if (categoryCtx && chartData.categories) {
             new Chart(categoryCtx, {
                 type: 'bar',
                 data: {
-                    labels: ['Receita', 'Despesa'],
+                    labels: chartData.categories.labels,
                     datasets: [{
                         label: 'Gastos por Categoria',
-                        data: [1200, 800],
+                        data: chartData.categories.values,
                         backgroundColor: [
                             'rgba(102, 126, 234, 0.8)',
                             'rgba(240, 147, 251, 0.8)',

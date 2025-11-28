@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from finances.models import Transaction, Categorie, Account
 from finances.forms import TransactionModelForm, CategorieModelForm, AccountModelForm
-from app import metrics
+from app.metrics import get_transactions_value, get_graphics_data
 
 # Create your views here.
 
@@ -25,7 +25,7 @@ class TransactionListView(LoginRequiredMixin, ListView):
         context["form"] = TransactionModelForm()
         context["form_categories"] = CategorieModelForm()
         context["form_accounts"] = AccountModelForm()
-        context["transactions_metrics"] = metrics.get_transactions_value(
+        context["transactions_metrics"] = get_transactions_value(
             user=self.request.user)
         context["categories"] = Categorie.objects.filter(
             user=self.request.user)
@@ -112,7 +112,7 @@ class CategorieListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["transactions_metrics"] = metrics.get_transactions_value(
+        context["transactions_metrics"] = get_transactions_value(
             user=self.request.user)
         context["form_categories"] = CategorieModelForm()
         return context
@@ -146,7 +146,7 @@ class AccountListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["transactions_metrics"] = metrics.get_transactions_value(
+        context["transactions_metrics"] = get_transactions_value(
             user=self.request.user)
         context["form_accounts"] = AccountModelForm()
         return context
@@ -186,6 +186,8 @@ class DashboardListView(LoginRequiredMixin, ListView):
         context["form"] = TransactionModelForm()
         context["form_categories"] = CategorieModelForm()
         context["form_accounts"] = AccountModelForm()
-        context["transactions_metrics"] = metrics.get_transactions_value(
+        context["transactions_metrics"] = get_transactions_value(
             user=self.request.user)
+        json_metrics = get_graphics_data(user=self.request.user)
+        context['graphics_metrics'] = json.dumps(json_metrics)
         return context

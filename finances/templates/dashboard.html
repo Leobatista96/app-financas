@@ -325,8 +325,12 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script>
 
+<script id='chart-data' type='application/json'>
+{{ graphics_metrics|safe}}
+</script>
+
+<script>
 // Initialize dashboard-specific functionality
 document.addEventListener('DOMContentLoaded', function() {
     // Refresh data every 5 minutes
