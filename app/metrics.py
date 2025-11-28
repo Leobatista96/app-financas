@@ -26,3 +26,34 @@ def get_transactions_value(user):
         total_categories_expense=total_categories_expenses,
         balance=balance,
     )
+
+
+def get_graphics_data(user):
+
+    total_recipes = Transaction.objects.filter(
+        user=user,
+        category__category__icontains='Receita',    
+    ).count()
+
+    total_expenses = Transaction.objects.filter(
+        user=user,
+        category__category__icontains='Despesa',
+    ).count()
+
+    categories_data = Transaction.objects.filter(
+        user=user,
+    ).values('category__category').annotate(total=Sum('value')).order_by('-total')
+
+    categories_labels = [item['category__category'] for item in categories_data]
+    categories_values = [float(item['total']) for item in categories_data]
+
+    return {
+        'total_recipes': {
+            'labels': ['Receitas', 'Despesas'],
+            'data': [total_recipes, total_expenses],
+        },
+        'categories': {
+            'labels': categories_labels,
+            'values': categories_values,
+        }
+    }
