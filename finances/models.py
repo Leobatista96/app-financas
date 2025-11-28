@@ -60,6 +60,20 @@ class Categorie(models.Model):
 
     def __str__(self):
         return self.category
+    
+class Recipes(models.Model):
+    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='user_recipes', verbose_name='Receitas')
+    categories = models.ForeignKey(Categorie, on_delete=models.PROTECT, related_name='recipes_categorie', verbose_name='Categoria')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Data de Criação')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Última Atualização')
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Receita'
+        verbose_name_plural = 'Receitas'
+
+    def __str__(self):
+        return self.categories
 
 
 class Transaction(models.Model):
