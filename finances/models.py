@@ -63,7 +63,11 @@ class Categorie(models.Model):
     
 class Recipes(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='user_recipes', verbose_name='Receitas')
-    categories = models.ForeignKey(Categorie, on_delete=models.PROTECT, related_name='recipes_categorie', verbose_name='Categoria')
+    category = models.ForeignKey(Categorie, on_delete=models.PROTECT, related_name='recipes_categorie', verbose_name='Categoria')
+    value = models.FloatField(verbose_name='Valor')
+    description = models.CharField(max_length=150, blank=True, null=True, default='', verbose_name='Descrição')
+    due_date = models.DateField(verbose_name='Data de Vencimento')
+    account = models.ForeignKey(Account, on_delete=models.PROTECT, related_name='recipes_accounts', verbose_name='Conta')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Data de Criação')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Última Atualização')
 
@@ -73,7 +77,7 @@ class Recipes(models.Model):
         verbose_name_plural = 'Receitas'
 
     def __str__(self):
-        return self.categories
+        return self.description
 
 
 class Transaction(models.Model):

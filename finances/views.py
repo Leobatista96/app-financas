@@ -4,8 +4,8 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from finances.models import Transaction, Categorie, Account
-from finances.forms import TransactionModelForm, CategorieModelForm, AccountModelForm
+from finances.models import Transaction, Categorie, Account, Recipes
+from finances.forms import TransactionModelForm, CategorieModelForm, AccountModelForm, RecipesModelForm
 from app import metrics
 
 # Create your views here.
@@ -30,6 +30,7 @@ class TransactionListView(LoginRequiredMixin, ListView):
         context["categories"] = Categorie.objects.filter(
             user=self.request.user)
         context["accounts"] = Account.objects.filter(user=self.request.user)
+        context["form_recipes"] = RecipesModelForm()
         return context
 
 
@@ -149,6 +150,7 @@ class AccountListView(LoginRequiredMixin, ListView):
         context["transactions_metrics"] = metrics.get_transactions_value(
             user=self.request.user)
         context["form_accounts"] = AccountModelForm()
+        context["form_recipes"] = RecipesModelForm()
         return context
 
 
@@ -188,4 +190,16 @@ class DashboardListView(LoginRequiredMixin, ListView):
         context["form_accounts"] = AccountModelForm()
         context["transactions_metrics"] = metrics.get_transactions_value(
             user=self.request.user)
+        context["form_recipes"] = RecipesModelForm()
+        return context
+
+
+class RecipesListView(LoginRequiredMixin, ListView):
+    model = Recipes
+    template_name = 'recipes.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form_recipes"] = RecipesModelForm()
+
         return context
