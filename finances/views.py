@@ -4,15 +4,9 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-<<<<<<< HEAD
-from finances.models import Transaction, Categorie, Account
-from finances.forms import TransactionModelForm, CategorieModelForm, AccountModelForm
+from finances.models import Transaction, Categorie, Account, Recipes, Revenues
+from finances.forms import TransactionModelForm, CategorieModelForm, AccountModelForm, RecipesModelForm, RevenuesModelForm
 from app.metrics import get_transactions_value, get_graphics_data
-=======
-from finances.models import Transaction, Categorie, Account, Recipes
-from finances.forms import TransactionModelForm, CategorieModelForm, AccountModelForm, RecipesModelForm
-from app import metrics
->>>>>>> new_feature_recipes_revenues
 
 # Create your views here.
 
@@ -37,6 +31,7 @@ class TransactionListView(LoginRequiredMixin, ListView):
             user=self.request.user)
         context["accounts"] = Account.objects.filter(user=self.request.user)
         context["form_recipes"] = RecipesModelForm()
+        context["form_revenues"] = RevenuesModelForm()
         return context
 
 
@@ -122,6 +117,8 @@ class CategorieListView(LoginRequiredMixin, ListView):
         context["transactions_metrics"] = get_transactions_value(
             user=self.request.user)
         context["form_categories"] = CategorieModelForm()
+        context["form_recipes"] = RecipesModelForm()
+        context["form_revenues"] = RevenuesModelForm()
         return context
 
 
@@ -157,6 +154,7 @@ class AccountListView(LoginRequiredMixin, ListView):
             user=self.request.user)
         context["form_accounts"] = AccountModelForm()
         context["form_recipes"] = RecipesModelForm()
+        context["form_revenues"] = RevenuesModelForm()
         return context
 
 
@@ -196,12 +194,10 @@ class DashboardListView(LoginRequiredMixin, ListView):
         context["form_accounts"] = AccountModelForm()
         context["transactions_metrics"] = get_transactions_value(
             user=self.request.user)
-<<<<<<< HEAD
         json_metrics = get_graphics_data(user=self.request.user)
         context['graphics_metrics'] = json.dumps(json_metrics)
-=======
         context["form_recipes"] = RecipesModelForm()
->>>>>>> new_feature_recipes_revenues
+        context["form_revenues"] = RevenuesModelForm()
         return context
 
 
@@ -212,5 +208,16 @@ class RecipesListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["form_recipes"] = RecipesModelForm()
+
+        return context
+    
+
+class RevenuesListView(LoginRequiredMixin, ListView):
+    model = Revenues
+    template_name = 'revenues.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form_revenues"] = RevenuesModelForm()
 
         return context

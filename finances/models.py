@@ -78,6 +78,24 @@ class Recipes(models.Model):
 
     def __str__(self):
         return self.description
+    
+class Revenues(models.Model):
+    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='user_revenues', verbose_name='Receitas')
+    category = models.ForeignKey(Categorie, on_delete=models.PROTECT, related_name='revenues_categorie', verbose_name='Categoria')
+    value = models.FloatField(verbose_name='Valor')
+    description = models.CharField(max_length=150, blank=True, null=True, verbose_name='Descrição')
+    due_date = models.DateField(verbose_name='Data de Vencimento')
+    account = models.ForeignKey(Account, on_delete=models.PROTECT, related_name='revenues_accounts', verbose_name='Conta')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Data de Criação')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Última Atualização')
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Despesa'
+        verbose_name_plural = 'Despesas'
+
+    def __str__(self):
+        return self.description
 
 
 class Transaction(models.Model):

@@ -14,7 +14,7 @@
                         <li><a class="dropdown-item addrecipesbutton" href="#">
                             <i class="bi bi-arrow-up-circle me-2 text-success"></i>Receita
                         </a></li>
-                        <li><a class="dropdown-item" href="#">
+                        <li><a class="dropdown-item addrevenuesbutton" href="#">
                             <i class="bi bi-arrow-down-circle me-2 text-danger"></i>Despesa
                         </a></li>
                     </ul>
@@ -116,7 +116,7 @@
                         <li><a class="dropdown-item addrecipesbutton" href="#">
                             <i class="bi bi-arrow-up-circle me-2 text-success"></i>Receita
                         </a></li>
-                        <li><a class="dropdown-item" href="#">
+                        <li><a class="dropdown-item addrevenuesbutton" href="#">
                             <i class="bi bi-arrow-down-circle me-2 text-danger"></i>Despesa
                         </a></li>
                     </ul>
@@ -146,15 +146,6 @@
                             <i class="bi bi-credit-card"></i>
                         </div>
                         <span>Contas</span>
-                    </a>
-                </li>
-                
-                <li class="nav-item">
-                    <a href="{% url 'categorie-list' %}" class="nav-link d-flex align-items-center gap-2">
-                        <div class="icon-wrapper">
-                            <i class="bi bi-tags"></i>
-                        </div>
-                        <span>Categorias</span>
                     </a>
                 </li>
             </ul>
@@ -288,3 +279,4 @@
 {% include 'components/partials/modal_categorie.html' %}
 {% include 'components/partials/modal_accounts.html' %}
 {% include 'components/partials/modal_recipes.html' %}
+{% include 'components/partials/modal_revenues.html' %}
