@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const step = (timestamp) => {
             if (!startTimestamp) startTimestamp = timestamp;
             const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-            const current = Math.floor(progress * (end - start) + start);
+            const current = progress * (end - start) + start;
             element.textContent = formatCurrency(current);
             if (progress < 1) {
                 window.requestAnimationFrame(step);
@@ -281,7 +281,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar contadores animados
     const counterElements = document.querySelectorAll('[data-counter]');
     counterElements.forEach(element => {
-        const target = parseInt(element.getAttribute('data-counter'));
+        const target = parseFloat(element.getAttribute('data-counter').trim());
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {

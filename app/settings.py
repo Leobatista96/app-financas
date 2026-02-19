@@ -157,7 +157,14 @@ TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
 
+USE_L10N = True
+
 USE_TZ = True
+
+USE_THOUSAND_SEPARATOR = True
+
+
+
 
 
 # Static files (CSS, JavaScript, Images)
@@ -193,8 +200,18 @@ RABBITMQPASS = config('RABBITMQPASSWORD', default='guest')
 # Para desenvolvimento local, usar localhost; para produção, usar nome do container
 if DJANGO_ENV == 'production':
     CELERY_BROKER_URL = f'amqp://{RABBITMQUSER}:{RABBITMQPASS}@rabbitmq:5672//'
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+    DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER')
+    
 else:
     CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+    # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 CELERY_RESULT_BACKEND = 'django-db'
 
