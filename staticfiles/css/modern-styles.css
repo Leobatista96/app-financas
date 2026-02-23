@@ -247,9 +247,12 @@ body {
 }
 
 .metric-card .metric-value {
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-xl);
   font-weight: 700;
+  line-height: 1.2;
   margin-bottom: var(--spacing-xs);
+  white-space: nowrap;
+  overflow: visible;
 }
 
 .metric-card .metric-label {

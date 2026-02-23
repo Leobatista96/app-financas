@@ -33,8 +33,9 @@ class TransactionAdmin(admin.ModelAdmin):
 
 
 class CategoriesAdmin(admin.ModelAdmin):
-    list_display = ['category', 'created_at', 'updated_at',]
-    search_fields = ['category', 'created_at', 'updated_at',]
+    list_display = ['category', 'category_type', 'created_at', 'updated_at',]
+    search_fields = ['category', 'category_type', 'created_at', 'updated_at',]
+    list_filter = ['category_type']
     exclude = ['user',]
 
     def save_model(self, request, obj, form, change):

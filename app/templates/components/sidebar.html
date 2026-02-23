@@ -3,6 +3,7 @@
     <div class="sidebar-content pt-3">
         <nav class="flex-grow-1">
             <ul class="nav flex-column" id="menu">
+                
                 <li class="nav-item">
                     <a href="{% url 'dashboard-list' %}" class="nav-link d-flex align-items-center gap-2">
                         <div class="icon-wrapper">
@@ -88,6 +89,23 @@
         <!-- Navigation Menu -->
         <nav class="flex-grow-1">
             <ul class="nav flex-column" id="mobile-menu">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link d-flex align-items-center gap-2 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-plus-circle"></i>
+                        </div>
+                        <span>Novo</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark">
+                        <li><a class="dropdown-item addrecipesbutton" href="#">
+                            <i class="bi bi-arrow-up-circle me-2 text-success"></i>Receita
+                        </a></li>
+                        <li><a class="dropdown-item addrevenuesbutton" href="#">
+                            <i class="bi bi-arrow-down-circle me-2 text-danger"></i>Despesa
+                        </a></li>
+                    </ul>
+                </li>
+                
                 <li class="nav-item">
                     <a href="{% url 'dashboard-list' %}" class="nav-link d-flex align-items-center gap-2">
                         <div class="icon-wrapper">
@@ -112,15 +130,6 @@
                             <i class="bi bi-credit-card"></i>
                         </div>
                         <span>Contas</span>
-                    </a>
-                </li>
-                
-                <li class="nav-item">
-                    <a href="{% url 'categorie-list' %}" class="nav-link d-flex align-items-center gap-2">
-                        <div class="icon-wrapper">
-                            <i class="bi bi-tags"></i>
-                        </div>
-                        <span>Categorias</span>
                     </a>
                 </li>
             </ul>
@@ -203,6 +212,25 @@
 .modern-sidebar .nav-link.active,
 .offcanvas .nav-link.active {
     color: white !important;
+}
+
+/* Estilização do dropdown */
+.dropdown-menu-dark {
+    background-color: #1e293b !important;
+    border: 1px solid #475569 !important;
+}
+
+.dropdown-menu-dark .dropdown-item {
+    color: #cbd5e1 !important;
+}
+
+.dropdown-menu-dark .dropdown-item:hover {
+    background-color: #334155 !important;
+    color: #667eea !important;
+}
+
+.dropdown-toggle::after {
+    margin-left: auto;
 }
 
 /* Melhorar contraste do saldo atual */

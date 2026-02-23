@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load l10n %}
 
 
 
@@ -10,7 +11,7 @@
         <p class="text-muted mb-0">Bem-vindo de volta, {{ user.username|title }}! Aqui está o resumo das suas finanças.</p>
     </div>
     <div class="d-flex gap-2">
-        <button class="btn btn-modern btn-primary" data-bs-toggle="modal" data-bs-target="#newTransactionModal">
+        <button class="btn btn-modern btn-primary" id="newTransactionButton">
             <i class="bi bi-plus-circle me-2"></i>Nova Transação
         </button>
         <button class="btn btn-outline-primary" onclick="window.print()">
@@ -29,7 +30,7 @@
                 <div class="metric-icon">
                     <i class="bi bi-arrow-up-circle"></i>
                 </div>
-                <div class="metric-value" data-counter="{% if transactions_metrics.total_categories_revenue is None %} 0,00 {% else %} {{ transactions_metrics.total_categories_revenue | floatformat:'2'}}  {% endif %}">
+                <div class="metric-value" data-counter="{% localize off %}{{transactions_metrics.total_categories_revenue|default:0}}{% endlocalize %}">
                 </div>
                 <div class="metric-label">Receitas do Mês</div>
             </div>
@@ -40,7 +41,7 @@
                 <div class="metric-icon">
                     <i class="bi bi-arrow-down-circle"></i>
                 </div>
-                <div class="metric-value" data-counter="{% if transactions_metrics.total_categories_expense is None %} 0,00 {% else %} {{transactions_metrics.total_categories_expense | floatformat:'2'}} {% endif %}"> 
+                <div class="metric-value" data-counter="{% localize off %}{{transactions_metrics.total_categories_expense|default:0}}{% endlocalize %}">
                 </div>
                 <div class="metric-label">Despesas do Mês</div>
             </div>
@@ -51,7 +52,7 @@
                 <div class="metric-icon">
                     <i class="bi bi-wallet2"></i>
                 </div>
-                <div class="metric-value" data-counter="{% if transactions_metrics.balance is None %} 0,00 {% else %} {{transactions_metrics.balance | floatformat:'2'}} {%endif%}">
+                <div class="metric-value" data-counter="{% localize off %}{{transactions_metrics.balance|default:0}}{% endlocalize %}">
                 </div>
                 <div class="metric-label">Saldo Atual</div>
             </div>

@@ -9,7 +9,9 @@ from finances.views import (
     CategorieListView,
     AccountCreateView,
     AccountListView, 
-    DashboardListView
+    DashboardListView,
+    RecipesListView,
+    RevenuesListView,
 )
 
 
@@ -24,6 +26,10 @@ urlpatterns = [
 
     path('new_categorie/', CategorieCreateView.as_view(), name='categorie-create'),
     path('categories/', CategorieListView.as_view(), name='categorie-list'),
+
+    path('recipes/', RecipesListView.as_view(), name='recipes-list'),
+    
+    path('revenues/', RevenuesListView.as_view(), name='revenues-list'),
 
     path('new_account/', AccountCreateView.as_view(), name='account-create'),
     path('accounts/', AccountListView.as_view(), name='account-list'),

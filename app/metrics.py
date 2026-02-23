@@ -7,10 +7,10 @@ def get_transactions_value(user):
         user=user).aggregate(Sum("value"))['value__sum']
 
     total_categories_revenues = Transaction.objects.filter(
-        category__category__icontains='Receita', user=user).aggregate(Sum('value'))['value__sum']
+        category__category_type='revenue', user=user).aggregate(Sum('value'))['value__sum']
 
     total_categories_expenses = Transaction.objects.filter(
-        category__category__icontains='Despesa', user=user).aggregate(Sum('value'))['value__sum']
+        category__category_type='expense', user=user).aggregate(Sum('value'))['value__sum']
 
     if total_categories_revenues is None:
         total_categories_revenues = 0
@@ -32,12 +32,12 @@ def get_graphics_data(user):
 
     total_recipes = Transaction.objects.filter(
         user=user,
-        category__category__icontains='Receita',    
+        category__category_type='revenue',    
     ).count()
 
     total_expenses = Transaction.objects.filter(
         user=user,
-        category__category__icontains='Despesa',
+        category__category_type='expense',
     ).count()
 
     categories_data = Transaction.objects.filter(

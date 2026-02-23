@@ -26,33 +26,50 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Gerenciar sidebar responsiva
     function initializeSidebar() {
-        // Marcar item ativo no menu - tanto desktop quanto mobile
-        const currentPath = window.location.pathname;
-        const navLinks = document.querySelectorAll('.modern-sidebar .nav-link, .offcanvas .nav-link');
+    // Marcar item ativo no menu - tanto desktop quanto mobile
+    const currentPath = window.location.pathname;
+    const navLinks = document.querySelectorAll('.modern-sidebar .nav-link, .offcanvas .nav-link');
+    
+    navLinks.forEach(link => {
+        const href = link.getAttribute('href');
         
-        navLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            if (href && href !== '#' && currentPath.includes(href)) {
+        // Remover classe active de todos os links primeiro
+        link.classList.remove('active');
+        
+        // Adicionar active apenas se o caminho for exatamente igual
+        // OU se for a home e o caminho atual for '/'
+        if (href && href !== '#') {
+            // Normalizar os caminhos removendo trailing slash
+            const normalizedHref = href.replace(/\/$/, '');
+            const normalizedPath = currentPath.replace(/\/$/, '');
+            
+            // Comparação exata do caminho
+            if (normalizedHref === normalizedPath) {
                 link.classList.add('active');
             }
-        });
-        
-        // Auto-close mobile menu when clicking on links
-        const mobileNavLinks = document.querySelectorAll('.offcanvas .nav-link');
-        const mobileOffcanvas = document.querySelector('#sidebarMenuLabel');
-        
-        mobileNavLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                if (this.getAttribute('href') && this.getAttribute('href') !== '#') {
-                    // Close the offcanvas
-                    const bsOffcanvas = bootstrap.Offcanvas.getInstance(mobileOffcanvas);
-                    if (bsOffcanvas) {
-                        bsOffcanvas.hide();
-                    }
+            // Caso especial para home/dashboard
+            else if (normalizedHref === '' && normalizedPath === '') {
+                link.classList.add('active');
+            }
+        }
+    });
+    
+    // Auto-close mobile menu when clicking on links
+    const mobileNavLinks = document.querySelectorAll('.offcanvas .nav-link');
+    const mobileOffcanvas = document.querySelector('#sidebarMenuLabel');
+    
+    mobileNavLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            if (this.getAttribute('href') && this.getAttribute('href') !== '#') {
+                // Close the offcanvas
+                const bsOffcanvas = bootstrap.Offcanvas.getInstance(mobileOffcanvas);
+                if (bsOffcanvas) {
+                    bsOffcanvas.hide();
                 }
-            });
+            }
         });
-    }
+    });
+}
     
     // Inicializar tooltips do Bootstrap
     function initializeTooltips() {
@@ -142,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 data: {
                     labels: chartData.categories.labels,
                     datasets: [{
-                        label: 'Gastos por Categoria',
+                        label: ' Total',
                         data: chartData.categories.values,
                         backgroundColor: [
                             'rgba(102, 126, 234, 0.8)',
@@ -300,7 +317,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const step = (timestamp) => {
             if (!startTimestamp) startTimestamp = timestamp;
             const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-            const current = Math.floor(progress * (end - start) + start);
+            const current = progress * (end - start) + start;
             element.textContent = formatCurrency(current);
             if (progress < 1) {
                 window.requestAnimationFrame(step);
@@ -312,7 +329,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar contadores animados
     const counterElements = document.querySelectorAll('[data-counter]');
     counterElements.forEach(element => {
-        const target = parseInt(element.getAttribute('data-counter'));
+        const target = parseFloat(element.getAttribute('data-counter').trim());
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {

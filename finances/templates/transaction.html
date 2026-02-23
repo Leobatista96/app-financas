@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load static %}
+{% load l10n %}
 
 
 
@@ -31,7 +32,7 @@
                 </div>
                 <div>
                     <div class="metric-label">Saldo</div>
-                    <div class="metric-value" data-counter="{{transactions_metrics.balance | floatformat:'2'}}"></div>
+                    <div class="metric-value" data-counter="{% localize off %}{{transactions_metrics.balance}}{% endlocalize %}"></div>
                 </div>
             </div>
         </div>
@@ -45,7 +46,7 @@
                 </div>
                 <div>
                     <div class="metric-label">Total</div>
-                    <div class="metric-value" data-counter=" {% if transactions_metric.total_transactions_value is None %} 0,00 {% else %} {{transactions_metrics.total_transactions_value | floatformat:'2'}} {% endif %}">
+                    <div class="metric-value" data-counter="{% localize off %}{{transactions_metrics.total_transactions_value|default:0}}{% endlocalize %}">
                     </div>
                 </div>
             </div>
@@ -60,7 +61,7 @@
                 </div>
                 <div>
                     <div class="metric-label">Receitas</div>
-                    <div class="metric-value" data-counter=" {% if transactions_metrics.total_categories_revenue is None %} 0,00 {% else %} {{ transactions_metrics.total_categories_revenue | floatformat:'2'}} {% endif %} ">
+                    <div class="metric-value" data-counter="{% localize off %}{{transactions_metrics.total_categories_revenue|default:0}}{% endlocalize %}">
                     </div>
                 </div>
             </div>
@@ -75,7 +76,7 @@
                 </div>
                 <div>
                     <div class="metric-label">Despesas</div>
-                    <div class="metric-value" data-counter=" {% if transactions_metrics.total_categories_expense is None %} 0,00 {% else %} {{ transactions_metrics.total_categories_expense | floatformat:'2'}} {% endif %} ">
+                    <div class="metric-value" data-counter="{% localize off %}{{transactions_metrics.total_categories_expense|default:0}}{% endlocalize %}">
                     </div>
                 </div>
             </div>
@@ -117,7 +118,7 @@
                         <td>
                             <div class="d-flex align-items-center">
                                 
-                                {% if transaction.category.category == 'Receita' %}
+                                {% if transaction.category.category_type == 'revenue' %}
                                     <div class="icon-wrapper me-3 bg-success bg-opacity-10 text-success rounded-circle p-1">
                                         <i class="bi bi-arrow-up"></i>
                                     </div>
@@ -134,7 +135,7 @@
                         </td>
                         <td>
                             <span class="badge rounded-pill 
-                            {% if transaction.category.category == 'Despesa' %}bg-danger{% else %}bg-success{% endif %}">
+                            {% if transaction.category.category_type == 'expense' %}bg-danger{% else %}bg-success{% endif %}">
                                 {{ transaction.category }}
                             </span>
                         </td>
@@ -145,8 +146,8 @@
                             </div>
                         </td>
                         <td>
-                            <span class="fw-bold {% if transaction.category.category == 'Receita' %}text-success{% else %}text-danger{% endif %}">
-                                R$ {{ transaction.value|floatformat:"2" }}
+                            <span class="fw-bold {% if transaction.category.category_type == 'revenue' %}text-success{% else %}text-danger{% endif %}">
+                                R$ {{ transaction.value|floatformat:2}}
                             </span>
                         </td>
                         <td>
