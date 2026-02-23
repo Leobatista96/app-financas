@@ -11,7 +11,7 @@
         <p class="text-muted mb-0">Bem-vindo de volta, {{ user.username|title }}! Aqui está o resumo das suas finanças.</p>
     </div>
     <div class="d-flex gap-2">
-        <button class="btn btn-modern btn-primary" data-bs-toggle="modal" data-bs-target="#newTransactionModal">
+        <button class="btn btn-modern btn-primary" id="newTransactionButton">
             <i class="bi bi-plus-circle me-2"></i>Nova Transação
         </button>
         <button class="btn btn-outline-primary" onclick="window.print()">

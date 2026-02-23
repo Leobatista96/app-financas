@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 data: {
                     labels: chartData.categories.labels,
                     datasets: [{
-                        label: 'Gastos por Categoria',
+                        label: ' Total',
                         data: chartData.categories.values,
                         backgroundColor: [
                             'rgba(102, 126, 234, 0.8)',
