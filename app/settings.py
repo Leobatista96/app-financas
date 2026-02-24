@@ -34,7 +34,7 @@ else:
     DEBUG = True
     SECRET_KEY = 'django-insecure-a2@bd6298lt(d$hg*p7^l3f)xxk19^!=o*j)qnubbcg&z%q=r7'
 
-ALLOWED_HOSTS = ['localhost', 'financas.leonardobatista96.com.br',
+ALLOWED_HOSTS = ['localhost', 'financas.leonardobatista96.com',
                  '127.0.0.1', '0.0.0.0']
 
 
@@ -187,7 +187,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://financas.leonardobatista96.com.br",
+    "https://financas.leonardobatista96.com",
 ]
 
 
