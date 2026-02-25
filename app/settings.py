@@ -27,8 +27,7 @@ DJANGO_ENV = config('DJANGO_ENV')
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECURITY WARNING: don't run with debug turned on in production!
 if DJANGO_ENV == 'production':
-    DEBUG = True
-    # DEBUG = False
+    DEBUG = False
     SECRET_KEY = config('SECRET_KEY')
 else:
     DEBUG = True
@@ -227,4 +226,21 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     "ACESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1)
+}
+
+JAZZMIN_SETTINGS = {
+    "custom_links": {
+        "finances": [
+            {
+                "name": "Voltar para a página inicial",
+                "url": "dashboard-list",
+                "icon": "fas fa-home",
+                "new_window": False,
+            }
+        ]
+    },
+
+    "usermenu_links": [
+        {"name": "Voltar para a página inicial", "url": "dashboard-list", "new_window": False},
+    ],
 }
