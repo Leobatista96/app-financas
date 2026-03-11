@@ -115,8 +115,8 @@ if DJANGO_ENV == 'production':
             "NAME": config("POSTGRESDB"),
             "USER": config("POSTGRESUSER"),
             "PASSWORD": config("POSTGRESPASSWORD"),
-            "HOST": "financas_db",
-            "PORT": "5432",
+            "HOST": config("POSTGRES_HOST"),
+            "PORT": config("POSTGRES_PORT"),
         }
     }
 
