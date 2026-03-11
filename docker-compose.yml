@@ -7,6 +7,13 @@ services:
             - 8002:8002
         depends_on:
             - financas_db
+        environment:
+            - DJANGO_ENV=${DJANGO_ENV}
+            - POSTGRES_HOST=${POSTGRES_HOST}
+            - POSTGRES_PORT=${POSTGRES_PORT}
+            - POSTGRESDB=${POSTGRESDB}
+            - POSTGRESUSER=${POSTGRESUSER}
+            - POSTGRESPASSWORD=${POSTGRESPASSWORD}
 
     financas_db:
         image: postgres
