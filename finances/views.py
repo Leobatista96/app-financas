@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from finances.models import Transaction, Categorie, Account
 from finances.forms import TransactionModelForm, CategorieModelForm, AccountModelForm
-from app.metrics import get_transactions_value, get_graphics_data
+from app.metrics import get_transactions_value, get_category_graphics_data, get_montly_graphics_metric
 
 # Create your views here.
 
@@ -188,6 +188,8 @@ class DashboardListView(LoginRequiredMixin, ListView):
         context["form_accounts"] = AccountModelForm()
         context["transactions_metrics"] = get_transactions_value(
             user=self.request.user)
-        json_metrics = get_graphics_data(user=self.request.user)
-        context['graphics_metrics'] = json.dumps(json_metrics)
+        category_metrics = get_category_graphics_data(user=self.request.user)
+        context['category_graphics_metrics'] = json.dumps(category_metrics)
+        montly_metrics = get_montly_graphics_metric(user=self.request.user)
+        context['montly_graphics_metrics'] = json.dumps(montly_metrics)
         return context
