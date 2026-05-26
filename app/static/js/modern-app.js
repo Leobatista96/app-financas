@@ -129,6 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Gráfico de receitas vs despesas
         const revenueExpenseCtx = document.getElementById('revenueExpenseChart');
+
         if (revenueExpenseCtx && chartData.total_recipes) {
 
             new Chart(revenueExpenseCtx, {
@@ -219,41 +220,63 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }
-        
+
         // Gráfico de evolução mensal
         const monthlyCtx = document.getElementById('monthlyChart');
-        if (monthlyCtx) {
-            new Chart(monthlyCtx, {
+
+        function renderMonthlyChart(mode = 'both') {
+            if (!monthlyCtx || !montlyData) {
+                console.warn('monthlyCtx ou montlyData não disponível', { monthlyCtx, montlyData });
+                return;
+            }
+
+            const datasets = [];
+
+            // Adicionar receita se solicitado
+            if (mode === 'revenue' || mode === 'both') {
+                datasets.push({
+                    label: 'Receita',
+                    data: montlyData.total_month_value_revenue,
+                    borderColor: 'rgba(74, 222, 128, 1)',
+                    backgroundColor: 'rgba(74, 222, 128, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                });
+            }
+
+            // Adicionar despesa se solicitado
+            if (mode === 'expense' || mode === 'both') {
+                datasets.push({
+                    label: 'Despesa',
+                    data: montlyData.total_month_value_expense,
+                    borderColor: 'rgba(239, 68, 68, 1)',
+                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                });
+            }
+
+            if (window.monthlyChartInstance) {
+                window.monthlyChartInstance.destroy();
+            }
+
+            window.monthlyChartInstance = new Chart(monthlyCtx, {
                 type: 'line',
                 data: {
                     labels: montlyData.month_labels,
-                    datasets: [{
-                        label: 'Receita',
-                        data: montlyData.total_month_value_revenue,
-                        borderColor: 'rgba(74, 222, 128, 1)',
-                        backgroundColor: 'rgba(74, 222, 128, 0.1)',
-                        tension: 0.4,
-                        fill: true
-                    }, {
-                        label: 'Despesas',
-                        data: montlyData.total_month_value_expense,
-                        borderColor: 'rgba(239, 68, 68, 1)',
-                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                        tension: 0.4,
-                        fill: true
-                    }]
+                    datasets: datasets
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            position: 'top',
+                            position: 'bottom',
                             labels: {
-                                padding: 20,
+                                padding: 10,
                                 font: {
-                                    size: 14,
-                                    weight: '500'
+                                    size: 15,
+                                    weight: '100',
                                 }
                             }
                         }
@@ -262,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         y: {
                             beginAtZero: true,
                             grid: {
-                                color: 'rgba(0, 0, 0, 0.1)'
+                                color: 'rgba(255, 252, 252, 0.1)'
                             }
                         },
                         x: {
@@ -274,6 +297,36 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }
+
+        // Renderizar com ambos inicialmente
+        console.log('Tentando renderizar gráfico mensal com dados:', { montlyData, monthlyCtx });
+        renderMonthlyChart('both');
+
+        // Listeners dos botões
+        const revenueBtn = document.getElementById('revenue-filter');
+        if (revenueBtn) {
+            revenueBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                renderMonthlyChart('revenue');
+            });
+        }
+
+        const expenseBtn = document.querySelectorAll('.btn-outline-danger')[0];
+        if (expenseBtn) {
+            expenseBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                renderMonthlyChart('expense');
+            });
+        }
+
+        const bothBtn = document.querySelectorAll('.btn-primary')[0];
+        if (bothBtn) {
+            bothBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                renderMonthlyChart('both');
+            });
+        }
+
     }
     
     // Sistema de notificações

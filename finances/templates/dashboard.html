@@ -80,8 +80,7 @@
           <div class="dropdown">
             <button
               class="btn btn-sm btn-outline-secondary dropdown-toggle"
-              data-bs-toggle="dropdown"
-            >
+              data-bs-toggle="dropdown">
               Este Mês
             </button>
             <ul class="dropdown-menu">
@@ -113,7 +112,6 @@
           class="card-header d-flex justify-content-between align-items-center"
         >
           <h5 class="mb-0">Gastos por Categoria</h5>
-          <button class="btn btn-sm btn-outline-primary">Ver Todos</button>
         </div>
         <div class="card-body">
           <div style="height: 300px; position: relative">
@@ -140,9 +138,9 @@
         >
           <h5 class="mb-0">Evolução Mensal</h5>
           <div class="d-flex gap-2">
-            <button class="btn btn-sm btn-outline-success">Receitas</button>
-            <button class="btn btn-sm btn-outline-danger">Despesas</button>
-            <button class="btn btn-sm btn-primary">Ambos</button>
+            <button class="btn btn-sm btn-outline-success" id='revenue-filter'>Receitas</button>
+            <button class="btn btn-sm btn-outline-danger" id='expense-filter'>Despesas</button>
+            <button class="btn btn-sm btn-primary" id='both-filter'>Ambos</button>
           </div>
         </div>
         <div class="card-body">
@@ -154,7 +152,7 @@
     </div>
   </div>
 
-  <!-- Recent Transactions & Quick Actions -->
+  {% comment %} <!-- Recent Transactions & Quick Actions -->
   <div class="row g-4">
     <!-- Recent Transactions -->
     <div class="col-lg-8">
@@ -259,33 +257,7 @@
       </div>
     </div>
 
-    <!-- Quick Actions & Goals -->
-    <div class="col-lg-4">
-      <!-- Quick Actions -->
-      <div class="modern-card mb-4">
-        <div class="card-header">
-          <h5 class="mb-0">Ações Rápidas</h5>
-        </div>
-        <div class="card-body">
-          <div class="d-grid gap-2">
-            <button
-              class="btn btn-modern btn-success"
-              onclick="showNotification('Nova receita adicionada!', 'success')"
-            >
-              <i class="bi bi-plus-circle me-2"></i>Adicionar Receita
-            </button>
-            <button class="btn btn-modern btn-danger">
-              <i class="bi bi-dash-circle me-2"></i>Registrar Despesa
-            </button>
-            <button class="btn btn-modern btn-info">
-              <i class="bi bi-arrow-left-right me-2"></i>Transferência
-            </button>
-            <button class="btn btn-outline-primary">
-              <i class="bi bi-calendar-plus me-2"></i>Agendar Pagamento
-            </button>
-          </div>
-        </div>
-      </div>
+  
 
       <!-- Monthly Goal -->
       <div class="modern-card">
@@ -335,7 +307,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> {% endcomment %}
 
 <style>
   .progress-circle {
