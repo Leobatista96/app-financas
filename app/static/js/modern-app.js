@@ -7,7 +7,8 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeTooltips();
     initializeCharts();
     initializeNotifications();
-    getChartData();
+    getChartCategoryData();
+    getMontlyChartData();
     
     // Adicionar classes de animação aos elementos
     function initializeAnimations() {
@@ -79,16 +80,31 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function getChartData() {
+    function getMontlyChartData(){
+        const montlyChartData = document.getElementById('category-chart');
+        if (montlyChartData) {
+            try {
+                const data = JSON.parse(montlyChartData.textContent);
+                console.log('Dados do grafico de mes carregado', data)
+                return data
+            }
+            catch (e) {
+                console.error('Erro ao carregar grafico de mes', e);
+                return null;
+            }
+        }
+    }
+
+    function getChartCategoryData() {
         const scriptElement = document.getElementById('chart-data');
         if (scriptElement) {
             try {
                 const data = JSON.parse(scriptElement.textContent);
-                console.log('Dados dos gráficos carregados', data)
+                console.log('Dados do gráfico de categoria carregado', data)
                 return data;
             }
             catch (e) {
-                console.error('Erro', e);
+                console.error('Erro ao carregar grafico de categoria', e);
                 return null;
             }
         }
@@ -102,7 +118,8 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Chart.js não carregado');
             return;
         }
-        const chartData = getChartData();
+        const chartData = getChartCategoryData();
+        const montlyData = getMontlyChartData();
 
         if (!chartData) {
             console.warn('Usando dados de exemplo');
@@ -113,7 +130,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Gráfico de receitas vs despesas
         const revenueExpenseCtx = document.getElementById('revenueExpenseChart');
         if (revenueExpenseCtx && chartData.total_recipes) {
-            console.log('Criando gráficos com dados dinamicos');
 
             new Chart(revenueExpenseCtx, {
                 type: 'doughnut',
@@ -210,17 +226,17 @@ document.addEventListener('DOMContentLoaded', function() {
             new Chart(monthlyCtx, {
                 type: 'line',
                 data: {
-                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                    labels: montlyData.month_labels,
                     datasets: [{
-                        label: 'Receitas',
-                        data: [5000, 5500, 5200, 5800, 6000, 6200],
+                        label: 'Receita',
+                        data: montlyData.total_month_value_revenue,
                         borderColor: 'rgba(74, 222, 128, 1)',
                         backgroundColor: 'rgba(74, 222, 128, 0.1)',
                         tension: 0.4,
                         fill: true
                     }, {
                         label: 'Despesas',
-                        data: [3500, 4000, 3800, 4200, 4500, 4300],
+                        data: montlyData.total_month_value_expense,
                         borderColor: 'rgba(239, 68, 68, 1)',
                         backgroundColor: 'rgba(239, 68, 68, 0.1)',
                         tension: 0.4,

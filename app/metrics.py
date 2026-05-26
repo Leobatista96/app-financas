@@ -1,5 +1,6 @@
 from django.db.models import Sum, Count
 from finances.models import Transaction
+from django.db.models.functions import ExtractMonth
 
 
 def get_transactions_value(user):
@@ -28,7 +29,7 @@ def get_transactions_value(user):
     )
 
 
-def get_graphics_data(user):
+def get_category_graphics_data(user):
 
     total_recipes = Transaction.objects.filter(
         user=user,
@@ -56,4 +57,34 @@ def get_graphics_data(user):
             'labels': categories_labels,
             'values': categories_values,
         }
+    }
+
+def get_montly_graphics_metric(user):
+    total_value_by_month_expense = Transaction.objects.filter(user=user, category__category_type='expense').annotate(month=ExtractMonth('due_date')).values('month').annotate(total=Sum('value')).order_by('month')
+    total_value_by_month_revenue = Transaction.objects.filter(user=user, category__category_type='revenue').annotate(month=ExtractMonth('due_date')).values('month').annotate(total=Sum('value')).order_by('month')
+
+
+    MONTHS = {
+        1: 'Janeiro',
+        2: 'Fevereiro',
+        3: 'Março',
+        4: 'Abril',
+        5: 'Maio',
+        6: 'Junho',
+        7: 'Julho',
+        8: 'Agosto',
+        9: 'Setembro',
+        10: 'Outubro',
+        11: 'Novembro',
+        12: 'Dezembro',
+    }
+
+    month_labels = [MONTHS[item['month']] for item in total_value_by_month_expense]
+    total_month_value_expense = [item['total'] for item in total_value_by_month_expense]
+    total_month_value_revenue = [item['total'] for item in total_value_by_month_revenue]
+
+    return {
+        'month_labels': month_labels,
+        'total_month_value_expense': total_month_value_expense,
+        'total_month_value_revenue': total_month_value_revenue,
     }

@@ -1,142 +1,155 @@
-<div class="modal fade" id="ModalTransaction" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Nova Transação</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="transactionForm">
-                    {% csrf_token %}
-                    <div class="mb-4">
-                        <span>
-                            Valor: {{form.value}}
-                        </span>
-                    </div>
-                    <div class="mb-4">
-                        <span>
-                            Descrição: {{form.description}}
-                        </span>
-                    </div>
-                    <div class="mb-4">
-                        <label for="due_date"> Data de Vencimento</label>
-                        {{form.due_date}}
-                    </div>
-                    <div class="mb-4">
-                        <span>
-                            Conta: {{form.account}}
-                        </span>
-                    </div>
-                    <div class="mb-4">
-                        <span>
-                            Categoria: {{form.category}}
-                        </span>
-                    </div>
-                    <button type="submit" class="btn btn-success" id="saveTransaction" onclick="showNotification('Transação Cadastrada!', 'success')">Salvar</button>
-                </form>
-            </div>
-        </div>
+<div
+  class="modal fade"
+  id="ModalTransaction"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">
+          Nova Transação
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form id="transactionForm">
+          {% csrf_token %}
+          <div class="mb-3">
+            <span> Valor: {{form.value}} </span>
+          </div>
+          <div class="mb-3">
+            <span> Descrição: {{form.description}} </span>
+          </div>
+          <div class="mb-3">
+            <span>Data de vencimento: {{form.due_date}}</span>
+          </div>
+          <div class="mb-3">
+            <span> Conta: {{form.account}} </span>
+          </div>
+          <div class="mb-3">
+            <span> Categoria: {{form.category}} </span>
+          </div>
+          <button
+            type="submit"
+            class="btn btn-success"
+            id="saveTransaction"
+            onclick="showNotification('Transação Cadastrada!', 'success')"
+          >
+            Salvar
+          </button>
+        </form>
+      </div>
     </div>
+  </div>
 </div>
 
 <style>
-/* Estilos específicos para o modal de transação */
-#ModalTransaction .modal-content {
+  /* Estilos específicos para o modal de transação */
+  #ModalTransaction .modal-content {
     background: #1e293b;
     border: 1px solid #475569;
     color: #f1f5f9;
-}
+  }
 
-#ModalTransaction .modal-header {
+  #ModalTransaction .modal-header {
     background: #334155;
     border-bottom: 1px solid #475569;
-}
+  }
 
-#ModalTransaction .modal-title {
+  #ModalTransaction .modal-title {
     color: #f1f5f9 !important;
-}
+  }
 
-#ModalTransaction .btn-close {
+  #ModalTransaction .btn-close {
     filter: brightness(0) invert(1);
-}
+  }
 
-#ModalTransaction .form-control,
-#ModalTransaction .form-select {
+  #ModalTransaction .form-control,
+  #ModalTransaction .form-select {
     background: #334155 !important;
     border: 1px solid #475569 !important;
     color: #f1f5f9 !important;
-}
+  }
 
-#ModalTransaction .form-control:focus,
-#ModalTransaction .form-select:focus {
+  #ModalTransaction .form-control:focus,
+  #ModalTransaction .form-select:focus {
     background: #334155 !important;
     border-color: #667eea !important;
     box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25) !important;
     color: #f1f5f9 !important;
-}
+  }
 
-#ModalTransaction .btn-success {
+  #ModalTransaction .btn-success {
     background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
     border: none;
     font-weight: 600;
-}
+  }
 
-#ModalTransaction .btn-success:hover {
+  #ModalTransaction .btn-success:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(74, 222, 128, 0.4);
-}
+  }
 
-#ModalTransaction .btn {
+  #ModalTransaction .btn {
     color: #667eea;
     border: none;
     background: transparent;
-}
+  }
 
-#ModalTransaction .btn:hover {
+  #ModalTransaction .btn:hover {
     color: #764ba2;
     transform: scale(1.1);
-}
+  }
 
-#ModalTransaction label,
-#ModalTransaction span {
+  #ModalTransaction label,
+  #ModalTransaction span {
     color: #f1f5f9 !important;
     font-weight: 500;
-}
+  }
 </style>
 
 {% block extra_scripts %}
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll("#newTransactionButton").forEach(button => {
-            button.addEventListener("click", function () {
-
-                new bootstrap.Modal(document.getElementById("ModalTransaction")).show();
-            });
-        });
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll("#newTransactionButton").forEach((button) => {
+      button.addEventListener("click", function () {
+        new bootstrap.Modal(document.getElementById("ModalTransaction")).show();
+      });
     });
-    document.getElementById("saveTransaction").addEventListener("click", function () {
-        let form = document.getElementById("transactionForm");
-        let formData = new FormData(form);
-        let jsonData = {};
+  });
+  document
+    .getElementById("saveTransaction")
+    .addEventListener("click", function () {
+      let form = document.getElementById("transactionForm");
+      let formData = new FormData(form);
+      let jsonData = {};
 
-        formData.forEach((value, key) => jsonData[key] = value); // Converte FormData em JSON
+      formData.forEach((value, key) => (jsonData[key] = value)); // Converte FormData em JSON
 
-        fetch("{% url 'transaction-create' %}", {
-            method: "POST",
-            body: JSON.stringify(jsonData), // Envia os dados como JSON
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
-            }
+      fetch("{% url 'transaction-create' %}", {
+        method: "POST",
+        body: JSON.stringify(jsonData), // Envia os dados como JSON
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]")
+            .value,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+          }
         })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    
-                }
-            })
-            .catch(error => console.error("Erro:", error));
+        .catch((error) => console.error("Erro:", error));
     });
 </script>
 {% endblock %}
