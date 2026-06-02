@@ -73,22 +73,8 @@
     <!-- Revenue vs Expenses Chart -->
     <div class="col-lg-6">
       <div class="modern-card">
-        <div
-          class="card-header d-flex justify-content-between align-items-center"
-        >
+        <div class="card-header d-flex justify-content-between align-items-center">
           <h5 class="mb-0">Receitas vs Despesas</h5>
-          <div class="dropdown">
-            <button
-              class="btn btn-sm btn-outline-secondary dropdown-toggle"
-              data-bs-toggle="dropdown">
-              Este Mês
-            </button>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Esta Semana</a></li>
-              <li><a class="dropdown-item" href="#">Este Mês</a></li>
-              <li><a class="dropdown-item" href="#">Este Ano</a></li>
-            </ul>
-          </div>
         </div>
         <div class="card-body">
           <div style="height: 300px; position: relative">
@@ -108,9 +94,7 @@
     <!-- Category Spending Chart -->
     <div class="col-lg-6">
       <div class="modern-card">
-        <div
-          class="card-header d-flex justify-content-between align-items-center"
-        >
+        <div class="card-header d-flex justify-content-between align-items-center">
           <h5 class="mb-0">Gastos por Categoria</h5>
         </div>
         <div class="card-body">
@@ -133,13 +117,11 @@
   <div class="row g-4 mb-5">
     <div class="col-12">
       <div class="modern-card">
-        <div
-          class="card-header d-flex justify-content-between align-items-center"
-        >
+        <div class="card-header d-flex justify-content-between align-items-center">
           <h5 class="mb-0">Evolução Mensal</h5>
           <div class="d-flex gap-2">
-            <button class="btn btn-sm btn-outline-success" id='revenue-filter'>Receitas</button>
-            <button class="btn btn-sm btn-outline-danger" id='expense-filter'>Despesas</button>
+            <button class="btn btn-sm btn-success" id='revenue-filter'>Receitas</button>
+            <button class="btn btn-sm btn-danger" id='expense-filter'>Despesas</button>
             <button class="btn btn-sm btn-primary" id='both-filter'>Ambos</button>
           </div>
         </div>
@@ -365,8 +347,11 @@
 <script id="chart-data" type="application/json">
   {{ category_graphics_metrics|safe}}
 </script>
-<script id="category-chart" type="application/json">
+<script id="montly-chart-data" type="application/json">
   {{ montly_graphics_metrics|safe}}
+</script>
+<script id="categorie-chart-filter-data" type="application/json">
+  {{ transactions_metrics_by_month|safe }}
 </script>
 
 <script>

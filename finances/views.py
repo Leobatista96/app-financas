@@ -17,14 +17,16 @@ class TransactionListView(LoginRequiredMixin, ListView):
     context_object_name = 'transactions'
     paginate_by = 5
 
-    def get_queryset(self):
-        return Transaction.objects.filter(user=self.request.user).order_by('-created_at')
-
+    # def get_queryset(self):
+    #     transaction = Transaction.objects.filter(user=self.request.user).order_by('-created_at')
+    #     accounts = Account.objects.filter(user=self.request.user)
+    #     return transaction, accounts
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["form"] = TransactionModelForm()
-        context["form_categories"] = CategorieModelForm()
-        context["form_accounts"] = AccountModelForm()
+        context["form"] = TransactionModelForm(user=self.request.user)
+        context["form_categories"] = CategorieModelForm(user=self.request.user)
+        context["form_accounts"] = AccountModelForm(user=self.request.user)
         context["transactions_metrics"] = get_transactions_value(
             user=self.request.user)
         context["categories"] = Categorie.objects.filter(
@@ -114,7 +116,11 @@ class CategorieListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context["transactions_metrics"] = get_transactions_value(
             user=self.request.user)
-        context["form_categories"] = CategorieModelForm()
+        context["form_categories"] = CategorieModelForm(user=self.request.user)
+        context["categories"] = Categorie.objects.filter(user=self.request.user)
+
+        categories_revenues_filter = Categorie.objects.filter(user=self.request.user, category_type='revenue')
+        context["categories_revenues_filter"] = categories_revenues_filter
         return context
 
 
@@ -146,9 +152,9 @@ class AccountListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["transactions_metrics"] = get_transactions_value(
-            user=self.request.user)
-        context["form_accounts"] = AccountModelForm()
+        context["form"] = TransactionModelForm(user=self.request.user)
+        context["form_accounts"] = AccountModelForm(user=self.request.user)
+        context["accounts"] = Account.objects.filter(user=self.request.user)
         return context
 
 
@@ -183,9 +189,9 @@ class DashboardListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["form"] = TransactionModelForm()
-        context["form_categories"] = CategorieModelForm()
-        context["form_accounts"] = AccountModelForm()
+        context["form"] = TransactionModelForm(user=self.request.user)
+        context["form_categories"] = CategorieModelForm(user=self.request.user)
+        context["form_accounts"] = AccountModelForm(user=self.request.user)
         context["transactions_metrics"] = get_transactions_value(
             user=self.request.user)
         category_metrics = get_category_graphics_data(user=self.request.user)

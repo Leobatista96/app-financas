@@ -9,9 +9,8 @@ class ProfileAdmin(admin.ModelAdmin):
 
 
 class AccountsAdmin(admin.ModelAdmin):
-    list_display = ['name', 'created_at', 'updated_at',]
-    search_fields = ['name', 'created_at', 'updated_at', ]
-    exclude = ['user',]
+    list_display = ['name', 'value', 'categorie','created_at', 'updated_at', 'user',]
+    search_fields = ['name', 'value', 'categorie','created_at', 'updated_at', 'user',]
 
     def save_model(self, request, obj, form, change):
         if not obj.user_id:
@@ -24,7 +23,6 @@ class TransactionAdmin(admin.ModelAdmin):
                     'category', 'due_date', 'created_at', 'updated_at', 'user',]
     search_fields = ['category', 'value',
                      'description', 'due_date', 'created_at', 'updated_at', 'user',]
-    exclude = ['user']
 
     def save_model(self, request, obj, form, change):
         if not obj.user_id:
@@ -33,10 +31,9 @@ class TransactionAdmin(admin.ModelAdmin):
 
 
 class CategoriesAdmin(admin.ModelAdmin):
-    list_display = ['category', 'category_type', 'created_at', 'updated_at',]
-    search_fields = ['category', 'category_type', 'created_at', 'updated_at',]
+    list_display = ['category', 'category_type', 'created_at', 'updated_at', 'user',]
+    search_fields = ['category', 'category_type', 'created_at', 'updated_at', 'user',]
     list_filter = ['category_type']
-    exclude = ['user',]
 
     def save_model(self, request, obj, form, change):
         if not obj.user_id:
