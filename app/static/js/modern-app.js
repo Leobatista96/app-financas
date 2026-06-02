@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeNotifications();
     getChartCategoryData();
     getMontlyChartData();
+    getCategorieRevenueExpenseFilter();
     
     // Adicionar classes de animação aos elementos
     function initializeAnimations() {
@@ -81,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function getMontlyChartData(){
-        const montlyChartData = document.getElementById('category-chart');
+        const montlyChartData = document.getElementById('montly-chart-data');
         if (montlyChartData) {
             try {
                 const data = JSON.parse(montlyChartData.textContent);
@@ -109,6 +110,39 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
+
+    function getCategorieRevenueExpenseFilter() {
+        const revenueBtn = document.getElementById('categoriesRevenuesFilterButton');
+        const expenseBtn = document.getElementById('categoriesExpensesFilterButton');
+        const tableRows = document.querySelectorAll('.transaction-row[data-category-type]');
+
+        function filterCategories(type) {
+            tableRows.forEach(row => {
+                const categoryType = row.getAttribute('data-category-type');
+                if (type === 'all') {
+                    row.style.display = '';
+                } else if (categoryType === type) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+        
+        if (revenueBtn) {
+            revenueBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                filterCategories('revenue');
+            });
+        }
+
+        if (expenseBtn) {
+            expenseBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                filterCategories('expense');
+            });
+        }
+    }
     
     // Inicializar gráficos (Chart.js)
     function initializeCharts() {
@@ -121,13 +155,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const chartData = getChartCategoryData();
         const montlyData = getMontlyChartData();
 
-        if (!chartData) {
-            console.warn('Usando dados de exemplo');
-            return;
-        }
+        console.log('Chart data:', {chartData, montlyData});
 
-
-        // Gráfico de receitas vs despesas
         const revenueExpenseCtx = document.getElementById('revenueExpenseChart');
 
         if (revenueExpenseCtx && chartData.total_recipes) {
@@ -201,7 +230,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            display: false
+                            display: false,
                         }
                     },
                     scales: {
@@ -268,24 +297,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false,
+                    maintainAspectRatio: true,
                     plugins: {
                         legend: {
                             position: 'bottom',
                             labels: {
                                 padding: 10,
+                                color: 'rgb(255, 255, 255)',
                                 font: {
                                     size: 15,
-                                    weight: '100',
+                                    weight: 'normal',
                                 }
                             }
+                        }
+                    },
+                    elements: {
+                        point: {
+                            radius: 5,
+                            hoverRadius: 8,
                         }
                     },
                     scales: {
                         y: {
                             beginAtZero: true,
                             grid: {
-                                color: 'rgba(255, 252, 252, 0.1)'
+                                color: 'rgba(0, 0, 0, 0.1)'
                             }
                         },
                         x: {
@@ -302,6 +338,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Tentando renderizar gráfico mensal com dados:', { montlyData, monthlyCtx });
         renderMonthlyChart('both');
 
+
         // Listeners dos botões
         const revenueBtn = document.getElementById('revenue-filter');
         if (revenueBtn) {
@@ -311,7 +348,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        const expenseBtn = document.querySelectorAll('.btn-outline-danger')[0];
+        const expenseBtn = document.getElementById('expense-filter');
         if (expenseBtn) {
             expenseBtn.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -319,7 +356,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        const bothBtn = document.querySelectorAll('.btn-primary')[0];
+        const bothBtn = document.getElementById('both-filter');
         if (bothBtn) {
             bothBtn.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -327,6 +364,13 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
+        // const categoriesFilterBtn = document.getElementById('categoriesRevenuesFilterButton');
+        // if (categoriesFilterBtn) {
+        //     categoriesFilterBtn.addEventListener('click', function (e) {
+        //         e.preventDefault();
+        //         getCategorieRevenueExpenseFilter();
+        //     });
+        // }
     }
     
     // Sistema de notificações
