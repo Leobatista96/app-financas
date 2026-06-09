@@ -1,106 +1,36 @@
-
-
-
 <!-- Modal de exclusao-->
-<div class="modal fade" id="ModalDelete" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Exclusao de Item</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <span class="form-label">Deseja realmente excluir o registro?</span>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" id="confirmDelete">Excluir</button>
-            </div>
+<div
+  class="modal fade"
+  id="ModalDelete"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">
+          Exclusao de Item
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <span class="form-label">Deseja realmente excluir o registro?</span>
         </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" id="confirmDelete">
+          Excluir
+        </button>
+      </div>
     </div>
+  </div>
 </div>
-
-<script>
-
-    let transactionIdToDelete = null;
-
-    document.querySelectorAll(".delete-btn").forEach(button => {
-        button.addEventListener("click", function () {
-            transactionIdToDelete = this.getAttribute("data-id");
-        });
-    });
-
-    document.getElementById("confirmDelete").addEventListener("click", function () {
-        if (transactionIdToDelete) {
-            fetch(`/transaction/${transactionIdToDelete}/delete/`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        document.getElementById(`transaction-row-${transactionIdToDelete}`).remove();
-                    } else {
-                        alert("Erro ao excluir a transação.");
-                    }
-                    transactionIdToDelete = null;
-                    let modal = bootstrap.Modal.getInstance(document.getElementById("deleteModal"));
-                    location.reload();
-                })
-        }
-    });
-</script>
-
-<style>
-/* Estilos específicos para o modal de exclusão */
-#ModalDelete .modal-content {
-    background: #1e293b;
-    border: 1px solid #475569;
-    color: #f1f5f9;
-}
-
-#ModalDelete .modal-header {
-    background: #334155;
-    border-bottom: 1px solid #475569;
-}
-
-#ModalDelete .modal-title {
-    color: #f1f5f9 !important;
-}
-
-#ModalDelete .btn-close {
-    filter: brightness(0) invert(1);
-}
-
-#ModalDelete .modal-body {
-    background: #1e293b;
-}
-
-#ModalDelete .modal-footer {
-    background: #1e293b;
-    border-top: 1px solid #475569;
-}
-
-#ModalDelete .form-label,
-#ModalDelete span {
-    color: #f1f5f9 !important;
-    font-weight: 500;
-}
-
-#ModalDelete .btn-danger {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-    border: none;
-    font-weight: 600;
-    color: white;
-}
-
-#ModalDelete .btn-danger:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
-}
-</style>

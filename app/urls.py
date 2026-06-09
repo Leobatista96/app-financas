@@ -23,6 +23,8 @@ from .views import SignUpView
 urlpatterns = [
     path('admin/', admin.site.urls),
 
+    path('accounts/', include('allauth.urls')),
+
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('register/', SignUpView.as_view(), name="register"),
