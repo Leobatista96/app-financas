@@ -26,7 +26,7 @@ urlpatterns = [
     path('categories/', CategorieListView.as_view(), name='categorie-list'),
 
     path('new_account/', AccountCreateView.as_view(), name='account-create'),
-    path('accounts/', AccountListView.as_view(), name='account-list'),
+    path('account/', AccountListView.as_view(), name='account-list'),
 
     path('dashboard/', DashboardListView.as_view(), name='dashboard-list'),
 ]

@@ -152,6 +152,8 @@ class AccountListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["transactions_metrics"] = get_transactions_value(
+            user=self.request.user)
         context["form"] = TransactionModelForm(user=self.request.user)
         context["form_accounts"] = AccountModelForm(user=self.request.user)
         context["accounts"] = Account.objects.filter(user=self.request.user)

@@ -49,6 +49,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+
+    'allauth.socialaccount.providers.google',
+
     'rest_framework',
     'rest_framework_simplejwt',
 
@@ -79,6 +85,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'app.urls'
@@ -97,6 +105,11 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 WSGI_APPLICATION = 'app.wsgi.application'
@@ -255,3 +268,15 @@ JAZZMIN_SETTINGS = {
         {"name": "Voltar para a página inicial", "url": "dashboard-list", "new_window": False},
     ],
 }
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': config('CLIENT_ID_GOOGLE'),
+            'secret': config('CLIENT_SECRET_GOOGLE'),
+            'key': '',
+        }
+    }
+}
+
+SOCIALACCOUNT_LOGIN_ON_GET = True

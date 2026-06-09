@@ -297,7 +297,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: {
                             position: 'bottom',
@@ -363,14 +363,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 renderMonthlyChart('both');
             });
         }
-
-        // const categoriesFilterBtn = document.getElementById('categoriesRevenuesFilterButton');
-        // if (categoriesFilterBtn) {
-        //     categoriesFilterBtn.addEventListener('click', function (e) {
-        //         e.preventDefault();
-        //         getCategorieRevenueExpenseFilter();
-        //     });
-        // }
     }
     
     // Sistema de notificações
@@ -553,3 +545,252 @@ const storage = {
         }
     }
 };
+
+// ===== MODAL TRANSACTION ===== 
+document.addEventListener('DOMContentLoaded', function () {
+  // Abrir modal ao clicar no botão
+  document.querySelectorAll('#newTransactionButton').forEach((button) => {
+    button.addEventListener('click', function () {
+      new bootstrap.Modal(document.getElementById('ModalTransaction')).show();
+    });
+  });
+
+  // Interceptar submit do formulário
+  const form = document.getElementById('transactionForm');
+  if (form) {
+    form.addEventListener(
+      'submit',
+      function (e) {
+        e.preventDefault(); // Prevenir reload da página
+        e.stopPropagation(); // Evitar que o evento dispare listeners globais
+
+        const submitBtn = document.getElementById('saveTransaction');
+        submitBtn.disabled = true;
+
+        let formData = new FormData(form);
+        let jsonData = {};
+
+        formData.forEach((value, key) => (jsonData[key] = value));
+
+        // Get the CSRF token and URL
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const actionUrl = form.getAttribute('data-action') || '/new_transaction/';
+
+        fetch(actionUrl, {
+          method: 'POST',
+          body: JSON.stringify(jsonData),
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              // Mostrar notificação
+              showNotification('Transação Cadastrada com Sucesso!', 'success');
+
+              // Fechar modal
+              const modal = bootstrap.Modal.getInstance(
+                document.getElementById('ModalTransaction'),
+              );
+              modal.hide();
+
+              // Limpar formulário
+              form.reset();
+
+              // Recarregar página após breve delay para atualizar a tabela
+              setTimeout(() => {
+                window.location.reload();
+              }, 1500);
+            } else {
+              showNotification(
+                'Erro ao salvar transação: ' + JSON.stringify(data.errors),
+                'danger',
+              );
+            }
+          })
+          .catch((error) => {
+            console.error('Erro:', error);
+            showNotification('Erro ao salvar transação', 'danger');
+          })
+          .finally(() => {
+            submitBtn.disabled = false;
+          });
+      },
+      true,
+    ); // Captura na fase de captura para interceptar antes do listener global
+  }
+});
+
+// ===== MODAL CATEGORIE =====
+if (document.getElementById('categorieForm')) {
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.addcategoriebutton').forEach((button) => {
+      button.addEventListener('click', function () {
+        new bootstrap.Modal(document.getElementById('ModalCategorie')).show();
+      });
+    });
+  });
+  
+  document.getElementById('saveCategorie').addEventListener('click', function () {
+    const form = document.getElementById('categorieForm');
+    const formData = new FormData(form);
+    const jsonData = {};
+
+    formData.forEach((value, key) => (jsonData[key] = value));
+
+    fetch('/new_categorie/', {
+      method: 'POST',
+      body: JSON.stringify(jsonData),
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          showNotification('Categoria criada com sucesso!', 'success');
+          window.location.reload();
+        } else {
+          showNotification('Erro ao criar categoria', 'danger');
+        }
+      })
+      .catch((error) => {
+        console.error('Erro:', error);
+        showNotification('Erro ao criar categoria', 'danger');
+      });
+  });
+}
+
+// ===== MODAL DELETE =====
+let transactionIdToDelete = null;
+
+if (document.querySelectorAll('.delete-btn').length > 0) {
+  document.querySelectorAll('.delete-btn').forEach((button) => {
+    button.addEventListener('click', function () {
+      transactionIdToDelete = this.getAttribute('data-id');
+    });
+  });
+}
+
+if (document.getElementById('confirmDelete')) {
+  document.getElementById('confirmDelete').addEventListener('click', function () {
+    if (transactionIdToDelete) {
+      fetch(`/transaction/${transactionIdToDelete}/delete/`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            showNotification('Transação excluída com sucesso!', 'success');
+            document.getElementById(`transaction-row-${transactionIdToDelete}`).remove();
+          } else {
+            showNotification('Erro ao excluir a transação.', 'danger');
+          }
+          transactionIdToDelete = null;
+          const modal = bootstrap.Modal.getInstance(document.getElementById('ModalDelete'));
+          if (modal) {
+            modal.hide();
+          }
+          location.reload();
+        });
+    }
+  });
+}
+
+// ===== MODAL EDIT =====
+if (document.getElementById('editForm')) {
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('#edit-btn').forEach((button) => {
+      button.addEventListener('click', function () {
+        const transactionId = this.getAttribute('data-id');
+
+        fetch(`/transactions/${transactionId}/update/`)
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById('transactionId').value = data.id;
+            document.getElementById('description').value = data.description;
+            document.getElementById('category_id').value = data.category_id;
+            document.getElementById('category_name').value = data.category_name;
+            document.getElementById('due_date').value = data.due_date;
+            document.getElementById('account_id').value = data.account_id;
+            document.getElementById('account_name').value = data.account_name;
+            document.getElementById('value').value = data.value;
+            document.getElementById('created_at').value = data.created_at;
+
+            new bootstrap.Modal(document.getElementById('ModalChange')).show();
+          });
+      });
+    });
+
+    if (document.getElementById('saveChanges')) {
+      document.getElementById('saveChanges').addEventListener('click', function () {
+        const transactionId = document.getElementById('transactionId').value;
+        const description = document.getElementById('description').value;
+        const category_id = document.getElementById('category_id').value;
+        const category_name = document.getElementById('category_name').value;
+        const due_date = document.getElementById('due_date').value;
+        const account_id = document.getElementById('account_id').value;
+        const account_name = document.getElementById('account_name').value;
+        const value = document.getElementById('value').value;
+
+        fetch(`/transactions/${transactionId}/update/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+          },
+          body: JSON.stringify({
+            description: description,
+            category_id: category_id,
+            account: account_id,
+            due_date: due_date,
+            value: value,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            showNotification('Transação atualizada com sucesso!', 'success');
+            location.reload();
+          });
+      });
+    }
+  });
+}
+
+// ===== DASHBOARD =====
+if (document.querySelectorAll('[data-quick-action]').length > 0) {
+  document.addEventListener('DOMContentLoaded', function () {
+    // Refresh data every 5 minutes
+    setInterval(function () {
+      console.log('Refreshing dashboard data...');
+    }, 300000);
+
+    // Quick action buttons
+    document.querySelectorAll('[data-quick-action]').forEach((button) => {
+      button.addEventListener('click', function () {
+        const action = this.getAttribute('data-quick-action');
+        handleQuickAction(action);
+      });
+    });
+  });
+}
+
+function handleQuickAction(action) {
+  switch (action) {
+    case 'add-income':
+      showNotification('Formulário de receita aberto!', 'info');
+      break;
+    case 'add-expense':
+      showNotification('Formulário de despesa aberto!', 'info');
+      break;
+    default:
+      showNotification('Ação não implementada ainda.', 'warning');
+  }
+}
