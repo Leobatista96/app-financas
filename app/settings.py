@@ -213,6 +213,13 @@ CSRF_TRUSTED_ORIGINS = [
     "https://financas.leonardobatista96.com",
 ]
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', "https")
+USE_X_FORWARDED_HOST = True
+
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+
+SECURE_SSL_REDIRECT = True
+
 
 CELERY_TIMEZONE = 'America/Sao_Paulo'
 
