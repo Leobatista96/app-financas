@@ -22,6 +22,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
+# Configuração do RabbitMQ para Celery
+RABBITMQUSER = config('RABBITMQUSER', default='guest')
+RABBITMQPASS = config('RABBITMQPASSWORD', default='guest')
+
 
 DJANGO_ENV = config('DJANGO_ENV')
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -29,12 +33,47 @@ DJANGO_ENV = config('DJANGO_ENV')
 if DJANGO_ENV == 'production':
     DEBUG = False
     SECRET_KEY = config('SECRET_KEY')
+
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', "https")
+    USE_X_FORWARDED_HOST = True
+    ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+    SECURE_SSL_REDIRECT = True
+
+    STORAGES = {
+        'default': {
+            'BACKEND': 'django.core.files.storage.FileSystemStorage',
+        },
+        'staticfiles': {
+            'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+        },
+    }
+
+    CELERY_BROKER_URL = f'amqp://{RABBITMQUSER}:{RABBITMQPASS}@rabbitmq:5672//'
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+    DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER')
 else:
     DEBUG = True
     SECRET_KEY = 'django-insecure-a2@bd6298lt(d$hg*p7^l3f)xxk19^!=o*j)qnubbcg&z%q=r7'
+    SECURE_SSL_REDIRECT = False
+
+    CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+CELERY_TIMEZONE = 'America/Sao_Paulo'
+    
+
+CELERY_RESULT_BACKEND = 'django-db'
+
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 ALLOWED_HOSTS = ['localhost', 'financas.leonardobatista96.com',
-                 '127.0.0.1', '0.0.0.0']
+                 '127.0.0.1', '0.0.0.0',]
 
 
 # Application definition
@@ -190,15 +229,6 @@ STATICFILES_DIRS = [
     BASE_DIR / 'app' / 'static',
 ]
 
-if DJANGO_ENV == 'production':
-    STORAGES = {
-        'default': {
-            'BACKEND': 'django.core.files.storage.FileSystemStorage',
-        },
-        'staticfiles': {
-            'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
-        },
-    }
 
 # Media files
 MEDIA_URL = '/media/'
@@ -213,39 +243,6 @@ CSRF_TRUSTED_ORIGINS = [
     "https://financas.leonardobatista96.com",
 ]
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', "https")
-USE_X_FORWARDED_HOST = True
-
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
-
-SECURE_SSL_REDIRECT = True
-
-
-CELERY_TIMEZONE = 'America/Sao_Paulo'
-
-# Configuração do RabbitMQ para Celery
-RABBITMQUSER = config('RABBITMQUSER', default='guest')
-RABBITMQPASS = config('RABBITMQPASSWORD', default='guest')
-
-# Para desenvolvimento local, usar localhost; para produção, usar nome do container
-if DJANGO_ENV == 'production':
-    CELERY_BROKER_URL = f'amqp://{RABBITMQUSER}:{RABBITMQPASS}@rabbitmq:5672//'
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    EMAIL_HOST = 'smtp.gmail.com'
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
-    EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-    DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER')
-    
-else:
-    CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
-    # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-CELERY_RESULT_BACKEND = 'django-db'
-
-CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 
 REST_FRAMEWORK = {
@@ -282,8 +279,20 @@ SOCIALACCOUNT_PROVIDERS = {
             'client_id': config('CLIENT_ID_GOOGLE'),
             'secret': config('CLIENT_SECRET_GOOGLE'),
             'key': '',
-        }
+        },
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
     }
 }
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
+ACCOUNT_LOGIN_METHODS = {"email", "username",}
+ACCOUNT_SIGNUP_FIELDS = [
+    "username*",
+    "email*",
+    "password1*",
+    "password2*",
+]
