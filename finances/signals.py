@@ -17,10 +17,3 @@ def create_user_profile(sender, instance, created, **kwargs):
         # Verifica se o profile já foi criado pelo formulário
         if not hasattr(instance, 'profile'):
             Profile.objects.get_or_create(user=instance)
-
-
-@receiver(signal=post_save, sender=Transaction)
-def update_account_balance_on_create(sender, instance, **kwargs):
-    account_value = Account.objects.filter(
-        user=instance.user, id=instance.id).aggregate(Sum('value'))['value__sum']
-    total = account_value
