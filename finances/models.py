@@ -1,15 +1,18 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
+
+from accounts.models import Account
+from categories.models import Categorie
 
 
 class Profile(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.PROTECT, related_name='profile')
     phone_number = models.CharField(
-        max_length=15, 
+        max_length=15,
         verbose_name='Telefone',
         help_text='Número de telefone (ex: 11999999999)',
-        default= ''
+        default=''
     )
     created_at = models.DateTimeField(
         auto_now=True, verbose_name='Data de Criação')
@@ -23,62 +26,6 @@ class Profile(models.Model):
     def __str__(self):
         return f"Perfil de: {self.user.username}"
 
-
-class Account(models.Model):
-    CATEGORIE_CHOICES = [
-        ('conta corrente', 'Conta Corrente'),
-        ('dinheiro', 'Dinheiro'),
-        ('poupanca', 'Poupança'),
-        ('investimentos', 'Investimentos'),
-        ('vale', 'VR/VA'),
-        ('outros', 'Outros'),
-    ]
-
-    user = models.ForeignKey(
-        User, on_delete=models.PROTECT, related_name='user_account', verbose_name='Usuário')
-    name = models.CharField(max_length=100, unique=True,
-                            verbose_name='Nome da Conta')
-    value = models.FloatField(verbose_name='Valor', default=0)
-    categorie = models.CharField(max_length=100, choices=CATEGORIE_CHOICES ,verbose_name='Categoria da Conta', default= 'Conta Corrente')
-    created_at = models.DateTimeField(
-        auto_now_add=True, verbose_name='Data de Criação')
-    updated_at = models.DateTimeField(
-        auto_now=True, verbose_name='Última Atualização')
-
-    class Meta:
-        ordering = ['-created_at']
-        verbose_name = 'Conta'
-        verbose_name_plural = 'Contas'
-
-    def __str__(self):
-        return self.name
-
-
-class Categorie(models.Model):
-
-    CATEGORY_TYPE_CHOICES = [
-        ('revenue', 'Receita'),
-        ('expense', 'Despesa'),
-    ]
-
-    user = models.ForeignKey(
-        User, on_delete=models.PROTECT, related_name='user_categorie', verbose_name='Usuário')
-    category = models.CharField(
-        max_length=100, unique=True, verbose_name='Categoria')
-    category_type = models.CharField(max_length=10, choices=CATEGORY_TYPE_CHOICES, default='revenue', verbose_name='Tipo de Categoria')
-    created_at = models.DateTimeField(
-        auto_now_add=True, verbose_name='Data de Criação')
-    updated_at = models.DateTimeField(
-        auto_now=True, verbose_name='Última Atualização')
-
-    class Meta:
-        ordering = ['-created_at']
-        verbose_name = 'Categoria'
-        verbose_name_plural = 'Categorias'
-        unique_together = ('user', 'category')
-
-    def __str__(self):
-        return self.category
 
 class Transaction(models.Model):
     user = models.ForeignKey(

@@ -1,21 +1,12 @@
 from django.contrib import admin
-from finances.models import Account, Transaction, Categorie, Profile
+
+from finances.models import Profile, Transaction
 
 
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ['user', 'phone_number',]
     search_fields = ['user', 'phone_number',]
     exclude = ['user',]
-
-
-class AccountsAdmin(admin.ModelAdmin):
-    list_display = ['name', 'value', 'categorie','created_at', 'updated_at', 'user',]
-    search_fields = ['name', 'value', 'categorie','created_at', 'updated_at', 'user',]
-
-    def save_model(self, request, obj, form, change):
-        if not obj.user_id:
-            obj.user = request.user
-        super().save_model(request, obj, form, change)
 
 
 class TransactionAdmin(admin.ModelAdmin):
@@ -30,18 +21,5 @@ class TransactionAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
 
-class CategoriesAdmin(admin.ModelAdmin):
-    list_display = ['category', 'category_type', 'created_at', 'updated_at', 'user',]
-    search_fields = ['category', 'category_type', 'created_at', 'updated_at', 'user',]
-    list_filter = ['category_type']
-
-    def save_model(self, request, obj, form, change):
-        if not obj.user_id:
-            obj.user = request.user
-        super().save_model(request, obj, form, change)
-
-
-admin.site.register(Account, AccountsAdmin)
 admin.site.register(Transaction, TransactionAdmin)
-admin.site.register(Categorie, CategoriesAdmin)
 admin.site.register(Profile, ProfileAdmin)
