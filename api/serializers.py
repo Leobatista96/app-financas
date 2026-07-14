@@ -1,19 +1,35 @@
-from rest_framework.serializers import ModelSerializer
-from finances.models import Transaction, Account, Categorie
+from rest_framework import serializers
 
-class TransactionSerializer(ModelSerializer):
+from accounts.models import Account
+from categories.models import Categorie
+from finances.models import Transaction
+
+
+class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
-        fields = '__all__'
+        fields = ['id', 'user', 'value', 'description',
+                  'due_date', 'account', 'category',]
+
+    # user = serializers.StringRelatedField(read_only=True)
+    # account = serializers.StringRelatedField(read_only=True)
+    # category = serializers.StringRelatedField(read_only=True)
 
 
-class AccountSerializer(ModelSerializer):
+class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = '__all__'
+        fields = ['id', 'user', 'name', 'value',
+                  'categorie',]
 
-class CategorieSerializer(ModelSerializer):
+    user = serializers.StringRelatedField(read_only=True)
+    categorie = serializers.StringRelatedField(read_only=True)
+
+
+class CategorieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Categorie
-        fields = '__all__'
+        fields = ['user', 'category', 'category_type', ]
 
+    user = serializers.StringRelatedField(read_only=True)
+    category = serializers.StringRelatedField(read_only=True)

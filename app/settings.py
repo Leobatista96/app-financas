@@ -10,11 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-from pathlib import Path
-from decouple import config
 from datetime import timedelta
+from pathlib import Path
 
-
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -48,6 +47,17 @@ if DJANGO_ENV == 'production':
         },
     }
 
+    DATABASES = {
+        'default': {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": config("POSTGRESDB"),
+            "USER": config("POSTGRESUSER"),
+            "PASSWORD": config("POSTGRESPASSWORD"),
+            "HOST": config("POSTGRES_HOST"),
+            "PORT": config("POSTGRES_PORT"),
+        }
+    }
+
     CELERY_BROKER_URL = f'amqp://{RABBITMQUSER}:{RABBITMQPASS}@rabbitmq:5672//'
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST = 'smtp.gmail.com'
@@ -56,6 +66,12 @@ if DJANGO_ENV == 'production':
     EMAIL_HOST_USER = config('EMAIL_HOST_USER')
     EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
     DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER')
+
+    SIMPLE_JWT = {
+        "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
+        "REFRESH_TOKEN_LIFETIME": timedelta(minutes=30)
+    }
+
 else:
     DEBUG = True
     SECRET_KEY = 'django-insecure-a2@bd6298lt(d$hg*p7^l3f)xxk19^!=o*j)qnubbcg&z%q=r7'
@@ -64,9 +80,21 @@ else:
     CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+
+    SIMPLE_JWT = {
+        "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+        "REFRESH_TOKEN_LIFETIME": timedelta(days=1)
+    }
+
 
 CELERY_TIMEZONE = 'America/Sao_Paulo'
-    
+
 
 CELERY_RESULT_BACKEND = 'django-db'
 
@@ -103,6 +131,8 @@ INSTALLED_APPS = [
     'finances',
     'api',
     'authentication',
+    'categories',
+    'accounts',
 ]
 
 SESSION_COOKIE_AGE = 900
@@ -133,7 +163,7 @@ ROOT_URLCONF = 'app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['app/templates'],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -156,30 +186,6 @@ WSGI_APPLICATION = 'app.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-
-
-if DJANGO_ENV == 'production':
-
-    DATABASES = {
-        'default': {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": config("POSTGRESDB"),
-            "USER": config("POSTGRESUSER"),
-            "PASSWORD": config("POSTGRESPASSWORD"),
-            "HOST": config("POSTGRES_HOST"),
-            "PORT": config("POSTGRES_PORT"),
-        }
-    }
-
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -216,9 +222,6 @@ USE_TZ = True
 USE_THOUSAND_SEPARATOR = True
 
 
-
-
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
@@ -226,7 +229,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'app' / 'static',
+    BASE_DIR / 'static',
 ]
 
 
@@ -244,17 +247,12 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
 
-SIMPLE_JWT = {
-    "ACESS_TOKEN_LIFETIME": timedelta(minutes=30),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1)
-}
 
 JAZZMIN_SETTINGS = {
     "custom_links": {
@@ -269,7 +267,8 @@ JAZZMIN_SETTINGS = {
     },
 
     "usermenu_links": [
-        {"name": "Voltar para a página inicial", "url": "dashboard-list", "new_window": False},
+        {"name": "Voltar para a página inicial",
+            "url": "dashboard-list", "new_window": False},
     ],
 }
 
@@ -289,7 +288,7 @@ SOCIALACCOUNT_PROVIDERS = {
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
 SOCIALACCOUNT_AUTO_SIGNUP = True
-ACCOUNT_LOGIN_METHODS = {"email", "username",}
+ACCOUNT_LOGIN_METHODS = {"email", "username", }
 ACCOUNT_SIGNUP_FIELDS = [
     "username*",
     "email*",

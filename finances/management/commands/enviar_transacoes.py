@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+
 from app.services.evolution_api import EvolutionAPI
 from finances.models import Transaction
 
@@ -18,5 +19,10 @@ class Command(BaseCommand):
             valor = transaction.value
             criado_em = transaction.created_at.strftime("%d/%m/%Y")
 
-            mensagem = f" Descricão: {descricao}\n Conta: {conta}\n Categoria: {categoria}\n Valor: {valor}\n Criado em: {criado_em}"
+            mensagem = f"""
+            Descricão: {descricao}\n
+            Conta: {conta}\n
+            Categoria: {categoria}\n
+            Valor: {valor}\n Criado em: {criado_em}
+            """
             evolution_api.send_whatsapp_message(mensagem)

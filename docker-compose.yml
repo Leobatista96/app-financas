@@ -16,7 +16,7 @@ services:
             - POSTGRESPASSWORD=${POSTGRESPASSWORD}
 
     financas_db:
-        image: postgres:17
+        image: postgres:18
         ports:
             - 5432:5432
         volumes:
@@ -27,7 +27,7 @@ services:
             - POSTGRES_DB=${POSTGRESDB}
 
     rabbitmq:
-        image: rabbitmq:4-management
+        image: rabbitmq:4.3.2-management-alpine
         ports:
             - 15672:15672
             - 5672:5672

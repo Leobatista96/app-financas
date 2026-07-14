@@ -1,0 +1,51 @@
+{% extends 'base.html' %} {% block page_header %}
+
+<div class="d-flex justfi-content-between">
+  <div>
+    <h1 class="mb-4">Contas</h1>
+  </div>
+</div>
+
+{% endblock page_header %} {% block content %}
+
+<div class="col-lg-4">
+  <div class="modern-card mb-4 text-center">
+    <div class="card-body">
+      <div class="d-grid gap-2">
+        <a class="addaccountbutton text-decoration-none btn" data-bs-toggle="tooltip" data-bs-placement="right"
+          data-bs-custom-class="custom-tooltip" data-bs-title="Clique aqui para criar uma nova conta">
+          <h5 class="card-title bi bi-plus-circle"></h5>
+          <span class="text-white">Nova Conta</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  {% for account in accounts %}
+  <div class="modern-card mb-4">
+    <div class="d-flex card-header gap-3 justify-content-center">
+      <i class="bi bi-bank"></i>
+      {{ account.name }}
+    </div>
+    <div class="card-body">
+      <div class="d-grid gap-2">
+        <a class="text-decoration-none btn" data-bs-placement="right">
+          <div class="d-flex justify-content-between">
+            <p class="text-white">Saldo</p>
+            <p class="text-white"> R$ {{ account.value }}</p>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="card-footer d-flex justify-content-center">
+      {% comment %} <button class="btn btn-modern btn-primary" id="newTransactionButton" data-bs-toggle="tooltip">Adicionar
+        Transação
+      </button> {% endcomment %}
+      <a href="{% url "" %}"></a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+
+
+{% endblock content %}

@@ -1,0 +1,74 @@
+{% extends 'base.html' %} {% block page_header %}
+
+<div class="d-flex justfi-content-between mb-4">
+  <div>
+    <h1 class="mb-0">Categorias</h1>
+  </div>
+</div>
+
+{% endblock page_header %} {% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div class="dropdown">
+    <button class="btn btn-success btn-modern dropdown-toggle" type="button" data-bs-toggle="dropdown">
+      Categorias
+    </button>
+    <ul class="dropdown-menu dropdown-menu-dark">
+      <li>
+        <a role="button" id="categoriesRevenuesFilterButton" class="dropdown-item">Receitas</a>
+      </li>
+      <li><a role="button" id="categoriesExpensesFilterButton" class="dropdown-item">Despesas</a></li>
+    </ul>
+  </div>
+  <div class="gap-3">
+    <button class="btn bg-success rounded-circle" data-bs-toggle="button">
+      <a class="addcategoriebutton text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="right"
+        data-bs-custom-class="custom-tooltip" data-bs-title="Clique aqui para criar uma nova categoria">
+        <span class="bi bi-plus-lg text-white"></span>
+      </a>
+    </button>
+  </div>
+</div>
+
+<div class="modern-card">
+  <div class="card-header d-flex justify-content-between align-items-center"></div>
+
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover mb-0">
+        <thead class="table-dark">
+          <tr>
+            <th>Nome</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for categorie in categories %}
+          <tr class="transaction-row" data-category-type="{{ categorie.category_type }}">
+            <td>
+              <span class="fw-medium text-black">{{ categorie.category }}</span>
+            </td>
+            <td class="text-center">
+              <div class="btn-group">
+                <button class="btn btn-success btn-sm">
+                  <i class="bi bi-pencil"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+           {% empty %}
+          <tr>
+            <td colspan="6" class="text-center py-5">
+              <div class="text-muted">
+                <i class="bi bi-inbox fs-1 d-block mb-3 text-black"></i>
+                <h5 class='text-black'>Nenhuma categoria encontrada</h5>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {% endblock content %}
+</div>

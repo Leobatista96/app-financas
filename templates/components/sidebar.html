@@ -1,0 +1,190 @@
+<!-- Desktop Sidebar -->
+<div class="modern-sidebar col-md-3 col-lg-2 d-md-block p-0 sidebar-desktop">
+    <div class="sidebar-content pt-3">
+        <nav class="flex-grow-1">
+            <ul class="nav flex-column" id="menu">
+                
+                <li class="nav-item">
+                    <a href="{% url 'dashboard-list' %}" class="nav-link d-flex align-items-center gap-2">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-speedometer2"></i>
+                        </div>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="{% url 'transaction-list' %}" class="nav-link d-flex align-items-center gap-2">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-list-ul"></i>
+                        </div>
+                        <span>Transações</span>
+                    </a>
+                </li>
+            
+                
+                <li class="nav-item">
+                    <a href="{% url 'account-list' %}" class="nav-link d-flex align-items-center gap-2">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-credit-card"></i>
+                        </div>
+                        <span>Contas</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="{% url 'categorie-list' %}" class="nav-link d-flex align-items-center gap-2">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-tags"></i>
+                        </div>
+                        <span>Categorias</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-bottom">
+                <!-- Quick Stats -->
+                <div class="px-3 mb-3">
+                    <div class="glass-effect rounded-modern p-3 text-center">
+                        <div class="small text-muted mb-1">Saldo Atual</div>
+                        <div class="fw-bold gradient-text fs-5">R$ {{transactions_metrics.balance}}</div>
+                    </div>
+                </div>               
+            </div>  
+        </nav>
+
+        
+        <!-- Bottom Section -->
+        <hr class="my-2 mx-3">
+            <div class="dropdown d-flex mb-3 justify-content-center ">
+                <button class="btn text-white dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    <i class="bi bi-person-circle me-1"></i>
+                    {{ user.username|title }}
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    {% if user.is_superuser %}
+                    <li>
+                    <a class="dropdown-item" href="{% url 'admin:index' %}">
+                        <i class="bi bi-person me-2"></i>Painel Administrativo
+                    </a>
+                    </li>
+                    {% endif %}
+
+                    <li>
+                    <hr class="dropdown-divider" />
+                    </li>
+                    <li>
+                    <form action="{% url 'logout' %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="dropdown-item">
+                        <i class="bi bi-box-arrow-right me-2"></i>Sair
+                        </button>
+                    </form>
+                    </li>
+                </ul>
+            </div>
+    </div>
+</div>
+
+<!-- Mobile Offcanvas Sidebar -->
+<div class="offcanvas offcanvas-start d-md-none" tabindex="-1" id="sidebarMenuLabel" aria-labelledby="sidebarMenuLabel">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title fw-bold" id="sidebarMenuLabel">
+            <i class="bi bi-graph-up-arrow me-2 text-primary"></i>
+            Menu Principal
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+
+    <div class="offcanvas-body p-0 pt-3 overflow-y-auto">
+        <!-- Navigation Menu -->
+        <nav class="flex-grow-1">
+            <ul class="nav flex-column" id="mobile-menu">
+                
+                <li class="nav-item">
+                    <a href="{% url 'dashboard-list' %}" class="nav-link d-flex align-items-center gap-2">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-speedometer2"></i>
+                        </div>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="{% url 'transaction-list' %}" class="nav-link d-flex align-items-center gap-2">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-list-ul"></i>
+                        </div>
+                        <span>Transações</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="{% url 'account-list' %}" class="nav-link d-flex align-items-center gap-2">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-credit-card"></i>
+                        </div>
+                        <span>Contas</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'categorie-list' %}" class="nav-link d-flex align-items-center gap-2">
+                        <div class="icon-wrapper">
+                            <i class="bi bi-tags"></i>
+                        </div>
+                        <span>Categorias</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <!-- Bottom Section -->
+        <div class="mt-auto">
+            <!-- Quick Stats -->
+            <div class="px-3 mb-3">
+                <div class="glass-effect rounded-modern p-3 text-center">
+                    <div class="small text-muted mb-1">Saldo Atual</div>
+                    <div class="fw-bold gradient-text fs-5">R$ {{transactions_metrics.balance}}</div>
+                </div>
+            </div>
+
+        <!-- Divider -->
+        <hr class="my-3 mx-3">
+
+        
+            <!-- User Menu -->
+            <div class="dropdown d-flex mb-3 ">
+                <button class="btn text-white dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    <i class="bi bi-person-circle me-1"></i>
+                    {{ user.username|title }}
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    {% if user.is_superuser %}
+                    <li>
+                    <a class="dropdown-item" href="{% url 'admin:index' %}">
+                        <i class="bi bi-person me-2"></i>Painel Administrativo
+                    </a>
+                    </li>
+                    {% endif %}
+
+                    <li>
+                    <hr class="dropdown-divider" />
+                    </li>
+                    <li>
+                    <form action="{% url 'logout' %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="dropdown-item">
+                        <i class="bi bi-box-arrow-right me-2"></i>Sair
+                        </button>
+                    </form>
+                    </li>
+                </ul>
+            </div>    
+        </div>
+    </div>
+</div>
+
+{% include 'partials/modal_transaction.html' %}
+{% include 'partials/modal_categorie.html' %}
+{% include 'partials/modal_accounts.html' %}
+

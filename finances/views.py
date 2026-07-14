@@ -1,12 +1,19 @@
 import json
+
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from finances.models import Transaction, Categorie, Account
-from finances.forms import TransactionModelForm, CategorieModelForm, AccountModelForm
-from app.metrics import get_transactions_value, get_category_graphics_data, get_montly_graphics_metric
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+
+from accounts.forms import AccountModelForm
+from accounts.models import Account
+from app.metrics import (get_category_graphics_data,
+                         get_montly_graphics_metric, get_transactions_value)
+from categories.forms import CategorieModelForm
+from categories.models import Categorie
+from finances.forms import TransactionModelForm
+from finances.models import Transaction
 
 # Create your views here.
 
@@ -17,11 +24,11 @@ class TransactionListView(LoginRequiredMixin, ListView):
     context_object_name = 'transactions'
     paginate_by = 5
 
-    # def get_queryset(self):
-    #     transaction = Transaction.objects.filter(user=self.request.user).order_by('-created_at')
-    #     accounts = Account.objects.filter(user=self.request.user)
-    #     return transaction, accounts
-    
+    def get_queryset(self):
+        transaction = Transaction.objects.filter(
+            user=self.request.user).select_related('account', 'category')
+        return transaction
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["form"] = TransactionModelForm(user=self.request.user)
@@ -106,88 +113,12 @@ class TransactionDeleteView(LoginRequiredMixin, DeleteView):
         transaction.delete()
 
         return JsonResponse({"success": "True"})
-    
-
-class CategorieListView(LoginRequiredMixin, ListView):
-    model = Categorie
-    template_name = 'categories.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["transactions_metrics"] = get_transactions_value(
-            user=self.request.user)
-        context["form_categories"] = CategorieModelForm(user=self.request.user)
-        context["categories"] = Categorie.objects.filter(user=self.request.user)
-
-        categories_revenues_filter = Categorie.objects.filter(user=self.request.user, category_type='revenue')
-        context["categories_revenues_filter"] = categories_revenues_filter
-        return context
-
-
-
-class CategorieCreateView(CreateView):
-    model = Categorie
-    form_class = CategorieModelForm
-    success_url = '/'
-
-    def post(self, request, *args, **kwargs):
-        try:
-            data = json.loads(request.body)  # Decodifica JSON
-            form = self.form_class(data)
-
-            if form.is_valid():
-                categorie = form.save(commit=False)
-                categorie.user = request.user
-                categorie.save()
-                return JsonResponse({"success": True})
-            return JsonResponse({"success": False, "errors": form.errors}, status=400)
-        
-        except json.JSONDecodeError:
-            return JsonResponse({"success": False, "error": "JSON inválido"}, status=400)
-        
-
-class AccountListView(LoginRequiredMixin, ListView):
-    model = Account
-    template_name = 'accounts.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["transactions_metrics"] = get_transactions_value(
-            user=self.request.user)
-        context["form"] = TransactionModelForm(user=self.request.user)
-        context["form_accounts"] = AccountModelForm(user=self.request.user)
-        context["accounts"] = Account.objects.filter(user=self.request.user)
-        return context
-
-
-class AccountCreateView(CreateView):
-    model = Account
-    form_class = AccountModelForm
-    success_url = '/'
-
-    def post(self, request, *args, **kwargs):
-        try:
-            data = json.loads(request.body)
-            form = self.form_class(data)
-
-            if form.is_valid():
-                account = form.save(commit=False)
-                account.user = request.user
-                account.save()
-                return JsonResponse({"success": True})
-            return JsonResponse({"success": False, "errors": form.errors}, status=400)
-        
-        except json.JSONDecodeError:
-            return JsonResponse({"success": False, "errors": "JSON inválido"}, status=400)
 
 
 class DashboardListView(LoginRequiredMixin, ListView):
     model = Transaction
     template_name = 'dashboard.html'
     context_object_name = 'transactions'
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

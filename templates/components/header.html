@@ -1,0 +1,20 @@
+<header class="modern-header navbar sticky-top flex-md-nowrap p-0 shadow-modern" data-bs-theme="dark">
+  <div class="container-fluid">
+    <div class="d-flex align-items-center justify-content-center ">
+      <div class="d-flex mx-4 align-items-left">
+        <!-- Mobile Menu Toggle -->
+        <button class="btn btn-link text-white d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenuLabel" aria-controls="sidebarMenuLabel">
+            <i class="bi bi-list fs-4"></i>
+        </button>
+      </div>
+      <!-- Brand/Logo -->
+      <div class="d-flex">
+        <a class="navbar-brand d-flex align-items-center px-3"
+          href="{% if user.is_authenticated %}{% url 'dashboard-list' %}{% else %}{% url 'login' %}{% endif %}">
+          <i class="bi bi-graph-up-arrow me-2 fs-4"></i>
+          <span class="fw-bold">Gerenciamento de Finanças</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
