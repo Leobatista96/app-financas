@@ -40,7 +40,12 @@
       {% comment %} <button class="btn btn-modern btn-primary" id="newTransactionButton" data-bs-toggle="tooltip">Adicionar
         Transação
       </button> {% endcomment %}
-      <a href="{% url "" %}"></a>
+      <a href="" class="btn text-white mx-4 bg-secondary text-decoration-none">
+        Editar
+      </a>
+      <a href="{% url "account-delete"%}" class="btn text-white bg-danger text-decoration-none">
+        Excluir
+      </a>
     </div>
   </div>
   {% endfor %}

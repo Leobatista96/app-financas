@@ -3,11 +3,13 @@ import json
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum
 from django.http import JsonResponse
-from django.views.generic import CreateView, ListView
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from accounts.forms import AccountModelForm
 from accounts.models import Account
-from app.metrics import account_balance, get_transactions_value
+from app.metrics import get_transactions_value
 from finances.forms import TransactionModelForm
 
 
@@ -53,3 +55,19 @@ class AccountCreateView(CreateView):
 
         except json.JSONDecodeError:
             return JsonResponse({'success': False, 'errors': 'JSON inválido'}, status=400)
+
+
+class AccountUpdateView(LoginRequiredMixin, UpdateView):
+    ...
+
+
+class AccountDeleteView(LoginRequiredMixin, DeleteView):
+    model = Account
+    success_url = reverse_lazy("/")
+
+    def delete(self, request, *args, **kwargs):
+        account = get_object_or_404(
+            Account, pk=self.kwargs['pk'], user=self.request.user,
+        )
+        account.delete()
+        return account
