@@ -624,16 +624,39 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // ===== MODAL CATEGORIE =====
+const categorieFormErrors = document.getElementById('categorieFormErrors');
+
+const renderCategorieFormErrors = (errors) => {
+    if (!categorieFormErrors) return;
+
+    const messages = Object.entries(errors || {}).flatMap(([field, values]) =>
+        (Array.isArray(values) ? values : [values]).map((value) =>
+            field === '__all__' ? value : `${field}: ${value}`,
+        ),
+    );
+
+    categorieFormErrors.innerHTML = messages.length
+        ? `<strong>Não foi possível salvar a categoria. Categoria com este nome já existe.</strong><br>`
+        : '<strong>Não foi possível salvar a categoria.</strong>';
+    categorieFormErrors.classList.remove('d-none');
+};
+
+const clearCategorieFormErrors = () => {
+    if (!categorieFormErrors) return;
+    categorieFormErrors.innerHTML = '';
+    categorieFormErrors.classList.add('d-none');
+};
+
 if (document.getElementById('categorieForm')) {
   document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.addcategoriebutton').forEach((button) => {
       button.addEventListener('click', function () {
+                clearCategorieFormErrors();
         new bootstrap.Modal(document.getElementById('ModalCategorie')).show();
       });
     });
-  })};
-  
-if (document.getElementById('categorieForm')) {
+    });
+
   document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.addaccountbutton').forEach((button) => {
       button.addEventListener('click', function () {
@@ -642,13 +665,17 @@ if (document.getElementById('categorieForm')) {
     });
   });
 
-  
-  document.getElementById('saveCategorie').addEventListener('click', function () {
+
+    document.getElementById('categorieForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+          event.stopImmediatePropagation();
+
     const form = document.getElementById('categorieForm');
     const formData = new FormData(form);
     const jsonData = {};
 
     formData.forEach((value, key) => (jsonData[key] = value));
+        clearCategorieFormErrors();
 
     fetch('/new_categorie/', {
       method: 'POST',
@@ -664,6 +691,7 @@ if (document.getElementById('categorieForm')) {
           showNotification('Categoria criada com sucesso!', 'success');
           window.location.reload();
         } else {
+                    renderCategorieFormErrors(data.errors || data.error || {});
           showNotification('Erro ao criar categoria', 'danger');
         }
       })
@@ -674,13 +702,14 @@ if (document.getElementById('categorieForm')) {
   });
 }
 
-// ===== MODAL DELETE =====
+// ===== MODAL TRANSACTION DELETE  =====
 let transactionIdToDelete = null;
 
 if (document.querySelectorAll('.delete-btn').length > 0) {
   document.querySelectorAll('.delete-btn').forEach((button) => {
     button.addEventListener('click', function () {
       transactionIdToDelete = this.getAttribute('data-id');
+      
     });
   });
 }
@@ -714,7 +743,9 @@ if (document.getElementById('confirmDelete')) {
   });
 }
 
-// ===== MODAL EDIT =====
+
+
+// ===== MODAL TRANSACTION EDIT =====
 if (document.getElementById('editForm')) {
   document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('#edit-btn').forEach((button) => {
@@ -774,6 +805,70 @@ if (document.getElementById('editForm')) {
   });
 }
 
+// === MODAL ACCOUNT DELETE ====
+
+let accountIdToDelete = null;
+
+if (document.querySelectorAll('.delete-account-btn').length > 0) {
+  document.querySelectorAll('.delete-account-btn').forEach((button) => {
+    button.addEventListener('click', function () {
+      accountIdToDelete = this.getAttribute('data-id');
+      
+    });
+  });
+}
+
+if (document.getElementById('confirmDelete')) {
+    document.getElementById('confirmDelete').addEventListener('click', function(){
+        if (accountIdToDelete) {
+            fetch(`/account/${accountIdToDelete}/delete`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                },
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    showNotification('Conta excluída com sucesso!', 'success');
+                } else {
+                    showNotification('Erro ao excluir a conta', 'danger');
+                }
+                accountIdToDelete = null;
+                const modal = bootstrap.Modal.getInstance(document.getElementById('ModalDelete'));
+                if (modal) {
+                    modal.hide();
+                }
+                location.reload();
+            })
+        }
+    })
+}
+
+// ==== MODAL ACCOUNT EDIT ====
+
+if (document.getElementById('editaccountForm')) {
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.edit-account-btn').forEach((button) =>{
+            button.addEventListener('click', function () {
+                const accountId = this.getAttribute('data-id');
+
+                fetch(`/account/${accountId}/update`)
+                    .then((response) => response.json())
+                    .then((data) => {
+                        document.getElementById('account_name').value = data.name;
+                        document.getElementById('account_value').value = data.value;
+                        document.getElementById('account_categorie_name').value = data.categorie;
+                        
+                        new bootstrap.Modal(document.getElementById('#ModalAccountChange')).show();
+                });
+            });
+        });
+    });
+}
+
+
 // ===== DASHBOARD =====
 if (document.querySelectorAll('[data-quick-action]').length > 0) {
   document.addEventListener('DOMContentLoaded', function () {
@@ -790,17 +885,4 @@ if (document.querySelectorAll('[data-quick-action]').length > 0) {
       });
     });
   });
-}
-
-function handleQuickAction(action) {
-  switch (action) {
-    case 'add-income':
-      showNotification('Formulário de receita aberto!', 'info');
-      break;
-    case 'add-expense':
-      showNotification('Formulário de despesa aberto!', 'info');
-      break;
-    default:
-      showNotification('Ação não implementada ainda.', 'warning');
-  }
 }

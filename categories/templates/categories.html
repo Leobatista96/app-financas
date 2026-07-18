@@ -33,11 +33,12 @@
   <div class="card-header d-flex justify-content-between align-items-center"></div>
 
   <div class="card-body p-0">
-    <div class="table-responsive">
+    <div class="table-responsive text-center">
       <table class="table table-bordered table-hover mb-0">
         <thead class="table-dark">
           <tr>
             <th>Nome</th>
+            <th>Tipo de Categoria</th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -47,11 +48,21 @@
             <td>
               <span class="fw-medium text-black">{{ categorie.category }}</span>
             </td>
+            <td>
+              {{ categorie.category_type }}
+            </td>
             <td class="text-center">
-              <div class="btn-group">
-                <button class="btn btn-success btn-sm">
-                  <i class="bi bi-pencil"></i>
-                </button>
+              <div class="btn-group ">
+                <div class="btn-group">
+                  <button class="btn btn-success btn-sm">
+                    <span class="bi bi-pencil"></span>
+                  </button>
+                </div>
+                <div class="btn-group">
+                  <button class="btn btn-danger btn-sm">
+                    <span class="bi bi-trash3"></span>
+                  </button>
+                </div>
               </div>
             </td>
           </tr>

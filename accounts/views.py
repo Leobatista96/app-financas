@@ -1,7 +1,7 @@
 import json
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Sum
+from django.db.models import ProtectedError, Sum
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
@@ -58,14 +58,34 @@ class AccountCreateView(CreateView):
 
 
 class AccountUpdateView(LoginRequiredMixin, UpdateView):
-    ...
+    model = Account
+
+    def get_object(self, queryset=...):
+        return get_object_or_404(Account, pk=self.kwargs['pk'], user=self.request.user)
+
+    def get(self, request, *args, **kwargs):
+        accounts = self.get_object()
+        return JsonResponse({
+            "name": accounts.name,
+            "value": accounts.value,
+            "categorie": accounts.categorie,
+        })
+
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
 
 
 class AccountDeleteView(LoginRequiredMixin, DeleteView):
     model = Account
-    success_url = reverse_lazy("/")
+    success_url = reverse_lazy("account-list")
 
     def delete(self, request, *args, **kwargs):
+        objects = ProtectedError.protected_objects
+        if objects:
+            context = self.get_context_data(
+                error_message='Erro',
+            )
+            return self.render_to_response(context)
         account = get_object_or_404(
             Account, pk=self.kwargs['pk'], user=self.request.user,
         )
