@@ -1,6 +1,7 @@
+<!-- Modal de exclusao-->
 <div
   class="modal fade"
-  id="ModalCategorie"
+  id="ModalDelete"
   data-bs-backdrop="static"
   data-bs-keyboard="false"
   tabindex="-1"
@@ -11,7 +12,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="staticBackdropLabel">
-          Criar Nova Categoria
+          Exclusao de Item
         </h1>
         <button
           type="button"
@@ -21,14 +22,17 @@
         ></button>
       </div>
       <div class="modal-body">
-        <div id="categorieFormErrors" class="alert alert-danger d-none" role="alert"></div>
-        <form id="categorieForm" data-no-loading="true">
-          {% csrf_token %} {{form_categories.as_p}}
-          <button type="submit" class="btn btn-success" id="saveCategorie">
-            Salvar
-          </button>
-        </form>
+        <div class="mb-3">
+          <span class="form-label ">Deseja realmente excluir a conta ?
+          </span>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <button type="button" class="btn btn-danger" id="confirmDelete">
+          Excluir
+        </button>
       </div>
     </div>
   </div>
 </div>
+

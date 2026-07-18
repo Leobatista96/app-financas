@@ -74,7 +74,7 @@ class TransactionUpdateView(LoginRequiredMixin, UpdateView):
         return get_object_or_404(Transaction, pk=self.kwargs['pk'], user=self.request.user)
 
     def get(self, request, *args, **kwargs):
-        transaction = get_object_or_404(Transaction, pk=self.kwargs['pk'])
+        transaction = self.get_object()
         return JsonResponse({
             "id": transaction.id,
             "description": transaction.description,

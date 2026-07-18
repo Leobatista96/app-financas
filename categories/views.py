@@ -15,7 +15,7 @@ class CategorieListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         categories = Categorie.objects.filter(
-            user=self.request.user).select_related('account')
+            user=self.request.user).select_related('user')
         return categories
 
     def get_context_data(self, **kwargs):
@@ -41,7 +41,6 @@ class CategorieCreateView(CreateView):
         try:
             data = json.loads(request.body)  # Decodifica JSON
             form = self.form_class(data)
-
             if form.is_valid():
                 categorie = form.save(commit=False)
                 categorie.user = request.user

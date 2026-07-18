@@ -1,0 +1,47 @@
+<!-- Modal de edicao -->
+<div class="modal fade" id="ModalAccountChange" data-bs-backdrop="static"   data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">
+          Atualizar Conta
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form id="editaccountForm" method="POST">
+          <div class="mb-3">
+            <label for="account_name" class="form-label">Nome da Conta</label>
+            <input type="text" class="form-control" id="account_name">
+          </div>
+          <div class="mb-3">
+            <label for="account_value" class="form-label">Valor</label>
+            <input type="value" class="form-control" id="account_value">
+          </div>
+          <div class="mb-3">
+            <label for="account_categorie_name" class="form-label">Categoria</label>
+            <select name="account_categorie_select" class="form-select" id="account_categorie_name">
+              <option value={{ form_accounts.categorie }}</option>
+            </select>
+          </div> 
+        </form>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-success" id="saveChanges">
+          Salvar
+        </button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+          Fechar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

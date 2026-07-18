@@ -95,6 +95,10 @@
   <script>
     // Show loading on form submits
     document.querySelectorAll('form').forEach(form => {
+      if (form.dataset.noLoading === 'true') {
+        return;
+      }
+
       form.addEventListener('submit', function() {
         document.getElementById('loadingOverlay').classList.remove('d-none');
       });

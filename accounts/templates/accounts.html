@@ -1,6 +1,6 @@
 {% extends 'base.html' %} {% block page_header %}
 
-<div class="d-flex justfi-content-between">
+<div class="d-flex justify-content-start">
   <div>
     <h1 class="mb-4">Contas</h1>
   </div>
@@ -23,34 +23,34 @@
   {% for account in accounts %}
   <div class="modern-card mb-4">
     <div class="d-flex card-header gap-3 justify-content-center">
-      <i class="bi bi-bank"></i>
+      <span class="bi bi-bank"></span>
       {{ account.name }}
     </div>
     <div class="card-body">
       <div class="d-grid gap-2">
-        <a class="text-decoration-none btn" data-bs-placement="right">
           <div class="d-flex justify-content-between">
             <p class="text-white">Saldo</p>
             <p class="text-white"> R$ {{ account.value }}</p>
           </div>
-        </a>
+          <div class="d-flex justify-content-between">
+            <p class="text-white">Categoria</p>
+            <p class="text-white"> {{ account.categorie | capfirst}}</p>
+          </div>
       </div>
     </div>
     <div class="card-footer d-flex justify-content-center">
-      {% comment %} <button class="btn btn-modern btn-primary" id="newTransactionButton" data-bs-toggle="tooltip">Adicionar
-        Transação
-      </button> {% endcomment %}
-      <a href="" class="btn text-white mx-4 bg-secondary text-decoration-none">
+      <button class="btn btn-secondary mx-4 edit-account-btn" data-id="{{account.pk}}" data-bs-toggle="modal" data-bs-target="#ModalAccountChange">
         Editar
-      </a>
-      <a href="{% url "account-delete"%}" class="btn text-white bg-danger text-decoration-none">
+      </button>
+      <button class="btn btn-danger delete-account-btn" data-id="{{account.pk}}" data-bs-toggle="modal" data-bs-target="#ModalDelete">
         Excluir
-      </a>
+      </button>
     </div>
   </div>
   {% endfor %}
 </div>
 
-
+{% include "partials/modal_delete_account.html" %}
+{% include "partials/modal_edit_account.html" %}
 
 {% endblock content %}
