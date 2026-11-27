@@ -3,219 +3,177 @@
 {% load static %}
 {% load l10n %}
 
-
-
-{% block page_header %}
-<div class="d-flex justify-content-between align-items-center">
-  <div>
-    <h1 class="h2 mb-0">
-      Transações
-    </h1>
-    <p class="text-muted small mb-0">Gerencie suas transações financeiras</p>
-  </div>
-  <button class="btn btn-modern btn-primary" id="newTransactionButton" data-bs-toggle="tooltip" data-bs-placement="left"
-    title="Adicionar nova transação">
-    <i class="bi bi-plus-circle me-2"></i>Nova Transação
-  </button>
-</div>
-{% endblock %}
-
 {% block content %}
 
-<!-- Métricas de Transações -->
-<div class="row g-2 mb-4">
-  <div class="col-xl-3 col-md-6">
-    <div class="modern-card metric-card info">
-      <div class="d-flex align-items-center">
-        <div class="metric-icon me-3">
-          <i class="bi bi-wallet2"></i>
-        </div>
-        <div>
-          <div class="metric-label">Saldo</div>
-          <div class="metric-value" data-counter="{% localize off %}{{transactions_metrics.balance}}{% endlocalize %}">
-          </div>
-        </div>
+<div class="max-w-[1400px] mx-auto px-6 pt-12 pb-24 relative">
+  <div class="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
+    <div class="figma-grid-bg"></div>
+  </div>
+
+  <!-- Cabeçalho da página (padrão de seção do design system) -->
+  <!-- Header sem reveal-section/reveal-text: conteúdo acima da dobra congela se um
+       ScrollTrigger.refresh() cai no meio da entrada (padrão from+stagger do GSAP) -->
+  <div class="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+    <div>
+      <span class="uppercase block text-sm text-[#EF5F3C] tracking-wide mb-4">02 / Lançamentos</span>
+      <h1 class="md:text-6xl leading-[1.1] text-5xl tracking-tight font-semibold">Transações</h1>
+      <p class="text-[#5E5E5E] font-light leading-relaxed mt-4 max-w-xl">Gerencie suas transações financeiras</p>
+    </div>
+    <button class="px-8 py-4 bg-[#0C0B07] text-white rounded-full font-medium text-lg hover:bg-black/80 transition-all shadow-xl shadow-black/10 flex items-center justify-center gap-2 group whitespace-nowrap w-fit" id="newTransactionButton" data-bs-toggle="tooltip" data-bs-placement="left" title="Adicionar nova transação">
+      Nova Transação <iconify-icon icon="lucide:arrow-right" class="group-hover:translate-x-1 transition-transform"></iconify-icon>
+    </button>
+  </div>
+
+  <!-- Métricas (cards do mockup do design system) -->
+  <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-6 reveal-section">
+    <div class="bg-white border border-[#0C0B07]/10 rounded-2xl shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] p-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 flex items-center justify-center bg-black/5 border border-black/10 rounded-lg text-[#0C0B07]"><iconify-icon icon="solar:wallet-money-linear" width="20"></iconify-icon></div>
+        <span class="font-mono text-[11px] tracking-wider uppercase text-[#5E5E5E]">Saldo</span>
       </div>
+      <div class="text-3xl font-semibold tracking-tight" data-counter="{% localize off %}{{transactions_metrics.balance}}{% endlocalize %}"></div>
     </div>
-  </div>
 
-  <div class="col-xl-3 col-md-6">
-    <div class="modern-card metric-card">
-      <div class="d-flex align-items-center">
-        <div class="metric-icon me-3">
-          <i class="bi bi-calculator"></i>
-        </div>
-        <div>
-          <div class="metric-label">Total</div>
-          <div class="metric-value"
-            data-counter="{% localize off %}{{transactions_metrics.total_transactions_value|default:0}}{% endlocalize %}">
-          </div>
-        </div>
+    <div class="bg-white border border-[#0C0B07]/10 rounded-2xl shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] p-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 flex items-center justify-center bg-purple-500/10 border border-purple-500/20 rounded-lg text-purple-500"><iconify-icon icon="lucide:pie-chart" width="20"></iconify-icon></div>
+        <span class="font-mono text-[11px] tracking-wider uppercase text-[#5E5E5E]">Total</span>
       </div>
+      <div class="text-3xl font-semibold tracking-tight" data-counter="{% localize off %}{{transactions_metrics.total_transactions_value|default:0}}{% endlocalize %}"></div>
     </div>
-  </div>
 
-  <div class="col-xl-3 col-md-6">
-    <div class="modern-card metric-card success">
-      <div class="d-flex align-items-center">
-        <div class="metric-icon me-3">
-          <i class="bi bi-arrow-up-circle"></i>
-        </div>
-        <div>
-          <div class="metric-label">Receitas</div>
-          <div class="metric-value"
-            data-counter="{% localize off %}{{transactions_metrics.total_categories_revenue|default:0}}{% endlocalize %}">
-          </div>
-        </div>
+    <div class="bg-white border border-[#0C0B07]/10 rounded-2xl shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] p-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 flex items-center justify-center bg-green-500/10 border border-green-500/20 rounded-lg text-green-500"><iconify-icon icon="solar:arrow-up-linear" width="20"></iconify-icon></div>
+        <span class="font-mono text-[11px] tracking-wider uppercase text-[#5E5E5E]">Receitas</span>
       </div>
+      <div class="text-3xl font-semibold tracking-tight" data-counter="{% localize off %}{{transactions_metrics.total_categories_revenue|default:0}}{% endlocalize %}"></div>
     </div>
-  </div>
 
-  <div class="col-xl-3 col-md-6">
-    <div class="modern-card metric-card danger">
-      <div class="d-flex align-items-center">
-        <div class="metric-icon me-3">
-          <i class="bi bi-arrow-down-circle"></i>
-        </div>
-        <div>
-          <div class="metric-label">Despesas</div>
-          <div class="metric-value"
-            data-counter="{% localize off %}{{transactions_metrics.total_categories_expense|default:0}}{% endlocalize %}">
-          </div>
-        </div>
+    <div class="bg-white border border-[#0C0B07]/10 rounded-2xl shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] p-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 flex items-center justify-center bg-[#EF5F3C]/10 border border-[#EF5F3C]/20 rounded-lg text-[#EF5F3C]"><iconify-icon icon="solar:arrow-down-linear" width="20"></iconify-icon></div>
+        <span class="font-mono text-[11px] tracking-wider uppercase text-[#5E5E5E]">Despesas</span>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- Tabela de Transações -->
-<div class="modern-card">
-  <div class="card-header d-flex justify-content-between align-items-center">
-    <h5 class="mb-0">
-      <i class="bi bi-table me-2"></i>
-      Lista de Transações
-    </h5>
-    <div class="d-flex gap-2">
-      <button class="btn btn-outline-primary btn-sm" data-bs-toggle="tooltip" title="Filtrar">
-        <i class="bi bi-funnel"></i>
-      </button>
+      <div class="text-3xl font-semibold tracking-tight" data-counter="{% localize off %}{{transactions_metrics.total_categories_expense|default:0}}{% endlocalize %}"></div>
     </div>
   </div>
 
-  <div class="card-body p-0">
-    <div class="table-responsive ">
-      <table class="table table-bordered table-hover mb-0">
-        <thead class="table-dark">
-          <tr>
-            <th><i class="bi bi-file-text me-1"></i>Descrição</th>
-            <th><i class="bi bi-tags me-1"></i>Categoria</th>
-            <th><i class="bi bi-credit-card me-1"></i>Conta</th>
-            <th><i class="bi bi-currency-dollar me-1"></i>Valor</th>
-            <th><i class="bi bi-calendar3 me-1"></i>Vencimento</th>
-            <th class="text-center"><i class="bi bi-gear me-1"></i>Ações</th>
-          </tr>
-        </thead>
+  <!-- Lista de transações (linhas divisórias do design system) -->
+  <div class="relative z-10 reveal-section">
+    <div class="bg-white border border-[#0C0B07]/10 rounded-2xl shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] overflow-hidden">
+      <div class="flex justify-between items-center px-6 pt-6 pb-2">
+        <div class="flex items-center gap-4">
+          <h5 class="text-lg font-medium">Lista de Transações</h5>
+          <span class="px-2 py-1 bg-purple-500/10 border border-purple-500/20 rounded text-[11px] text-purple-500 font-mono tracking-wider">DASH</span>
+        </div>
+        <button class="px-5 py-2.5 bg-white text-[#0C0B07] rounded-full text-sm font-medium border border-black/10 hover:bg-black/5 transition-all flex items-center gap-2" data-bs-toggle="tooltip" title="Filtrar">
+          <iconify-icon icon="lucide:pie-chart"></iconify-icon>
+        </button>
+      </div>
 
-        <tbody>
-          {% for transaction in transactions %}
-          {% localize off %}
-          <tr id="transaction-row-{{ transaction.id }}" class="transaction-row">
-            <td>
-              <div class="d-flex align-items-center">
+      <div class="overflow-x-auto">
+        <table class="app-table">
+          <thead>
+            <tr>
+              <th>Descrição</th>
+              <th>Categoria</th>
+              <th>Conta</th>
+              <th>Valor</th>
+              <th>Vencimento</th>
+              <th class="text-center">Ações</th>
+            </tr>
+          </thead>
 
-                {% if transaction.category.category_type == 'revenue' %}
-                <div class="icon-wrapper me-3 bg-success bg-opacity-10 text-success rounded-circle p-1">
-                  <i class="bi bi-arrow-up"></i>
+          <tbody>
+            {% for transaction in transactions %}
+            {% localize off %}
+            <tr id="transaction-row-{{ transaction.id }}" class="transaction-row">
+              <td>
+                <div class="flex items-center gap-3">
+                  {% if transaction.category.category_type == 'revenue' %}
+                  <span class="badge-dot shrink-0"></span>
+                  {% else %}
+                  <span class="badge-dot shrink-0" style="background:#EF5F3C;"></span>
+                  {% endif %}
+                  <span class="font-medium text-[#0C0B07]">{{ transaction.description }}</span>
                 </div>
-
+              </td>
+              <td>
+                {% if transaction.category.category_type == 'expense' %}
+                <span class="badge-expense"><span class="badge-dot"></span>{{ transaction.category }}</span>
                 {% else %}
-                <div class="icon-wrapper me-3 bg-danger bg-opacity-10 text-danger rounded-circle p-1">
-                  <i class="bi bi-arrow-down"></i>
-                </div>
+                <span class="badge-revenue"><span class="badge-dot"></span>{{ transaction.category }}</span>
                 {% endif %}
+              </td>
+              <td>
+                <div class="flex items-center gap-1.5 text-[#5E5E5E]">
+                  <iconify-icon icon="solar:wallet-money-linear"></iconify-icon>
+                  {{ transaction.account }}
+                </div>
+              </td>
+              <td>
+                <span class="{% if transaction.category.category_type == 'revenue' %}text-revenue{% else %}text-expense{% endif %}">
+                  R$ {{ transaction.value|floatformat:2}}
+                </span>
+              </td>
+              <td>
+                <span class="text-[#5E5E5E]">{{ transaction.due_date|date:"d/m/Y"}}</span>
+              </td>
+              <td>
+                <div class="flex justify-center gap-2">
+                  <button id="edit-btn" class="btn btn-success btn-sm" data-id="{{ transaction.pk }}"
+                    data-category-name="{{ transaction.category.category }}" data-bs-target="#ModalChange"
+                    data-bs-toggle="tooltip" title="Editar">
+                    Editar
+                  </button>
+                  <button class="btn btn-danger btn-sm delete-btn" data-id="{{transaction.pk}}" data-bs-toggle="modal"
+                    data-bs-target="#ModalDelete" data-bs-toggle="tooltip" title="Excluir">
+                    Excluir
+                  </button>
+                </div>
+              </td>
+            </tr>
+            {% endlocalize %}
+            {% empty %}
+            <tr>
+              <td colspan="6" class="!py-16 text-center">
+                <div class="flex flex-col items-center gap-3 text-[#5E5E5E]">
+                  <iconify-icon icon="solar:wallet-money-linear" width="48" height="48"></iconify-icon>
+                  <h5 class="text-lg font-medium text-[#0C0B07]">Nenhuma transação encontrada</h5>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
 
-
-                <span class="fw-medium text-black">{{ transaction.description }}</span>
-              </div>
-            </td>
-            <td>
-              <span
-                class="badge rounded-pill 
-                            {% if transaction.category.category_type == 'expense' %}bg-danger{% else %}bg-success{% endif %}">
-                {{ transaction.category }}
-              </span>
-            </td>
-            <td>
-              <div class="d-flex align-items-center">
-                <i class="bi bi-bank me-1 text-black"></i>
-                <span class='text-black'>{{ transaction.account }}</span>
-              </div>
-            </td>
-            <td>
-              <span
-                class="fw-bold {% if transaction.category.category_type == 'revenue' %}text-success{% else %}text-danger{% endif %}">
-                R$ {{ transaction.value|floatformat:2}}
-              </span>
-            </td>
-            <td>
-              <span class="text-black">{{ transaction.due_date|date:"d/m/Y"}}</span>
-            </td>
-            <td class="text-center">
-              <div class="btn-group" role="group">
-                <button id="edit-btn" class="btn btn-success btn-sm" data-id="{{ transaction.pk }}"
-                  data-category-name="{{ transaction.category.category }}" data-bs-target="#ModalChange"
-                  data-bs-toggle="tooltip" title="Editar">
-                  <i class="bi bi-pencil"></i>
-                </button>
-                <button class="btn btn-danger btn-sm delete-btn" data-id="{{transaction.pk}}" data-bs-toggle="modal"
-                  data-bs-target="#ModalDelete" data-bs-toggle="tooltip" title="Excluir">
-                  <i class="bi bi-trash3"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-          {% endlocalize %}
-          {% empty %}
-          <tr>
-            <td colspan="6" class="text-center py-5">
-              <div class="text-muted">
-                <i class="bi bi-inbox fs-1 d-block mb-3 text-black"></i>
-                <h5 class='text-black'>Nenhuma transação encontrada</h5>
-              </div>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Paginação Moderna -->
-    {% if page_obj.paginator.num_pages > 1 %}
-    {% localize off %}
-    <div class="card-footer bg-transparent border-top">
-      <div class="d-flex justify-content-between align-items-center">
-        <div class="text-muted small">
+      <!-- Paginação (pills do design system) -->
+      {% if page_obj.paginator.num_pages > 1 %}
+      {% localize off %}
+      <div class="flex flex-col sm:flex-row justify-between items-center gap-4 px-6 py-5 border-t border-[#0C0B07]/10">
+        <div class="text-[#5E5E5E] text-sm">
           Página {{ page_obj.number }} de {{page_obj.paginator.num_pages }}
           ({{ page_obj.paginator.count }} transações)
         </div>
         <nav aria-label="Navegação de páginas">
-          <ul class="pagination pagination-sm mb-0">
+          <ul class="pagination">
             {% if page_obj.has_previous %}
             <li class="page-item">
-              <a class="page-link" href="?page=1">
-                <i class="bi bi-chevron-double-left"></i>
+              <a class="page-link" href="?page=1" aria-label="Primeira página">
+                <iconify-icon icon="lucide:arrow-right" class="rotate-180"></iconify-icon>
               </a>
             </li>
             <li class="page-item">
-              <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
-                <i class="bi bi-chevron-left"></i>
+              <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Página anterior">
+                <iconify-icon icon="lucide:arrow-right" class="rotate-180"></iconify-icon>
               </a>
             </li>
-            
             {% else %}
             <li class="page-item disabled">
               <span class="page-link">
-                <i class="bi bi-chevron-left"></i>
+                <iconify-icon icon="lucide:arrow-right" class="rotate-180"></iconify-icon>
               </span>
             </li>
             {% endif %}
@@ -226,35 +184,32 @@
 
             {% if page_obj.has_next %}
             <li class="page-item">
-              <a class="page-link" href="?page={{ page_obj.next_page_number }}">
-                <i class="bi bi-chevron-right"></i>
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Próxima página">
+                <iconify-icon icon="lucide:arrow-right"></iconify-icon>
               </a>
             </li>
             <li class="page-item">
-              <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
-                <i class="bi bi-chevron-double-right"></i>
+              <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Última página">
+                <iconify-icon icon="lucide:arrow-right"></iconify-icon>
               </a>
             </li>
             {% else %}
             <li class="page-item disabled">
               <span class="page-link">
-                <i class="bi bi-chevron-right"></i>
+                <iconify-icon icon="lucide:arrow-right"></iconify-icon>
               </span>
             </li>
             {% endif %}
           </ul>
         </nav>
       </div>
+      {% endlocalize %}
+      {% endif %}
     </div>
-    {% endlocalize %}
-    {% endif %}
   </div>
 </div>
 
-
 {% include 'partials/modal_delete.html' %}
 {% include 'partials/modal_edit.html' %}
-
-
 
 {% endblock %}

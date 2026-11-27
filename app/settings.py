@@ -141,9 +141,11 @@ SESSION_SAVE_EVERY_REQUEST = True
 
 LOGIN_URL = 'login'
 
-LOGIN_REDIRECT_URL = '/'
+# Era '/' — que antes era a lista de transações. Como a raiz agora é a landing
+# pública (LandingView), o pós-login aponta direto ao interior do sistema.
+LOGIN_REDIRECT_URL = 'transaction-list'
 
-LOGOUT_REDIRECT_URL = '/login/'
+LOGOUT_REDIRECT_URL = '/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

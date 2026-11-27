@@ -1,114 +1,104 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" class="scroll-smooth">
 
 <head>
-  <title>{% block title %}Gestão de Finanças Pessoais{% endblock %}</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Gestão de Finanças Pessoais{% endblock %}</title>
   <meta name="description" content="Sistema moderno de gestão de finanças pessoais">
   <meta name="author" content="Sistema de Finanças">
-  
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
-  
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-  
-  <!-- Custom CSS -->
-  {% load static %}
-  <link href="{% static 'css/modern-styles.css' %}" rel="stylesheet">
-  
+  <meta name="theme-color" content="#F6F6F6">
+
+  <!-- Favicon (design system) -->
+  <link rel="icon" type="image/svg+xml" href="{% static 'img/favicon.svg' %}">
+
+  <!-- Performance: CDNs usados pelo design system -->
+  <link rel="preconnect" href="https://cdn.tailwindcss.com/">
+  <link rel="preconnect" href="https://code.iconify.design/" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com/" crossorigin>
+
+  <!-- Design system: mesmos CDNs e mesmo CSS compilado -->
+  <script src="https://cdn.tailwindcss.com/"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <link rel="stylesheet" href="{% static 'css/vendor/main-BsXTeVfQ.css' %}">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+
   <!-- Chart.js for modern charts -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
+
   <!-- Additional head content -->
   {% block extra_head %}{% endblock %}
 </head>
 
-<body>
-  <!-- Header -->
-  {% include "components/header.html" %}
+<body class="bg-[#F6F6F6] text-[#0C0B07] antialiased overflow-x-hidden font-[Geist]">
 
-  <!-- Main Content -->
-  <main class="main-content">
-    <div class="container-fluid">
-      <div class="row">
-        <!-- Sidebar -->
-        {% if user.is_authenticated %}
-          {% include "components/sidebar.html" %}
-        {% endif %}
-        
-        <!-- Page Content -->
-        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4 {% if not user.is_authenticated %}col-12{% endif %}">
-          <!-- Page Header -->
-          {% block page_header %}{% endblock %}
-          
-          <!-- Messages/Alerts -->
-          {% if messages %}
-            <div class="alert-container mb-4">
-              {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" data-auto-hide="5000">
-                  <i class="bi bi-check-circle me-2"></i>
-                  {{ message }}
-                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-              {% endfor %}
+  {% if user.is_authenticated %}
+    <!-- Navbar (pattern-nav do design system) -->
+    {% include "components/header.html" %}
+  {% endif %}
+
+  <main class="min-h-screen {% if user.is_authenticated %}pt-[70px]{% endif %}">
+    <!-- Messages/Alerts -->
+    {% if messages %}
+      <div class="{% if user.is_authenticated %}max-w-[1400px] mx-auto px-6 pt-6{% endif %}">
+        <div class="flex flex-col gap-3">
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" data-auto-hide="5000">
+              {% if message.tags == 'success' %}
+                <iconify-icon icon="lucide:shield-check" class="text-lg"></iconify-icon>
+              {% elif message.tags == 'error' or message.tags == 'danger' or message.tags == 'warning' %}
+                <iconify-icon icon="solar:danger-triangle-linear" class="text-lg"></iconify-icon>
+              {% else %}
+                <iconify-icon icon="lucide:bell" class="text-lg"></iconify-icon>
+              {% endif %}
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
             </div>
-          {% endif %}
-          
-          <!-- Main Content Block -->
-          {% block content %}{% endblock %}
+          {% endfor %}
         </div>
       </div>
-    </div>
+    {% endif %}
+
+    <!-- Page Header -->
+    {% block page_header %}{% endblock %}
+
+    <!-- Main Content Block -->
+    {% block content %}{% endblock %}
   </main>
 
-  <!-- Footer fora do container principal para ocupar toda a largura -->
-  {% include 'components/footer.html' %}
+  {% if user.is_authenticated %}
+    <!-- Footer (padrão do design system) -->
+    {% include 'components/footer.html' %}
+
+    <!-- Modais globais (novos registros) -->
+    {% include 'partials/modal_transaction.html' %}
+    {% include 'partials/modal_categorie.html' %}
+    {% include 'partials/modal_accounts.html' %}
+  {% endif %}
 
   <!-- Loading Overlay -->
-  <div id="loadingOverlay" class="position-fixed top-0 start-0 w-100 h-100 d-none" style="background: rgba(0,0,0,0.5); z-index: 9999;">
-    <div class="d-flex justify-content-center align-items-center h-100">
-      <div class="loading-spinner"></div>
-    </div>
+  <div id="loadingOverlay" class="d-none">
+    <div class="loading-spinner"></div>
   </div>
 
   <!-- Toast Container -->
-  <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1060;"></div>
+  <div class="toast-container"></div>
 
-  <!-- Bootstrap JS -->
+  <!-- Bootstrap JS (funcional: modais, dropdowns, toasts) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  
+
   <!-- Custom JS -->
   <script src="{% static 'js/modern-app.js' %}"></script>
-  
+
+  <!-- Design system JS (navbar + reveals GSAP) -->
+  <script defer src="{% static 'js/main.js' %}"></script>
+
   <!-- Additional scripts -->
   {% block extra_scripts %}{% endblock %}
-
-  <!-- Initialize app -->
-  <script>
-    // Show loading on form submits
-    document.querySelectorAll('form').forEach(form => {
-      if (form.dataset.noLoading === 'true') {
-        return;
-      }
-
-      form.addEventListener('submit', function() {
-        document.getElementById('loadingOverlay').classList.remove('d-none');
-      });
-    });
-    
-    // Hide loading when page loads
-    window.addEventListener('load', function() {
-      document.getElementById('loadingOverlay').classList.add('d-none');
-    });
-  </script>
 </body>
 
 </html>

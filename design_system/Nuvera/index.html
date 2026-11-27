@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verba — Controle de Finanças Pessoais sem Planilhas</title>
+  <meta name="description" content="Organize receitas, despesas, orçamentos e metas em um só lugar. O Verba mostra para onde vai cada real — no celular e no computador.">
+  <!-- Editável: domínio provisório -->
+  <link rel="canonical" href="https://verba.app/">
+  <meta name="theme-color" content="#F6F6F6">
+  <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Verba">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:url" content="https://verba.app/">
+  <meta property="og:title" content="Verba — Controle de Finanças Pessoais sem Planilhas">
+  <meta property="og:description" content="Receitas, despesas, orçamentos e metas em um só lugar. Sem planilhas e sem surpresas no fim do mês.">
+  <meta property="og:image" content="https://verba.app/img/og-cover.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Verba — Controle de Finanças Pessoais sem Planilhas">
+  <meta name="twitter:description" content="Receitas, despesas, orçamentos e metas em um só lugar. Sem planilhas e sem surpresas no fim do mês.">
+  <meta name="twitter:image" content="https://verba.app/img/og-cover.png">
+
+  <!-- Performance: CDNs usados pelo design system -->
+  <link rel="preconnect" href="https://cdn.tailwindcss.com/">
+  <link rel="preconnect" href="https://code.iconify.design/" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com/" crossorigin>
+
+  <!-- Design system: mesmos CDNs e mesmo CSS compilado -->
+  <script src="https://cdn.tailwindcss.com/"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <link rel="stylesheet" href="css/vendor/main-BsXTeVfQ.css">
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Verba",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Web, Android, iOS",
+    "description": "Aplicativo de controle de finanças pessoais: receitas, despesas, orçamentos por categoria, metas de economia, contas a pagar e receber, relatórios e alertas inteligentes.",
+    "offers": {
+      "@type": "Offer",
+      "availability": "https://schema.org/PreOrder",
+      "description": "Pré-lançamento — converse com um especialista para condições de acesso antecipado."
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "O Verba é gratuito?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Estamos em pré-lançamento. Fale com um de nossos especialistas para conhecer os planos e as condições de acesso antecipado." }
+      },
+      {
+        "@type": "Question",
+        "name": "Meus dados financeiros estão seguros?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Sim. Tudo é criptografado em trânsito e em repouso, com backups automáticos diários. Seus dados seguem a LGPD e nunca são vendidos." }
+      },
+      {
+        "@type": "Question",
+        "name": "Funciona no celular e no computador?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Sim. O mesmo painel sincronizado no celular, no tablet e no computador — comece um lançamento em um dispositivo e termine em outro." }
+      },
+      {
+        "@type": "Question",
+        "name": "Consigo importar o extrato do meu banco?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Sim: os principais bancos permitem exportar CSV ou OFX. Você importa o arquivo e o Verba lança e categoriza tudo sozinho." }
+      },
+      {
+        "@type": "Question",
+        "name": "Preciso abandonar minha planilha?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Não precisa ser traumático: importe os dados que você já tem e, se um dia quiser sair, exporte tudo de volta." }
+      },
+      {
+        "@type": "Question",
+        "name": "O app faz investimentos por mim?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Não. O Verba organiza e mostra sua situação para você decidir. Para dar o próximo passo, fale com um de nossos especialistas." }
+      }
+    ]
+  }
+  </script>
+</head>
+<body class="bg-[#F6F6F6] text-[#0C0B07] antialiased overflow-x-hidden font-[Geist]">
+
+  <!-- ================= NAVBAR (pattern-nav do design system) ================= -->
+  <nav id="navbar" class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-black/10" aria-label="Navegação principal">
+    <div class="flex z-10 h-[70px] max-w-[1440px] mr-auto ml-auto pr-6 pl-6 relative items-center justify-between gap-6">
+      <a href="#hero" class="text-[#0C0B07] font-semibold tracking-tight whitespace-nowrap">Verba</a>
+      <div class="flex items-center gap-4 overflow-x-auto no-scrollbar text-sm font-medium">
+        <a href="#funcionalidades" class="whitespace-nowrap hover:text-[#EF5F3C] transition-colors">Funcionalidades</a>
+        <a href="#como-funciona" class="whitespace-nowrap hover:text-[#EF5F3C] transition-colors">Como funciona</a>
+        <a href="#depoimentos" class="whitespace-nowrap hover:text-[#EF5F3C] transition-colors">Depoimentos</a>
+        <a href="#faq" class="whitespace-nowrap hover:text-[#EF5F3C] transition-colors">FAQ</a>
+        <a href="mailto:contato@verba.app" class="whitespace-nowrap px-6 py-2.5 bg-[#0C0B07] text-white rounded-full text-[15px] font-medium hover:bg-black/80 transition-all shadow-lg shadow-black/5">Fale com um de nossos especialistas</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="pt-[70px]">
+
+    <!-- ================= HERO (clone do design system) ================= -->
+    <section id="hero" class="min-h-screen flex flex-col relative overflow-hidden bg-[#F6F6F6] justify-center pt-24 lg:pt-0">
+      <div class="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
+        <div class="figma-grid-bg"></div>
+      </div>
+      <div class="hidden lg:block absolute top-0 right-0 pl-12 w-1/2 h-full z-0">
+        <img src="img/hero-mockup.svg" alt="Painel do Verba com saldo do mês, gastos por categoria, meta de viagem e boletos pagos" class="h-full object-contain">
+      </div>
+      <div class="flex-grow flex flex-col w-full max-w-[1440px] z-10 mr-auto ml-auto pt-12 pr-6 pb-12 pl-6 relative justify-center">
+        <div class="grid lg:grid-cols-2 gap-12 gap-x-12 gap-y-12 items-center lg:pt-[120px]">
+          <div class="flex flex-col items-start max-w-2xl reveal-section">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full badge-gradient-border bg-white/50 backdrop-blur-sm mb-8 shadow-sm">
+              <iconify-icon icon="solar:globe-linear" class="text-orange-500"></iconify-icon>
+              <span class="text-sm font-medium bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600">Controle de finanças pessoais</span>
+            </div>
+            <h1 class="sm:text-7xl lg:text-[5rem] leading-[0.95] text-6xl font-semibold text-[#0C0B07] tracking-tight mb-8">Todo o seu dinheiro em um só lugar, <span class="text-[#EF5F3C]">sem planilhas.</span></h1>
+            <p class="text-xl sm:text-2xl text-[#5E5E5E] font-normal leading-relaxed mb-12 max-w-xl">O Verba reúne receitas, despesas, orçamentos e metas em um app simples — e mostra para onde vai cada real, com alertas antes do aperto.</p>
+            <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+              <a href="mailto:contato@verba.app" class="px-8 py-4 bg-[#0C0B07] text-white rounded-full font-medium text-lg hover:bg-black/80 transition-all shadow-xl shadow-black/10 flex items-center justify-center gap-2 group whitespace-nowrap">Fale com um de nossos especialistas <iconify-icon icon="lucide:arrow-right" class="group-hover:translate-x-1 transition-transform"></iconify-icon></a>
+              <a href="#como-funciona" class="px-8 py-4 bg-white text-[#0C0B07] rounded-full font-medium text-lg hover:bg-black/5 transition-all border border-black/10 flex items-center justify-center gap-2">Ver como funciona</a>
+            </div>
+          </div>
+          <div class="lg:hidden w-full relative h-[400px] rounded-2xl overflow-hidden reveal-visual flex justify-center">
+            <img src="img/hero-mockup.svg" alt="Painel do Verba com saldo do mês e gastos por categoria" class="h-full">
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-4 w-full md:pt-16 gap-x-4 gap-y-4 items-center justify-center lg:justify-start">
+          <div class="group flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-white border border-[#0C0B07]/5 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] hover:border-[#0C0B07]/10 hover:shadow-[0_4px_12px_-4px_rgba(0,0,0,0.1)] transition-all duration-300 cursor-default">
+            <iconify-icon icon="solar:transfer-horizontal-linear" class="text-orange-500 text-lg group-hover:scale-110 transition-transform duration-300"></iconify-icon>
+            <span class="text-[#5E5E5E] text-sm font-medium">Categorização automática</span>
+          </div>
+          <div class="group flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-white border border-[#0C0B07]/5 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] hover:border-[#0C0B07]/10 hover:shadow-[0_4px_12px_-4px_rgba(0,0,0,0.1)] transition-all duration-300 cursor-default">
+            <iconify-icon icon="solar:card-transfer-linear" class="text-orange-500 text-lg group-hover:scale-110 transition-transform duration-300"></iconify-icon>
+            <span class="text-[#5E5E5E] text-sm font-medium">Orçamentos que avisam</span>
+          </div>
+          <div class="group flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-white border border-[#0C0B07]/5 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] hover:border-[#0C0B07]/10 hover:shadow-[0_4px_12px_-4px_rgba(0,0,0,0.1)] transition-all duration-300 cursor-default">
+            <iconify-icon icon="solar:wallet-money-linear" class="text-orange-500 text-lg group-hover:scale-110 transition-transform duration-300"></iconify-icon>
+            <span class="text-[#5E5E5E] text-sm font-medium">Metas que se cumprem</span>
+          </div>
+          <div class="group flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-white border border-[#0C0B07]/5 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] hover:border-[#0C0B07]/10 hover:shadow-[0_4px_12px_-4px_rgba(0,0,0,0.1)] transition-all duration-300 cursor-default">
+            <iconify-icon icon="solar:server-square-linear" class="text-orange-500 text-lg group-hover:scale-110 transition-transform duration-300"></iconify-icon>
+            <span class="text-[#5E5E5E] text-sm font-medium">Seus dados criptografados</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= PROBLEMA ================= -->
+    <section id="problema" class="bg-white text-[#0C0B07] pt-24 pb-24">
+      <div class="max-w-[1400px] mx-auto px-6">
+        <span class="uppercase block text-sm text-[#EF5F3C] tracking-wide mb-4">01 / O problema</span>
+        <h2 class="text-5xl md:text-6xl leading-[1.1] tracking-tight max-w-2xl font-semibold reveal-text mb-12">Organizar o próprio dinheiro não deveria ser um segundo emprego.</h2>
+        <div class="border-t border-[#0C0B07]/10">
+          <div class="flex flex-col md:flex-row justify-between gap-6 py-8 border-b border-[#0C0B07]/10">
+            <h3 class="text-2xl font-medium text-[#0C0B07] max-w-md">«Para onde foi o meu salário?»</h3>
+            <p class="text-[#5E5E5E] font-light leading-relaxed max-w-xl">Cartão, pix, boleto, assinatura… o dinheiro some em pedacinhos e nenhuma conta fecha no fim do mês.</p>
+          </div>
+          <div class="flex flex-col md:flex-row justify-between gap-6 py-8 border-b border-[#0C0B07]/10">
+            <h3 class="text-2xl font-medium text-[#0C0B07] max-w-md">Boletos e juros surpresa</h3>
+            <p class="text-[#5E5E5E] font-light leading-relaxed max-w-xl">O boleto esquecido vira multa, e a fatura que ninguém abriu vira rotina — todo mês, de novo.</p>
+          </div>
+          <div class="flex flex-col md:flex-row justify-between gap-6 py-8 border-b border-[#0C0B07]/10">
+            <h3 class="text-2xl font-medium text-[#0C0B07] max-w-md">A planilha não passa do mês 2</h3>
+            <p class="text-[#5E5E5E] font-light leading-relaxed max-w-xl">Você começa animado e desiste na segunda semana. Manter planilha vira cansaço, não hábito.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= FUNCIONALIDADES (seção escura do design system) ================= -->
+    <section id="funcionalidades" class="overflow-hidden text-white bg-black pt-24 pb-24 relative">
+      <div class="max-w-[1400px] mx-auto px-6 relative z-10">
+        <span class="text-stone-300 text-sm tracking-wide uppercase">02 / Funcionalidades</span>
+        <h2 class="text-4xl md:text-5xl tracking-tight mt-4 font-semibold reveal-text mb-16">Tudo que um app de finanças precisa. Nada que complique.</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+          <div class="group tech-card relative border border-white/10 rounded-xl overflow-hidden min-h-[300px] flex flex-col p-8 cursor-default">
+            <div class="absolute top-0 inset-x-0 h-40 beam-light w-full pointer-events-none -z-10"></div>
+            <div class="absolute inset-0 tech-grid-overlay opacity-50 pointer-events-none"></div>
+            <div class="flex justify-between items-start mb-12">
+              <div class="w-12 h-12 flex items-center justify-center bg-white/5 border border-white/5 rounded-lg text-white"><iconify-icon icon="solar:wallet-money-linear" width="24"></iconify-icon></div>
+              <span class="px-2 py-1 bg-green-500/10 border border-green-500/20 rounded text-[11px] text-green-400 font-mono tracking-wider">CORE</span>
+            </div>
+            <div class="relative z-10 pt-8 mt-auto">
+              <h3 class="text-2xl font-medium text-white mb-2">Receitas e despesas em segundos</h3>
+              <p class="text-sm text-stone-300 leading-relaxed font-light">Lance cada movimentação em poucos toques, no celular ou no computador. Sem burocracia e sem planilha.</p>
+            </div>
+          </div>
+
+          <div class="group tech-card relative border border-white/10 rounded-xl overflow-hidden min-h-[300px] flex flex-col p-8 cursor-default">
+            <div class="absolute top-0 inset-x-0 h-40 beam-light w-full pointer-events-none -z-10"></div>
+            <div class="absolute inset-0 tech-grid-overlay opacity-50 pointer-events-none"></div>
+            <div class="flex justify-between items-start mb-12">
+              <div class="w-12 h-12 flex items-center justify-center bg-white/5 border border-white/5 rounded-lg text-white"><iconify-icon icon="solar:tuning-square-2-linear" width="24"></iconify-icon></div>
+              <span class="px-2 py-1 bg-purple-500/10 border border-purple-500/20 rounded text-[11px] text-purple-400 font-mono tracking-wider">AUTO</span>
+            </div>
+            <div class="relative z-10 pt-8 mt-auto">
+              <h3 class="text-2xl font-medium text-white mb-2">Categorização automática</h3>
+              <p class="text-sm text-stone-300 leading-relaxed font-light">O Verba aprende com seus hábitos: mercado vira alimentação, aluguel vira moradia. Você só confere.</p>
+            </div>
+          </div>
+
+          <div class="group tech-card relative border border-white/10 rounded-xl overflow-hidden min-h-[300px] flex flex-col p-8 cursor-default">
+            <div class="absolute top-0 inset-x-0 h-40 beam-light w-full pointer-events-none -z-10"></div>
+            <div class="absolute inset-0 tech-grid-overlay opacity-50 pointer-events-none"></div>
+            <div class="flex justify-between items-start mb-12">
+              <div class="w-12 h-12 flex items-center justify-center bg-white/5 border border-white/5 rounded-lg text-white"><iconify-icon icon="solar:card-transfer-linear" width="24"></iconify-icon></div>
+              <span class="px-2 py-1 bg-blue-500/10 border border-blue-500/20 rounded text-[11px] text-blue-400 font-mono tracking-wider">ALERT</span>
+            </div>
+            <div class="relative z-10 pt-8 mt-auto">
+              <h3 class="text-2xl font-medium text-white mb-2">Orçamentos que avisam antes</h3>
+              <p class="text-sm text-stone-300 leading-relaxed font-light">Defina um limite por categoria e receba alerta quando chegar perto de estourar — antes do fim do mês, não depois.</p>
+            </div>
+          </div>
+
+          <div class="group tech-card relative border border-white/10 rounded-xl overflow-hidden min-h-[300px] flex flex-col p-8 cursor-default">
+            <div class="absolute top-0 inset-x-0 h-40 beam-light w-full pointer-events-none -z-10"></div>
+            <div class="absolute inset-0 tech-grid-overlay opacity-50 pointer-events-none"></div>
+            <div class="flex justify-between items-start mb-12">
+              <div class="w-12 h-12 flex items-center justify-center bg-white/5 border border-white/5 rounded-lg text-white"><iconify-icon icon="lucide:target" width="24"></iconify-icon></div>
+              <span class="px-2 py-1 bg-green-500/10 border border-green-500/20 rounded text-[11px] text-green-400 font-mono tracking-wider">GOALS</span>
+            </div>
+            <div class="relative z-10 pt-8 mt-auto">
+              <h3 class="text-2xl font-medium text-white mb-2">Metas que enxergam sua realidade</h3>
+              <p class="text-sm text-stone-300 leading-relaxed font-light">Reserva de emergência, viagem, troca de carro: crie metas com prazo e acompanhe o progresso semana a semana.</p>
+            </div>
+          </div>
+
+          <div class="group tech-card relative border border-white/10 rounded-xl overflow-hidden min-h-[300px] flex flex-col p-8 cursor-default">
+            <div class="absolute top-0 inset-x-0 h-40 beam-light w-full pointer-events-none -z-10"></div>
+            <div class="absolute inset-0 tech-grid-overlay opacity-50 pointer-events-none"></div>
+            <div class="flex justify-between items-start mb-12">
+              <div class="w-12 h-12 flex items-center justify-center bg-white/5 border border-white/5 rounded-lg text-white"><iconify-icon icon="lucide:bell" width="24"></iconify-icon></div>
+              <span class="px-2 py-1 bg-purple-500/10 border border-purple-500/20 rounded text-[11px] text-purple-400 font-mono tracking-wider">REMIND</span>
+            </div>
+            <div class="relative z-10 pt-8 mt-auto">
+              <h3 class="text-2xl font-medium text-white mb-2">Contas a pagar e a receber</h3>
+              <p class="text-sm text-stone-300 leading-relaxed font-light">Boletos, faturas e recibos em um calendário com lembretes. Nunca mais juros por esquecimento.</p>
+            </div>
+          </div>
+
+          <div class="group tech-card relative border border-white/10 rounded-xl overflow-hidden min-h-[300px] flex flex-col p-8 cursor-default">
+            <div class="absolute top-0 inset-x-0 h-40 beam-light w-full pointer-events-none -z-10"></div>
+            <div class="absolute inset-0 tech-grid-overlay opacity-50 pointer-events-none"></div>
+            <div class="flex justify-between items-start mb-12">
+              <div class="w-12 h-12 flex items-center justify-center bg-white/5 border border-white/5 rounded-lg text-white"><iconify-icon icon="lucide:pie-chart" width="24"></iconify-icon></div>
+              <span class="px-2 py-1 bg-blue-500/10 border border-blue-500/20 rounded text-[11px] text-blue-400 font-mono tracking-wider">REPORT</span>
+            </div>
+            <div class="relative z-10 pt-8 mt-auto">
+              <h3 class="text-2xl font-medium text-white mb-2">Relatórios que você entende</h3>
+              <p class="text-sm text-stone-300 leading-relaxed font-light">Fluxo do mês, top categorias e comparação com meses anteriores — sem precisar ser analista.</p>
+            </div>
+          </div>
+
+          <div class="group tech-card relative border border-white/10 rounded-xl overflow-hidden min-h-[300px] flex flex-col p-8 cursor-default">
+            <div class="absolute top-0 inset-x-0 h-40 beam-light w-full pointer-events-none -z-10"></div>
+            <div class="absolute inset-0 tech-grid-overlay opacity-50 pointer-events-none"></div>
+            <div class="flex justify-between items-start mb-12">
+              <div class="w-12 h-12 flex items-center justify-center bg-white/5 border border-white/5 rounded-lg text-white"><iconify-icon icon="lucide:download" width="24"></iconify-icon></div>
+              <span class="px-2 py-1 bg-green-500/10 border border-green-500/20 rounded text-[11px] text-green-400 font-mono tracking-wider">IMPORT</span>
+            </div>
+            <div class="relative z-10 pt-8 mt-auto">
+              <h3 class="text-2xl font-medium text-white mb-2">Importe o extrato do banco</h3>
+              <p class="text-sm text-stone-300 leading-relaxed font-light">Arraste o CSV ou OFX do seu banco e o Verba lança e categoriza tudo por você. Sua história começa pronta.</p>
+            </div>
+          </div>
+
+          <div class="group tech-card relative border border-white/10 rounded-xl overflow-hidden min-h-[300px] flex flex-col p-8 cursor-default">
+            <div class="absolute top-0 inset-x-0 h-40 beam-light w-full pointer-events-none -z-10"></div>
+            <div class="absolute inset-0 tech-grid-overlay opacity-50 pointer-events-none"></div>
+            <div class="flex justify-between items-start mb-12">
+              <div class="w-12 h-12 flex items-center justify-center bg-white/5 border border-white/5 rounded-lg text-white"><iconify-icon icon="solar:transfer-horizontal-linear" width="24"></iconify-icon></div>
+              <span class="px-2 py-1 bg-purple-500/10 border border-purple-500/20 rounded text-[11px] text-purple-400 font-mono tracking-wider">DASH</span>
+            </div>
+            <div class="relative z-10 pt-8 mt-auto">
+              <h3 class="text-2xl font-medium text-white mb-2">Dashboard do mês inteiro</h3>
+              <p class="text-sm text-stone-300 leading-relaxed font-light">Saldo, quanto entrou, quanto saiu e quanto sobrou — sua situação financeira em uma tela só.</p>
+            </div>
+          </div>
+
+          <div class="group tech-card relative border border-white/10 rounded-xl overflow-hidden min-h-[300px] flex flex-col p-8 cursor-default">
+            <div class="absolute top-0 inset-x-0 h-40 beam-light w-full pointer-events-none -z-10"></div>
+            <div class="absolute inset-0 tech-grid-overlay opacity-50 pointer-events-none"></div>
+            <div class="flex justify-between items-start mb-12">
+              <div class="w-12 h-12 flex items-center justify-center bg-white/5 border border-white/5 rounded-lg text-white"><iconify-icon icon="solar:danger-triangle-linear" width="24"></iconify-icon></div>
+              <span class="px-2 py-1 bg-blue-500/10 border border-blue-500/20 rounded text-[11px] text-blue-400 font-mono tracking-wider">SMART</span>
+            </div>
+            <div class="relative z-10 pt-8 mt-auto">
+              <h3 class="text-2xl font-medium text-white mb-2">Alertas de gastos incomuns</h3>
+              <p class="text-sm text-stone-300 leading-relaxed font-light">Uma cobrança que se repete, uma assinatura esquecida, um gasto fora do padrão: o Verba aponta e você decide.</p>
+            </div>
+          </div>
+
+          <div class="group tech-card relative border border-white/10 rounded-xl overflow-hidden min-h-[300px] flex flex-col p-8 cursor-default">
+            <div class="absolute top-0 inset-x-0 h-40 beam-light w-full pointer-events-none -z-10"></div>
+            <div class="absolute inset-0 tech-grid-overlay opacity-50 pointer-events-none"></div>
+            <div class="flex justify-between items-start mb-12">
+              <div class="w-12 h-12 flex items-center justify-center bg-white/5 border border-white/5 rounded-lg text-white"><iconify-icon icon="lucide:file-down" width="24"></iconify-icon></div>
+              <span class="px-2 py-1 bg-green-500/10 border border-green-500/20 rounded text-[11px] text-green-400 font-mono tracking-wider">EXPORT</span>
+            </div>
+            <div class="relative z-10 pt-8 mt-auto">
+              <h3 class="text-2xl font-medium text-white mb-2">Seus dados são seus</h3>
+              <p class="text-sm text-stone-300 leading-relaxed font-light">Exporte tudo quando quiser, no formato que quiser. Nada de ficar preso ao aplicativo.</p>
+            </div>
+          </div>
+
+          <div class="group tech-card relative border border-white/10 rounded-xl overflow-hidden min-h-[300px] flex flex-col p-8 cursor-default">
+            <div class="absolute top-0 inset-x-0 h-40 beam-light w-full pointer-events-none -z-10"></div>
+            <div class="absolute inset-0 tech-grid-overlay opacity-50 pointer-events-none"></div>
+            <div class="flex justify-between items-start mb-12">
+              <div class="w-12 h-12 flex items-center justify-center bg-white/5 border border-white/5 rounded-lg text-white"><iconify-icon icon="lucide:shield-check" width="24"></iconify-icon></div>
+              <span class="px-2 py-1 bg-purple-500/10 border border-purple-500/20 rounded text-[11px] text-purple-400 font-mono tracking-wider">SAFE</span>
+            </div>
+            <div class="relative z-10 pt-8 mt-auto">
+              <h3 class="text-2xl font-medium text-white mb-2">Segurança de verdade</h3>
+              <p class="text-sm text-stone-300 leading-relaxed font-light">Criptografia em trânsito e em repouso, backups automáticos e dados protegidos pela LGPD.</p>
+            </div>
+          </div>
+
+          <div class="group tech-card relative border border-white/10 rounded-xl overflow-hidden min-h-[300px] flex flex-col p-8 cursor-default">
+            <div class="absolute top-0 inset-x-0 h-40 beam-light w-full pointer-events-none -z-10"></div>
+            <div class="absolute inset-0 tech-grid-overlay opacity-50 pointer-events-none"></div>
+            <div class="flex justify-between items-start mb-12">
+              <div class="w-12 h-12 flex items-center justify-center bg-white/5 border border-white/5 rounded-lg text-white"><iconify-icon icon="lucide:smartphone" width="24"></iconify-icon></div>
+              <span class="px-2 py-1 bg-blue-500/10 border border-blue-500/20 rounded text-[11px] text-blue-400 font-mono tracking-wider">SYNC</span>
+            </div>
+            <div class="relative z-10 pt-8 mt-auto">
+              <h3 class="text-2xl font-medium text-white mb-2">No celular, no computador, em todo lugar</h3>
+              <p class="text-sm text-stone-300 leading-relaxed font-light">Comece um lançamento no ônibus e termine em casa: tudo sincronizado entre seus dispositivos.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- CTA do meio -->
+        <div class="reveal-section flex flex-col items-center gap-6 pt-16">
+          <p class="text-lg text-stone-300 font-light text-center max-w-md">Quer ver como o Verba se encaixa na sua rotina?</p>
+          <a href="mailto:contato@verba.app" class="px-8 py-4 bg-white text-[#0C0B07] rounded-full font-medium text-lg hover:bg-white/80 transition-all flex items-center justify-center gap-2 group whitespace-nowrap">Fale com um de nossos especialistas <iconify-icon icon="lucide:arrow-right" class="group-hover:translate-x-1 transition-transform"></iconify-icon></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= COMO FUNCIONA (split 12 colunas do design system) ================= -->
+    <section id="como-funciona" class="overflow-hidden text-[#0C0B07] bg-[#F6F6F6] z-20 pt-24 pb-24 relative">
+      <div class="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
+        <div class="figma-grid-bg"></div>
+      </div>
+      <div class="max-w-[1400px] mx-auto px-6 relative z-10 flex flex-col gap-6">
+        <div>
+          <span class="uppercase block text-sm text-[#EF5F3C] tracking-wide mb-4">03 / Como funciona</span>
+          <h2 class="md:text-6xl leading-[1.1] text-5xl tracking-tight max-w-2xl font-semibold reveal-text">Três passos e sua vida financeira no automático.</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-12">
+          <div class="md:col-span-5 relative group">
+            <div class="aspect-[3/4] overflow-hidden rounded-lg relative border border-[#0C0B07]/10 shadow-2xl reveal-visual">
+              <img src="img/como-funciona.svg" alt="Lançamento do Verba sendo categorizado automaticamente e resumo da semana em gráfico" class="w-full h-full object-cover">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <div class="absolute bottom-6 left-6">
+                <p class="text-white/90 font-medium">Lançou, categorizou, acompanhou.</p>
+              </div>
+            </div>
+          </div>
+          <div class="md:col-span-7 flex flex-col justify-center md:pl-12">
+            <div class="space-y-10">
+              <div class="flex flex-col group border-[#0C0B07]/10 border-b pb-8 gap-4">
+                <div class="flex items-center gap-4">
+                  <span class="font-mono text-[#EF5F3C] text-sm">01</span>
+                  <h3 class="text-2xl font-medium text-[#0C0B07]">Junte suas contas em um só lugar</h3>
+                </div>
+                <p class="leading-relaxed font-light text-[#5E5E5E] max-w-lg pl-10">Importe o extrato do banco (CSV ou OFX) ou lance à mão. Contas, cartões e pix ficam juntos no Verba.</p>
+              </div>
+              <div class="flex flex-col group border-[#0C0B07]/10 border-b pb-8 gap-4">
+                <div class="flex items-center gap-4">
+                  <span class="font-mono text-[#EF5F3C] text-sm">02</span>
+                  <h3 class="text-2xl font-medium text-[#0C0B07]">Deixe o Verba categorizar</h3>
+                </div>
+                <p class="text-[#5E5E5E] font-light leading-relaxed pl-10 max-w-lg">Cada lançamento ganha sua categoria automaticamente. Você só confere e ajusta o que quiser — leva minutos por semana.</p>
+              </div>
+              <div class="flex flex-col group pb-8 gap-4">
+                <div class="flex items-center gap-4">
+                  <span class="font-mono text-[#EF5F3C] text-sm">03</span>
+                  <h3 class="text-2xl font-medium text-[#0C0B07]">Acompanhe e decida com dados</h3>
+                </div>
+                <p class="text-[#5E5E5E] font-light leading-relaxed pl-10 max-w-lg">Relatórios semanais, alertas de orçamento e o progresso das metas no painel. O que sobra, você escolhe: guardar, investir ou aproveitar.</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-8 mt-12">
+              <a href="mailto:contato@verba.app" class="flex items-center gap-2 text-lg font-medium text-[#0C0B07] hover:text-[#EF5F3C] transition group pl-10">Fale com um de nossos especialistas <iconify-icon icon="lucide:arrow-right" class="group-hover:translate-x-1 transition-transform"></iconify-icon></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= DEPOIMENTOS (seção escura do design system) ================= -->
+    <section id="depoimentos" class="bg-black text-white py-24 relative overflow-hidden min-h-[600px] flex items-center">
+      <div class="max-w-[1400px] mx-auto px-6 relative z-10 w-full">
+        <span class="text-white text-sm uppercase tracking-wide font-medium mb-6">04 / Primeiros testadores</span>
+        <h2 class="text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.05] mb-8 reveal-text">Quem testou não quis voltar para a planilha.</h2>
+        <!-- Editável: substituir pelos depoimentos reais dos primeiros usuários -->
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="group tech-card relative border border-white/10 rounded-xl overflow-hidden flex flex-col p-8 cursor-default">
+            <div class="absolute top-0 inset-x-0 h-40 beam-light w-full pointer-events-none -z-10"></div>
+            <div class="absolute inset-0 tech-grid-overlay opacity-50 pointer-events-none"></div>
+            <p class="text-sm text-stone-300 leading-relaxed font-light relative z-10">«Em três meses montei a reserva que eu tentava fazer há anos. O alerta de orçamento me salvou de dois apertos.»</p>
+            <div class="relative z-10 pt-8 mt-auto">
+              <h3 class="text-2xl font-medium text-white mb-2">Mariana L.</h3>
+              <p class="text-sm text-stone-300 leading-relaxed font-light">Professora · testadora beta</p>
+            </div>
+          </div>
+          <div class="group tech-card relative border border-white/10 rounded-xl overflow-hidden flex flex-col p-8 cursor-default">
+            <div class="absolute top-0 inset-x-0 h-40 beam-light w-full pointer-events-none -z-10"></div>
+            <div class="absolute inset-0 tech-grid-overlay opacity-50 pointer-events-none"></div>
+            <p class="text-sm text-stone-300 leading-relaxed font-light relative z-10">«Importei o extrato do banco e em dez minutos tinha o mês inteiro mapeado. A categorização automática é impressionante.»</p>
+            <div class="relative z-10 pt-8 mt-auto">
+              <h3 class="text-2xl font-medium text-white mb-2">Rafael T.</h3>
+              <p class="text-sm text-stone-300 leading-relaxed font-light">Designer · testador beta</p>
+            </div>
+          </div>
+          <div class="group tech-card relative border border-white/10 rounded-xl overflow-hidden flex flex-col p-8 cursor-default">
+            <div class="absolute top-0 inset-x-0 h-40 beam-light w-full pointer-events-none -z-10"></div>
+            <div class="absolute inset-0 tech-grid-overlay opacity-50 pointer-events-none"></div>
+            <p class="text-sm text-stone-300 leading-relaxed font-light relative z-10">«Eu evitava olhar o extrato. Agora abro o painel, vejo onde estou e fecho o app. Leva dois minutos.»</p>
+            <div class="relative z-10 pt-8 mt-auto">
+              <h3 class="text-2xl font-medium text-white mb-2">Camila R.</h3>
+              <p class="text-sm text-stone-300 leading-relaxed font-light">Enfermeira · testadora beta</p>
+            </div>
+          </div>
+        </div>
+        <!-- Editável: substituir pelas métricas reais do pré-lançamento -->
+        <div class="flex flex-wrap justify-start gap-2 mt-8">
+          <span class="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm text-stone-300">1.200 pessoas na lista de espera</span>
+          <span class="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm text-stone-300">4,9 de satisfação entre testadores</span>
+          <span class="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm text-stone-300">2 meses até a primeira meta batida</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= FAQ ================= -->
+    <section id="faq" class="bg-white text-[#0C0B07] pt-24 pb-24">
+      <div class="max-w-[1400px] mx-auto px-6">
+        <span class="uppercase block text-sm text-[#EF5F3C] tracking-wide mb-4">05 / Perguntas frequentes</span>
+        <h2 class="text-5xl md:text-6xl leading-[1.1] tracking-tight max-w-2xl font-semibold reveal-text mb-12">O que saber antes de começar.</h2>
+        <div class="border-t border-[#0C0B07]/10">
+          <div class="flex flex-col md:flex-row justify-between gap-6 py-8 border-b border-[#0C0B07]/10">
+            <h3 class="text-2xl font-medium text-[#0C0B07] max-w-md">O Verba é gratuito?</h3>
+            <p class="text-[#5E5E5E] font-light leading-relaxed max-w-xl">Estamos em pré-lançamento. Fale com um de nossos especialistas para conhecer os planos e as condições de acesso antecipado.</p>
+          </div>
+          <div class="flex flex-col md:flex-row justify-between gap-6 py-8 border-b border-[#0C0B07]/10">
+            <h3 class="text-2xl font-medium text-[#0C0B07] max-w-md">Meus dados financeiros estão seguros?</h3>
+            <p class="text-[#5E5E5E] font-light leading-relaxed max-w-xl">Sim. Tudo é criptografado em trânsito e em repouso, com backups automáticos diários. Seus dados seguem a LGPD e nunca são vendidos.</p>
+          </div>
+          <div class="flex flex-col md:flex-row justify-between gap-6 py-8 border-b border-[#0C0B07]/10">
+            <h3 class="text-2xl font-medium text-[#0C0B07] max-w-md">Funciona no celular e no computador?</h3>
+            <p class="text-[#5E5E5E] font-light leading-relaxed max-w-xl">Sim. O mesmo painel sincronizado no celular, no tablet e no computador — comece um lançamento em um dispositivo e termine em outro.</p>
+          </div>
+          <div class="flex flex-col md:flex-row justify-between gap-6 py-8 border-b border-[#0C0B07]/10">
+            <h3 class="text-2xl font-medium text-[#0C0B07] max-w-md">Consigo importar o extrato do meu banco?</h3>
+            <p class="text-[#5E5E5E] font-light leading-relaxed max-w-xl">Sim: os principais bancos permitem exportar CSV ou OFX. Você importa o arquivo e o Verba lança e categoriza tudo sozinho.</p>
+          </div>
+          <div class="flex flex-col md:flex-row justify-between gap-6 py-8 border-b border-[#0C0B07]/10">
+            <h3 class="text-2xl font-medium text-[#0C0B07] max-w-md">Preciso abandonar minha planilha?</h3>
+            <p class="text-[#5E5E5E] font-light leading-relaxed max-w-xl">Não precisa ser traumático: importe os dados que você já tem e, se um dia quiser sair, exporte tudo de volta.</p>
+          </div>
+          <div class="flex flex-col md:flex-row justify-between gap-6 py-8 border-b border-[#0C0B07]/10">
+            <h3 class="text-2xl font-medium text-[#0C0B07] max-w-md">O app faz investimentos por mim?</h3>
+            <p class="text-[#5E5E5E] font-light leading-relaxed max-w-xl">Não. O Verba organiza e mostra sua situação para você decidir. Para dar o próximo passo, fale com um de nossos especialistas.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CTA FINAL + FOOTER (padrão do design system) ================= -->
+    <section id="comecar" class="relative bg-gradient-to-b from-[#F8F7F4] to-[#FFE8E0] text-[#0C0B07] pt-24 pb-12 overflow-hidden border-t border-stone-200">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 z-10 max-w-[1400px] mx-auto px-6 relative">
+        <div class="lg:col-span-6 flex flex-col h-full justify-between">
+          <div>
+            <span class="text-[#5E5E5E] text-sm uppercase tracking-wide mb-8 block font-medium">06 / Comece agora</span>
+            <h2 class="text-5xl lg:text-6xl leading-[1.05] tracking-tight font-medium mb-8 reveal-text text-[#0C0B07]">Seu dinheiro organizado ainda este mês.</h2>
+            <a href="mailto:contato@verba.app" class="inline-flex items-center gap-2 px-8 py-4 bg-[#0C0B07] text-white rounded-full font-medium text-lg hover:bg-black/80 transition-all shadow-xl shadow-black/5 group w-fit">Fale com um de nossos especialistas <iconify-icon icon="lucide:arrow-right" class="group-hover:translate-x-1 transition-transform"></iconify-icon></a>
+          </div>
+        </div>
+        <div class="lg:col-span-6 flex flex-col justify-end lg:pl-12">
+          <div class="grid grid-cols-2 gap-8 text-sm mt-auto border-t border-stone-300 pt-8">
+            <div>
+              <h4 class="font-semibold text-[#0C0B07] mb-4">Produto</h4>
+              <ul class="space-y-3 text-stone-600">
+                <li><a href="#funcionalidades" class="hover:text-[#EF5F3C] transition-colors">Funcionalidades</a></li>
+                <li><a href="#como-funciona" class="hover:text-[#EF5F3C] transition-colors">Como funciona</a></li>
+                <li><a href="#depoimentos" class="hover:text-[#EF5F3C] transition-colors">Depoimentos</a></li>
+                <li><a href="#faq" class="hover:text-[#EF5F3C] transition-colors">Perguntas frequentes</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-semibold text-[#0C0B07] mb-4">Contato</h4>
+              <ul class="space-y-3 text-stone-600">
+                <li><a href="mailto:contato@verba.app" class="hover:text-[#EF5F3C] transition-colors">Especialistas</a></li>
+                <li><a href="mailto:suporte@verba.app" class="hover:text-[#EF5F3C] transition-colors">Suporte</a></li>
+                <li><a href="mailto:imprensa@verba.app" class="hover:text-[#EF5F3C] transition-colors">Imprensa</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="max-w-[1400px] mx-auto px-6 mt-16 pt-8 border-t border-stone-300/50 flex flex-col sm:flex-row justify-between items-center text-stone-200 text-sm">
+        <p class="text-stone-500">© 2026 Verba. Em pré-lançamento — nome e contatos provisórios.</p>
+        <div class="flex gap-4 mt-4 sm:mt-0">
+          <a href="#" class="hover:text-black transition-colors" aria-label="LinkedIn do Verba"><iconify-icon icon="simple-icons:linkedin" width="18"></iconify-icon></a>
+          <a href="#" class="hover:text-black transition-colors" aria-label="Twitter / X do Verba"><iconify-icon icon="simple-icons:twitter" width="18"></iconify-icon></a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script defer src="js/main.js"></script>
+</body>
+</html>

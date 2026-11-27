@@ -5,7 +5,7 @@ from finances.views import (DashboardListView, TransactionCreateView,
                             TransactionUpdateView)
 
 urlpatterns = [
-    path('', TransactionListView.as_view(), name='transaction-list'),
+    path('transactions/', TransactionListView.as_view(), name='transaction-list'),
     path('new_transaction/', TransactionCreateView.as_view(),
          name='transaction-create'),
     path('transactions/<int:pk>/update/',

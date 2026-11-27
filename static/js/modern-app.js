@@ -26,11 +26,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Gerenciar sidebar responsiva
+    // Gerenciar navegação ativa (navbar do design system + fallbacks antigos)
     function initializeSidebar() {
-    // Marcar item ativo no menu - tanto desktop quanto mobile
+    // Marcar item ativo no menu - navbar e offcanvas (legado)
     const currentPath = window.location.pathname;
-    const navLinks = document.querySelectorAll('.modern-sidebar .nav-link, .offcanvas .nav-link');
+    const navLinks = document.querySelectorAll('#navbar .nav-link, .modern-sidebar .nav-link, .offcanvas .nav-link');
     
     navLinks.forEach(link => {
         const href = link.getAttribute('href');
@@ -168,12 +168,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     datasets: [{
                         data: chartData.total_recipes.data,
                         backgroundColor: [
-                            'rgba(74, 222, 128, 0.8)',
-                            'rgba(239, 68, 68, 0.8)'
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(239, 95, 60, 0.8)'
                         ],
                         borderColor: [
-                            'rgba(74, 222, 128, 1)',
-                            'rgba(239, 68, 68, 1)'
+                            'rgba(34, 197, 94, 1)',
+                            'rgba(239, 95, 60, 1)'
                         ],
                         borderWidth: 2
                     }]
@@ -208,18 +208,18 @@ document.addEventListener('DOMContentLoaded', function() {
                         label: ' Total',
                         data: chartData.categories.values,
                         backgroundColor: [
-                            'rgba(102, 126, 234, 0.8)',
-                            'rgba(240, 147, 251, 0.8)',
-                            'rgba(74, 222, 128, 0.8)',
-                            'rgba(251, 191, 36, 0.8)',
-                            'rgba(239, 68, 68, 0.8)'
+                            'rgba(239, 95, 60, 0.8)',
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(168, 85, 247, 0.8)',
+                            'rgba(12, 11, 7, 0.8)'
                         ],
                         borderColor: [
-                            'rgba(102, 126, 234, 1)',
-                            'rgba(240, 147, 251, 1)',
-                            'rgba(74, 222, 128, 1)',
-                            'rgba(251, 191, 36, 1)',
-                            'rgba(239, 68, 68, 1)'
+                            'rgba(239, 95, 60, 1)',
+                            'rgba(34, 197, 94, 1)',
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(168, 85, 247, 1)',
+                            'rgba(12, 11, 7, 1)'
                         ],
                         borderWidth: 2,
                         borderRadius: 8
@@ -266,8 +266,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 datasets.push({
                     label: 'Receita',
                     data: montlyData.total_month_value_revenue,
-                    borderColor: 'rgba(74, 222, 128, 1)',
-                    backgroundColor: 'rgba(74, 222, 128, 0.1)',
+                    borderColor: 'rgba(34, 197, 94, 1)',
+                    backgroundColor: 'rgba(34, 197, 94, 0.1)',
                     tension: 0.4,
                     fill: true
                 });
@@ -278,8 +278,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 datasets.push({
                     label: 'Despesa',
                     data: montlyData.total_month_value_expense,
-                    borderColor: 'rgba(239, 68, 68, 1)',
-                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    borderColor: 'rgba(239, 95, 60, 1)',
+                    backgroundColor: 'rgba(239, 95, 60, 0.1)',
                     tension: 0.4,
                     fill: true
                 });
@@ -303,7 +303,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             position: 'bottom',
                             labels: {
                                 padding: 10,
-                                color: 'rgb(255, 255, 255)',
+                                color: 'rgb(94, 94, 94)',
                                 font: {
                                     size: 15,
                                     weight: 'normal',
@@ -483,6 +483,43 @@ document.addEventListener('DOMContentLoaded', function() {
             const bsAlert = new bootstrap.Alert(alert);
             bsAlert.close();
         }, delay);
+    });
+
+    // Loading overlay em submits de formulário
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    document.querySelectorAll('form').forEach(form => {
+        if (form.dataset.noLoading === 'true') {
+            return;
+        }
+
+        form.addEventListener('submit', function() {
+            if (loadingOverlay) {
+                loadingOverlay.classList.remove('d-none');
+            }
+        });
+    });
+
+    window.addEventListener('load', function() {
+        if (loadingOverlay) {
+            loadingOverlay.classList.add('d-none');
+        }
+    });
+
+    // Alternar exibição da senha (botões [data-password-toggle])
+    document.querySelectorAll('[data-password-toggle]').forEach(button => {
+        button.addEventListener('click', function() {
+            const passwordInput = document.getElementById(this.getAttribute('data-password-toggle'));
+            const toggleIcon = this.querySelector('iconify-icon');
+            if (!passwordInput) return;
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                if (toggleIcon) toggleIcon.setAttribute('icon', 'lucide:eye-off');
+            } else {
+                passwordInput.type = 'password';
+                if (toggleIcon) toggleIcon.setAttribute('icon', 'lucide:eye');
+            }
+        });
     });
 });
 

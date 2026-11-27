@@ -22,7 +22,7 @@ from django.contrib.auth.views import (LoginView, LogoutView,
                                        PasswordResetView)
 from django.urls import include, path
 
-from .views import SignUpView
+from .views import LandingView, SignUpView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -40,6 +40,8 @@ urlpatterns = [
          PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('password-reset-complete/', PasswordResetCompleteView.as_view(),
          name='password_reset_complete'),
+
+    path('', LandingView.as_view(), name='landing'),
 
     path('', include('finances.urls')),
 

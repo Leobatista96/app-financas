@@ -1,0 +1,570 @@
+/* ============================================================
+   app.css — camada de integração do design system Nuvera/Verba
+   com os componentes funcionais do Django (modais Bootstrap JS,
+   formulários do Django, mensagens, toasts, tabelas, paginação).
+
+   Todos os valores vêm do design system:
+   - tinta: #0C0B07 · texto secundário: #5E5E5E
+   - acento: #EF5F3C · verde: #22C55E (ponto #4ADE80) · azul: #3B82F6
+   - bordas: rgba(12,11,7,.1) · fundo: #F6F6F6 / branco
+   - raios: pill (9999px), cards 12–24px · sombras: chips e cards
+   ============================================================ */
+
+/* ---------- utilitários funcionais (mantêm o JS existente) ---------- */
+.d-none {
+  display: none !important;
+}
+
+.fade {
+  transition: opacity 0.15s linear;
+}
+.fade:not(.show) {
+  opacity: 0;
+}
+
+/* ---------- botões: padrão pill do design system ---------- */
+.btn {
+  cursor: pointer;
+  font: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  border: none;
+  background: none;
+  text-decoration: none;
+}
+
+/* Ação primária — CTA preto do design system */
+.btn-success,
+.btn-primary {
+  background: #0C0B07;
+  color: #fff;
+  border-radius: 9999px;
+  padding: 0.625rem 1.5rem;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.15);
+}
+.btn-success:hover,
+.btn-primary:hover {
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+}
+
+/* Ação secundária — pill branca com borda do design system */
+.btn-secondary,
+.btn-outline-primary {
+  background: #fff;
+  color: #0C0B07;
+  border: 1px solid rgba(12, 11, 7, 0.1);
+  border-radius: 9999px;
+  padding: 0.625rem 1.5rem;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+.btn-secondary:hover,
+.btn-outline-primary:hover {
+  background: rgba(12, 11, 7, 0.05);
+  color: #0C0B07;
+}
+
+/* Ação destrutiva — pill branca com acento laranja (alerta do mockup) */
+.btn-danger {
+  background: #fff;
+  color: #EF5F3C;
+  border: 1px solid rgba(239, 95, 60, 0.35);
+  border-radius: 9999px;
+  padding: 0.625rem 1.5rem;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+.btn-danger:hover {
+  background: rgba(239, 95, 60, 0.08);
+  color: #EF5F3C;
+}
+
+.btn-sm {
+  padding: 0.375rem 0.875rem;
+  font-size: 13px;
+}
+
+/* ---------- formulários — tokens do design system ---------- */
+.form-label,
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #0C0B07;
+  margin-bottom: 0.5rem;
+}
+
+.form-text {
+  font-size: 13px;
+  color: #5E5E5E;
+  margin-top: 0.375rem;
+}
+
+.form-control,
+.form-select,
+.modal-body input[type='text'],
+.modal-body input[type='number'],
+.modal-body input[type='date'],
+.modal-body input[type='email'],
+.modal-body input[type='password'],
+.modal-body input[type='tel'],
+.modal-body select,
+.modal-body textarea {
+  width: 100%;
+  background: #fff;
+  border: 1px solid rgba(12, 11, 7, 0.1);
+  border-radius: 10px;
+  padding: 0.625rem 1rem;
+  font: inherit;
+  font-size: 15px;
+  color: #0C0B07;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control::placeholder {
+  color: rgba(94, 94, 94, 0.6);
+}
+
+.form-control:focus,
+.form-select:focus,
+.modal-body input:focus,
+.modal-body select:focus,
+.modal-body textarea:focus {
+  outline: none;
+  border-color: #EF5F3C;
+  box-shadow: 0 0 0 3px rgba(239, 95, 60, 0.15);
+}
+
+.modal-body p {
+  margin-bottom: 1rem;
+}
+
+.input-group {
+  display: flex;
+}
+.input-group .form-control {
+  flex: 1;
+  min-width: 0;
+  border-radius: 10px 0 0 10px;
+}
+.input-group .btn {
+  border: 1px solid rgba(12, 11, 7, 0.1);
+  border-left: none;
+  border-radius: 0 10px 10px 0;
+  background: #fff;
+  color: #5E5E5E;
+  padding: 0 0.875rem;
+  transition: color 0.2s ease;
+}
+.input-group .btn:hover {
+  color: #EF5F3C;
+}
+
+/* ---------- mensagens do Django — chips do mockup ---------- */
+.alert {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.875rem 1.25rem;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid transparent;
+}
+.alert-success {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.2);
+  color: #16a34a;
+}
+.alert-danger,
+.alert-error {
+  background: rgba(239, 95, 60, 0.1);
+  border-color: rgba(239, 95, 60, 0.2);
+  color: #EF5F3C;
+}
+.alert-warning {
+  background: rgba(239, 95, 60, 0.1);
+  border-color: rgba(239, 95, 60, 0.2);
+  color: #b3401f;
+}
+.alert-info {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.2);
+  color: #1d4ed8;
+}
+
+.btn-close {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-size: 0;
+  opacity: 0.5;
+  margin-left: auto;
+  padding: 0.25rem;
+  transition: opacity 0.2s ease;
+}
+.btn-close::before {
+  content: '\2715';
+  font-size: 14px;
+  line-height: 1;
+  color: inherit;
+}
+.btn-close:hover {
+  opacity: 1;
+}
+
+/* ---------- modais (Bootstrap JS funcional, visual do DS) ---------- */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1055;
+  display: none;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  outline: 0;
+}
+.modal-dialog {
+  position: relative;
+  width: auto;
+  margin: 1.75rem auto;
+  max-width: 560px;
+  pointer-events: none;
+}
+.modal.fade .modal-dialog {
+  transition: transform 0.3s ease-out;
+  transform: translate(0, -32px);
+}
+.modal.show .modal-dialog {
+  transform: none;
+}
+.modal-content {
+  position: relative;
+  pointer-events: auto;
+  background: #fff;
+  border: 1px solid rgba(12, 11, 7, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(12, 11, 7, 0.1);
+}
+.modal-title {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #0C0B07;
+}
+.modal-body {
+  padding: 1.5rem;
+}
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid rgba(12, 11, 7, 0.1);
+}
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1050;
+  width: 100vw;
+  height: 100vh;
+  background-color: #0C0B07;
+}
+.modal-backdrop.fade {
+  opacity: 0;
+}
+.modal-backdrop.show {
+  opacity: 0.6;
+}
+
+/* ---------- dropdown (menu do usuário / filtros) ---------- */
+.dropdown-menu {
+  position: absolute;
+  display: none;
+  min-width: 14rem;
+  background: #fff;
+  border: 1px solid rgba(12, 11, 7, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
+  padding: 0.375rem;
+  z-index: 1000;
+}
+.dropdown-menu.show {
+  display: block;
+}
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #0C0B07;
+  text-align: left;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.dropdown-item:hover {
+  background: rgba(12, 11, 7, 0.05);
+  color: #EF5F3C;
+}
+.dropdown-divider {
+  height: 1px;
+  background: rgba(12, 11, 7, 0.08);
+  margin: 0.375rem 0.5rem;
+}
+.dropdown-toggle::after {
+  content: '';
+  display: inline-block;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+  width: 0.45em;
+  height: 0.45em;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg) translateY(-2px);
+}
+
+/* ---------- toasts (notificações do app) ---------- */
+.toast-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1060;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.toast {
+  width: 350px;
+  max-width: calc(100vw - 2rem);
+  display: none;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.35);
+  transition: opacity 0.3s ease;
+  opacity: 0;
+  overflow: hidden;
+}
+.toast.show,
+.toast.showing {
+  display: flex;
+}
+.toast.show {
+  opacity: 1;
+}
+.toast-body {
+  padding: 0.875rem 1rem;
+  flex: 1;
+}
+.bg-success {
+  background: #22C55E;
+}
+.bg-danger {
+  background: #EF5F3C;
+}
+.bg-info {
+  background: #0C0B07;
+}
+.text-white {
+  color: #fff;
+}
+
+/* ---------- tooltip ---------- */
+.tooltip {
+  position: absolute;
+  z-index: 1080;
+  display: block;
+}
+.tooltip-inner {
+  max-width: 220px;
+  background: #0C0B07;
+  color: #fff;
+  border-radius: 8px;
+  padding: 0.375rem 0.625rem;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+}
+.tooltip-arrow {
+  display: none;
+}
+
+/* ---------- tabela — linhas divisórias do design system ---------- */
+.app-table {
+  width: 100%;
+  font-size: 14px;
+  border-collapse: collapse;
+}
+.app-table thead th {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #5E5E5E;
+  text-align: left;
+  padding: 0.875rem 1.25rem;
+  border-bottom: 1px solid rgba(12, 11, 7, 0.1);
+  white-space: nowrap;
+}
+.app-table tbody td {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgba(12, 11, 7, 0.1);
+  color: #0C0B07;
+  vertical-align: middle;
+}
+.app-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.app-table tbody tr {
+  transition: background 0.2s ease;
+}
+.app-table tbody tr:hover {
+  background: rgba(12, 11, 7, 0.02);
+}
+
+/* badges de categoria — chips do mockup do design system */
+.badge-revenue {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  color: #16a34a;
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.badge-expense {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  background: rgba(239, 95, 60, 0.1);
+  border: 1px solid rgba(239, 95, 60, 0.2);
+  color: #EF5F3C;
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.badge-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: #4ade80;
+}
+.badge-expense .badge-dot {
+  background: #EF5F3C;
+}
+
+/* valores — cores semânticas do design system */
+.text-revenue {
+  color: #22C55E;
+  font-weight: 600;
+}
+.text-expense {
+  color: #EF5F3C;
+  font-weight: 600;
+}
+
+/* ---------- paginação — pills do design system ---------- */
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.page-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  padding: 0 0.625rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(12, 11, 7, 0.1);
+  background: #fff;
+  color: #0C0B07;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.page-link:hover {
+  background: rgba(12, 11, 7, 0.05);
+  color: #0C0B07;
+}
+.page-item.active .page-link {
+  background: #0C0B07;
+  border-color: #0C0B07;
+  color: #fff;
+}
+.page-item.disabled .page-link {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* ---------- link ativo da navbar (marcado pelo JS) ---------- */
+#navbar .nav-link.active {
+  color: #EF5F3C;
+}
+
+/* ---------- loading overlay ---------- */
+#loadingOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(12, 11, 7, 0.5);
+}
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  animation: app-spin 0.8s linear infinite;
+}
+@keyframes app-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

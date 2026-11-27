@@ -1,297 +1,108 @@
-{% extends 'base.html' %} {% load static %} {% load l10n %} {% block page_header
-%}
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <div>
-    <h1 class="h2 fw-bold gradient-text mb-1">Dashboard Financeiro</h1>
-    <p class="text-muted mb-0">
-      Bem-vindo de volta, {{ user.username|title }}! Aqui está o resumo das suas
-      finanças.
-    </p>
+{% extends 'base.html' %}
+{% load static %}
+{% load l10n %}
+
+{% block content %}
+<div class="max-w-[1400px] mx-auto px-6 pt-12 pb-24 relative">
+  <div class="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
+    <div class="figma-grid-bg"></div>
   </div>
-  <div class="d-flex gap-2">
-    <button class="btn btn-modern btn-primary" id="newTransactionButton">
-      <i class="bi bi-plus-circle me-2"></i>Nova Transação
+
+  <!-- Cabeçalho da página (padrão de seção do design system) -->
+  <!-- Header sem reveal-section/reveal-text: conteúdo acima da dobra congela se um
+       ScrollTrigger.refresh() cai no meio da entrada (padrão from+stagger do GSAP) -->
+  <div class="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+    <div>
+      <span class="uppercase block text-sm text-[#EF5F3C] tracking-wide mb-4">01 / Painel</span>
+      <h1 class="md:text-6xl leading-[1.1] text-5xl tracking-tight font-semibold">Dashboard Financeiro</h1>
+      <p class="text-[#5E5E5E] font-light leading-relaxed mt-4 max-w-xl">Bem-vindo de volta, {{ user.username|title }}! Aqui está o resumo das suas finanças.</p>
+    </div>
+    <button class="px-8 py-4 bg-[#0C0B07] text-white rounded-full font-medium text-lg hover:bg-black/80 transition-all shadow-xl shadow-black/10 flex items-center justify-center gap-2 group whitespace-nowrap w-fit" id="newTransactionButton">
+      Nova Transação <iconify-icon icon="lucide:arrow-right" class="group-hover:translate-x-1 transition-transform"></iconify-icon>
     </button>
   </div>
+
+  <!-- Métricas (cards do mockup do design system) -->
+  <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-6 reveal-section">
+    <div class="bg-white border border-[#0C0B07]/10 rounded-2xl shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] p-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 flex items-center justify-center bg-green-500/10 border border-green-500/20 rounded-lg text-green-500"><iconify-icon icon="solar:arrow-up-linear" width="20"></iconify-icon></div>
+        <span class="font-mono text-[11px] tracking-wider uppercase text-[#5E5E5E]">Receitas do Mês</span>
+      </div>
+      <div class="text-3xl font-semibold tracking-tight" data-counter="{% localize off %}{{transactions_metrics.total_categories_revenue|default:0}}{% endlocalize %}"></div>
+    </div>
+
+    <div class="bg-white border border-[#0C0B07]/10 rounded-2xl shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] p-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 flex items-center justify-center bg-[#EF5F3C]/10 border border-[#EF5F3C]/20 rounded-lg text-[#EF5F3C]"><iconify-icon icon="solar:arrow-down-linear" width="20"></iconify-icon></div>
+        <span class="font-mono text-[11px] tracking-wider uppercase text-[#5E5E5E]">Despesas do Mês</span>
+      </div>
+      <div class="text-3xl font-semibold tracking-tight" data-counter="{% localize off %}{{transactions_metrics.total_categories_expense|default:0}}{% endlocalize %}"></div>
+    </div>
+
+    <div class="bg-white border border-[#0C0B07]/10 rounded-2xl shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] p-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 flex items-center justify-center bg-black/5 border border-black/10 rounded-lg text-[#0C0B07]"><iconify-icon icon="solar:wallet-money-linear" width="20"></iconify-icon></div>
+        <span class="font-mono text-[11px] tracking-wider uppercase text-[#5E5E5E]">Saldo Atual</span>
+      </div>
+      <div class="text-3xl font-semibold tracking-tight" data-counter="{% localize off %}{{transactions_metrics.balance|default:0}}{% endlocalize %}"></div>
+    </div>
+
+    <div class="bg-white border border-[#0C0B07]/10 rounded-2xl shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] p-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 flex items-center justify-center bg-blue-500/10 border border-blue-500/20 rounded-lg text-blue-500"><iconify-icon icon="lucide:target" width="20"></iconify-icon></div>
+        <span class="font-mono text-[11px] tracking-wider uppercase text-[#5E5E5E]">Economia do Mês</span>
+      </div>
+      <div class="text-3xl font-semibold tracking-tight">R$ 0,00</div>
+    </div>
+  </div>
+
+  <!-- Gráficos (cards brancos + tags mono do design system) -->
+  <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 reveal-section">
+    <div class="bg-white border border-[#0C0B07]/10 rounded-2xl shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] p-6">
+      <div class="flex justify-between items-center mb-6">
+        <h5 class="text-lg font-medium">Receitas vs Despesas</h5>
+        <span class="px-2 py-1 bg-green-500/10 border border-green-500/20 rounded text-[11px] text-green-500 font-mono tracking-wider">REPORT</span>
+      </div>
+      <div style="height: 300px; position: relative">
+        <canvas id="revenueExpenseChart"></canvas>
+      </div>
+    </div>
+
+    <div class="bg-white border border-[#0C0B07]/10 rounded-2xl shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] p-6">
+      <div class="flex justify-between items-center mb-6">
+        <h5 class="text-lg font-medium">Gastos por Categoria</h5>
+        <span class="px-2 py-1 bg-blue-500/10 border border-blue-500/20 rounded text-[11px] text-blue-500 font-mono tracking-wider">REPORT</span>
+      </div>
+      <div style="height: 300px; position: relative">
+        <canvas id="categoryChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Evolução mensal (chips de filtro do design system) -->
+  <div class="relative z-10 reveal-section">
+    <div class="bg-white border border-[#0C0B07]/10 rounded-2xl shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] p-6">
+      <div class="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-6">
+        <div class="flex items-center gap-4">
+          <h5 class="text-lg font-medium">Evolução Mensal</h5>
+          <span class="px-2 py-1 bg-purple-500/10 border border-purple-500/20 rounded text-[11px] text-purple-500 font-mono tracking-wider">DASH</span>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button class="px-5 py-2.5 bg-white text-[#0C0B07] rounded-full text-sm font-medium border border-black/10 hover:bg-black/5 transition-all" id='revenue-filter'>Receitas</button>
+          <button class="px-5 py-2.5 bg-white text-[#0C0B07] rounded-full text-sm font-medium border border-black/10 hover:bg-black/5 transition-all" id='expense-filter'>Despesas</button>
+          <button class="px-5 py-2.5 bg-white text-[#0C0B07] rounded-full text-sm font-medium border border-black/10 hover:bg-black/5 transition-all" id='both-filter'>Ambos</button>
+        </div>
+      </div>
+      <div style="height: 400px">
+        <canvas id="monthlyChart"></canvas>
+      </div>
+    </div>
+  </div>
 </div>
-{% block content %}
-<div class="container-fluid p-0">
-  <!-- Quick Stats Cards -->
-  <div class="row g-4 mb-5">
-    <div class="col-md-6 col-xl-3">
-      <div class="metric-card success">
-        <div class="metric-icon">
-          <i class="bi bi-arrow-up-circle"></i>
-        </div>
-        <div
-          class="metric-value"
-          data-counter="{% localize off %}{{transactions_metrics.total_categories_revenue|default:0}}{% endlocalize %}"
-        ></div>
-        <div class="metric-label">Receitas do Mês</div>
-      </div>
-    </div>
+{% endblock %}
 
-    <div class="col-md-6 col-xl-3">
-      <div class="metric-card danger">
-        <div class="metric-icon">
-          <i class="bi bi-arrow-down-circle"></i>
-        </div>
-        <div
-          class="metric-value"
-          data-counter="{% localize off %}{{transactions_metrics.total_categories_expense|default:0}}{% endlocalize %}"
-        ></div>
-        <div class="metric-label">Despesas do Mês</div>
-      </div>
-    </div>
-
-    <div class="col-md-6 col-xl-3">
-      <div class="metric-card info">
-        <div class="metric-icon">
-          <i class="bi bi-wallet2"></i>
-        </div>
-        <div
-          class="metric-value"
-          data-counter="{% localize off %}{{transactions_metrics.balance|default:0}}{% endlocalize %}"
-        ></div>
-        <div class="metric-label">Saldo Atual</div>
-      </div>
-    </div>
-
-    <div class="col-md-6 col-xl-3">
-      <div class="metric-card warning">
-        <div class="metric-icon">
-          <i class="bi bi-piggy-bank"></i>
-        </div>
-        <div class="metric-value">R$ 0,00</div>
-        <div class="metric-label">Economia do Mês</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Charts Section -->
-  <div class="row g-4 mb-5">
-    <!-- Revenue vs Expenses Chart -->
-    <div class="col-lg-6">
-      <div class="modern-card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h5 class="mb-0">Receitas vs Despesas</h5>
-        </div>
-        <div class="card-body">
-          <div style="height: 300px; position: relative">
-            <canvas
-              id="revenueExpenseChart"
-              style="
-                display: block !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-              "
-            ></canvas>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Category Spending Chart -->
-    <div class="col-lg-6">
-      <div class="modern-card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h5 class="mb-0">Gastos por Categoria</h5>
-        </div>
-        <div class="card-body">
-          <div style="height: 300px; position: relative">
-            <canvas
-              id="categoryChart"
-              style="
-                display: block !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-              "
-            ></canvas>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Monthly Evolution Chart -->
-  <div class="row g-4 mb-5">
-    <div class="col-12">
-      <div class="modern-card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h5 class="mb-0">Evolução Mensal</h5>
-          <div class="d-flex gap-2">
-            <button class="btn btn-sm btn-success" id='revenue-filter'>Receitas</button>
-            <button class="btn btn-sm btn-danger" id='expense-filter'>Despesas</button>
-            <button class="btn btn-sm btn-primary" id='both-filter'>Ambos</button>
-          </div>
-        </div>
-        <div class="card-body">
-          <div style="height: 400px">
-            <canvas id="monthlyChart"></canvas>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  {% comment %} <!-- Recent Transactions & Quick Actions -->
-  <div class="row g-4">
-    <!-- Recent Transactions -->
-    <div class="col-lg-8">
-      <div class="modern-card">
-        <div
-          class="card-header d-flex justify-content-between align-items-center"
-        >
-          <h5 class="mb-0">Transações Recentes</h5>
-          <a
-            href="{% url 'transaction-list' %}"
-            class="btn btn-sm btn-outline-primary"
-          >
-            Ver Todas <i class="bi bi-arrow-right ms-1"></i>
-          </a>
-        </div>
-        <div class="card-body p-0">
-          <div class="table-responsive">
-            <table class="table table-modern mb-0">
-              <thead>
-                <tr>
-                  <th>Descrição</th>
-                  <th>Categoria</th>
-                  <th>Data</th>
-                  <th>Valor</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <div class="d-flex align-items-center">
-                      <div
-                        class="icon-wrapper me-3 bg-success bg-opacity-10 text-success rounded-circle p-2"
-                      >
-                        <i class="bi bi-arrow-up"></i>
-                      </div>
-                      <div>
-                        <div class="fw-medium">Salário</div>
-                        <small class="text-muted">Empresa XYZ</small>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <span class="badge bg-success bg-opacity-10 text-success"
-                      >Receita</span
-                    >
-                  </td>
-                  <td>01/08/2025</td>
-                  <td class="fw-bold text-success">+R$ 5.000,00</td>
-                  <td><span class="badge bg-success">Confirmado</span></td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="d-flex align-items-center">
-                      <div
-                        class="icon-wrapper me-3 bg-danger bg-opacity-10 text-danger rounded-circle p-2"
-                      >
-                        <i class="bi bi-arrow-down"></i>
-                      </div>
-                      <div>
-                        <div class="fw-medium">Supermercado</div>
-                        <small class="text-muted">Compras da semana</small>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <span class="badge bg-warning bg-opacity-10 text-warning"
-                      >Alimentação</span
-                    >
-                  </td>
-                  <td>28/07/2025</td>
-                  <td class="fw-bold text-danger">-R$ 285,50</td>
-                  <td><span class="badge bg-success">Confirmado</span></td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="d-flex align-items-center">
-                      <div
-                        class="icon-wrapper me-3 bg-danger bg-opacity-10 text-danger rounded-circle p-2"
-                      >
-                        <i class="bi bi-arrow-down"></i>
-                      </div>
-                      <div>
-                        <div class="fw-medium">Conta de Luz</div>
-                        <small class="text-muted">Enel Distribuição</small>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <span class="badge bg-info bg-opacity-10 text-info"
-                      >Utilidades</span
-                    >
-                  </td>
-                  <td>25/07/2025</td>
-                  <td class="fw-bold text-danger">-R$ 125,30</td>
-                  <td><span class="badge bg-warning">Pendente</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  
-
-      <!-- Monthly Goal -->
-      <div class="modern-card">
-        <div class="card-header">
-          <h5 class="mb-0">Meta do Mês</h5>
-        </div>
-        <div class="card-body">
-          <div class="text-center mb-3">
-            <div
-              class="progress-circle mx-auto mb-3"
-              style="width: 100px; height: 100px"
-            >
-              <svg viewBox="0 0 36 36" class="circular-chart">
-                <path
-                  class="circle-bg"
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  fill="none"
-                  stroke="#eee"
-                  stroke-width="2"
-                />
-                <path
-                  class="circle"
-                  stroke-dasharray="68, 100"
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  fill="none"
-                  stroke="url(#gradient)"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                />
-                <defs>
-                  <linearGradient id="gradient">
-                    <stop offset="0%" stop-color="#667eea" />
-                    <stop offset="100%" stop-color="#764ba2" />
-                  </linearGradient>
-                </defs>
-              </svg>
-              <div class="percentage">68%</div>
-            </div>
-            <div class="fw-bold">R$ 1.360 de R$ 2.000</div>
-            <small class="text-muted">Meta de economia mensal</small>
-          </div>
-          <div class="d-flex justify-content-between small text-muted">
-            <span>Faltam R$ 640</span>
-            <span>12 dias restantes</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> {% endcomment %}
-
-{% endblock %} {% block extra_scripts %}
+{% block extra_scripts %}
 
 <script id="chart-data" type="application/json">
   {{ category_graphics_metrics|safe}}
@@ -304,4 +115,3 @@
 </script>
 
 {% endblock %}
-

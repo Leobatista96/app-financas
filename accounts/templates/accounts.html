@@ -1,53 +1,61 @@
-{% extends 'base.html' %} {% block page_header %}
+{% extends 'base.html' %}
 
-<div class="d-flex justify-content-start">
-  <div>
-    <h1 class="mb-4">Contas</h1>
+{% load static %}
+{% load l10n %}
+
+{% block content %}
+
+<div class="max-w-[1400px] mx-auto px-6 pt-12 pb-24 relative">
+  <div class="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
+    <div class="figma-grid-bg"></div>
   </div>
-</div>
 
-{% endblock page_header %} {% block content %}
+  <!-- Cabeçalho da página (padrão de seção do design system) -->
+  <!-- Header sem reveal-section/reveal-text: conteúdo acima da dobra congela se um
+       ScrollTrigger.refresh() cai no meio da entrada (padrão from+stagger do GSAP) -->
+  <div class="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+    <div>
+      <span class="uppercase block text-sm text-[#EF5F3C] tracking-wide mb-4">03 / Contas</span>
+      <h1 class="md:text-6xl leading-[1.1] text-5xl tracking-tight font-semibold">Contas</h1>
+      <p class="text-[#5E5E5E] font-light leading-relaxed mt-4 max-w-xl">Suas contas, saldos e categorias em um só lugar.</p>
+    </div>
+    <a role="button" class="addaccountbutton px-8 py-4 bg-[#0C0B07] text-white rounded-full font-medium text-lg hover:bg-black/80 transition-all shadow-xl shadow-black/10 flex items-center justify-center gap-2 group whitespace-nowrap w-fit cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="right"
+      data-bs-custom-class="custom-tooltip" data-bs-title="Clique aqui para criar uma nova conta">
+      Nova Conta <iconify-icon icon="lucide:arrow-right" class="group-hover:translate-x-1 transition-transform"></iconify-icon>
+    </a>
+  </div>
 
-<div class="col-lg-4">
-  <div class="modern-card mb-4 text-center">
-    <div class="card-body">
-      <div class="d-grid gap-2">
-        <a class="addaccountbutton text-decoration-none btn" data-bs-toggle="tooltip" data-bs-placement="right"
-          data-bs-custom-class="custom-tooltip" data-bs-title="Clique aqui para criar uma nova conta">
-          <h5 class="card-title bi bi-plus-circle"></h5>
-          <span class="text-white">Nova Conta</span>
-        </a>
+  <!-- Contas (cards brancos + linhas divisórias do design system) -->
+  <div class="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6 reveal-section">
+    {% for account in accounts %}
+    <div class="bg-white border border-[#0C0B07]/10 rounded-2xl shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] overflow-hidden flex flex-col">
+      <div class="flex items-center gap-3 px-6 py-5 border-b border-[#0C0B07]/10">
+        <div class="w-10 h-10 flex items-center justify-center bg-[#EF5F3C]/10 border border-[#EF5F3C]/20 rounded-lg text-[#EF5F3C] shrink-0">
+          <iconify-icon icon="solar:wallet-money-linear" width="20"></iconify-icon>
+        </div>
+        <h5 class="text-lg font-medium truncate">{{ account.name }}</h5>
+      </div>
+      <div class="px-6 py-2">
+        <div class="flex justify-between items-center py-4 border-b border-[#0C0B07]/10">
+          <span class="font-mono text-[11px] tracking-wider uppercase text-[#5E5E5E]">Saldo</span>
+          <span class="font-semibold tracking-tight">R$ {{ account.value }}</span>
+        </div>
+        <div class="flex justify-between items-center py-4">
+          <span class="font-mono text-[11px] tracking-wider uppercase text-[#5E5E5E]">Categoria</span>
+          <span class="text-[#5E5E5E]">{{ account.categorie | capfirst}}</span>
+        </div>
+      </div>
+      <div class="flex gap-2 px-6 py-5 border-t border-[#0C0B07]/10 mt-auto">
+        <button class="btn btn-secondary btn-sm flex-1 edit-account-btn" data-id="{{account.pk}}" data-bs-toggle="modal" data-bs-target="#ModalAccountChange">
+          Editar
+        </button>
+        <button class="btn btn-danger btn-sm flex-1 delete-account-btn" data-id="{{account.pk}}" data-bs-toggle="modal" data-bs-target="#ModalDelete">
+          Excluir
+        </button>
       </div>
     </div>
+    {% endfor %}
   </div>
-  {% for account in accounts %}
-  <div class="modern-card mb-4">
-    <div class="d-flex card-header gap-3 justify-content-center">
-      <span class="bi bi-bank"></span>
-      {{ account.name }}
-    </div>
-    <div class="card-body">
-      <div class="d-grid gap-2">
-          <div class="d-flex justify-content-between">
-            <p class="text-white">Saldo</p>
-            <p class="text-white"> R$ {{ account.value }}</p>
-          </div>
-          <div class="d-flex justify-content-between">
-            <p class="text-white">Categoria</p>
-            <p class="text-white"> {{ account.categorie | capfirst}}</p>
-          </div>
-      </div>
-    </div>
-    <div class="card-footer d-flex justify-content-center">
-      <button class="btn btn-secondary mx-4 edit-account-btn" data-id="{{account.pk}}" data-bs-toggle="modal" data-bs-target="#ModalAccountChange">
-        Editar
-      </button>
-      <button class="btn btn-danger delete-account-btn" data-id="{{account.pk}}" data-bs-toggle="modal" data-bs-target="#ModalDelete">
-        Excluir
-      </button>
-    </div>
-  </div>
-  {% endfor %}
 </div>
 
 {% include "partials/modal_delete_account.html" %}
