@@ -32,7 +32,7 @@ class CategorieListView(LoginRequiredMixin, ListView):
         return context
 
 
-class CategorieCreateView(CreateView):
+class CategorieCreateView(LoginRequiredMixin, CreateView):
     model = Categorie
     form_class = CategorieModelForm
     success_url = '/'
@@ -40,7 +40,7 @@ class CategorieCreateView(CreateView):
     def post(self, request, *args, **kwargs):
         try:
             data = json.loads(request.body)  # Decodifica JSON
-            form = self.form_class(data)
+            form = self.form_class(data, user=request.user)
             if form.is_valid():
                 categorie = form.save(commit=False)
                 categorie.user = request.user

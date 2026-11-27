@@ -14,7 +14,9 @@ class Account(models.Model):
 
     user = models.ForeignKey(
         User, on_delete=models.PROTECT, related_name='user_account', verbose_name='Usuário')
-    name = models.CharField(max_length=100, unique=True,
+    # Sem unique=True global: nomes de conta podem se repetir entre usuários.
+    # A unicidade por usuário é garantida por Meta.unique_together abaixo.
+    name = models.CharField(max_length=100,
                             verbose_name='Nome da Conta')
     value = models.FloatField(verbose_name='Valor', default=0)
     categorie = models.CharField(max_length=100, choices=CATEGORIE_CHOICES,
@@ -28,6 +30,7 @@ class Account(models.Model):
         ordering = ['-created_at']
         verbose_name = 'Conta'
         verbose_name_plural = 'Contas'
+        unique_together = ('user', 'name')
 
     def __str__(self):
         return self.name
