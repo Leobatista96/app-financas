@@ -1,85 +1,104 @@
-{% extends 'base.html' %} {% block page_header %}
+{% extends 'base.html' %}
 
-<div class="d-flex justfi-content-between mb-4">
-  <div>
-    <h1 class="mb-0">Categorias</h1>
+{% load static %}
+{% load l10n %}
+
+{% block content %}
+
+<div class="max-w-[1400px] mx-auto px-6 pt-12 pb-24 relative">
+  <div class="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
+    <div class="figma-grid-bg"></div>
   </div>
-</div>
 
-{% endblock page_header %} {% block content %}
-<div class="d-flex align-items-center justify-content-between mb-4">
-  <div class="dropdown">
-    <button class="btn btn-success btn-modern dropdown-toggle" type="button" data-bs-toggle="dropdown">
-      Categorias
-    </button>
-    <ul class="dropdown-menu dropdown-menu-dark">
-      <li>
-        <a role="button" id="categoriesRevenuesFilterButton" class="dropdown-item">Receitas</a>
-      </li>
-      <li><a role="button" id="categoriesExpensesFilterButton" class="dropdown-item">Despesas</a></li>
-    </ul>
+  <!-- Cabeçalho da página (padrão de seção do design system) -->
+  <!-- Header sem reveal-section/reveal-text: conteúdo acima da dobra congela se um
+       ScrollTrigger.refresh() cai no meio da entrada (padrão from+stagger do GSAP) -->
+  <div class="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+    <div>
+      <span class="uppercase block text-sm text-[#EF5F3C] tracking-wide mb-4">04 / Categorias</span>
+      <h1 class="md:text-6xl leading-[1.1] text-5xl tracking-tight font-semibold">Categorias</h1>
+      <p class="text-[#5E5E5E] font-light leading-relaxed mt-4 max-w-xl">Organize suas receitas e despesas por tipo.</p>
+    </div>
+    <a role="button" class="addcategoriebutton px-8 py-4 bg-[#0C0B07] text-white rounded-full font-medium text-lg hover:bg-black/80 transition-all shadow-xl shadow-black/10 flex items-center justify-center gap-2 group whitespace-nowrap w-fit cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="right"
+      data-bs-custom-class="custom-tooltip" data-bs-title="Clique aqui para criar uma nova categoria">
+      Nova Categoria <iconify-icon icon="lucide:arrow-right" class="group-hover:translate-x-1 transition-transform"></iconify-icon>
+    </a>
   </div>
-  <div class="gap-3">
-    <button class="btn bg-success rounded-circle" data-bs-toggle="button">
-      <a class="addcategoriebutton text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="right"
-        data-bs-custom-class="custom-tooltip" data-bs-title="Clique aqui para criar uma nova categoria">
-        <span class="bi bi-plus-lg text-white"></span>
-      </a>
-    </button>
-  </div>
-</div>
 
-<div class="modern-card">
-  <div class="card-header d-flex justify-content-between align-items-center"></div>
-
-  <div class="card-body p-0">
-    <div class="table-responsive text-center">
-      <table class="table table-bordered table-hover mb-0">
-        <thead class="table-dark">
-          <tr>
-            <th>Nome</th>
-            <th>Tipo de Categoria</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for categorie in categories %}
-          <tr class="transaction-row" data-category-type="{{ categorie.category_type }}">
-            <td>
-              <span class="fw-medium text-black">{{ categorie.category }}</span>
-            </td>
-            <td>
-              {{ categorie.category_type }}
-            </td>
-            <td class="text-center">
-              <div class="btn-group ">
-                <div class="btn-group">
-                  <button class="btn btn-success btn-sm">
-                    <span class="bi bi-pencil"></span>
-                  </button>
-                </div>
-                <div class="btn-group">
-                  <button class="btn btn-danger btn-sm">
-                    <span class="bi bi-trash3"></span>
-                  </button>
-                </div>
-              </div>
-            </td>
-          </tr>
-           {% empty %}
-          <tr>
-            <td colspan="6" class="text-center py-5">
-              <div class="text-muted">
-                <i class="bi bi-inbox fs-1 d-block mb-3 text-black"></i>
-                <h5 class='text-black'>Nenhuma categoria encontrada</h5>
-              </div>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+  <!-- Filtro por tipo (chips do design system) -->
+  <div class="relative z-10 flex items-center justify-between gap-4 mb-6">
+    <div class="dropdown">
+      <button class="px-5 py-2.5 bg-white text-[#0C0B07] rounded-full text-sm font-medium border border-black/10 hover:bg-black/5 transition-all flex items-center gap-2" type="button" data-bs-toggle="dropdown">
+        <iconify-icon icon="solar:tuning-square-2-linear"></iconify-icon>
+        Categorias
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+          <a role="button" id="categoriesRevenuesFilterButton" class="dropdown-item">Receitas</a>
+        </li>
+        <li><a role="button" id="categoriesExpensesFilterButton" class="dropdown-item">Despesas</a></li>
+      </ul>
     </div>
   </div>
 
-  {% endblock content %}
+  <!-- Lista de categorias (linhas divisórias do design system) -->
+  <div class="relative z-10 reveal-section">
+    <div class="bg-white border border-[#0C0B07]/10 rounded-2xl shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="app-table">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Tipo de Categoria</th>
+              <th class="text-center">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for categorie in categories %}
+            <tr class="transaction-row" data-category-type="{{ categorie.category_type }}">
+              <td>
+                <div class="flex items-center gap-3">
+                  {% if categorie.category_type == 'revenue' %}
+                  <span class="badge-dot shrink-0"></span>
+                  {% else %}
+                  <span class="badge-dot shrink-0" style="background:#EF5F3C;"></span>
+                  {% endif %}
+                  <span class="font-medium text-[#0C0B07]">{{ categorie.category }}</span>
+                </div>
+              </td>
+              <td>
+                {% if categorie.category_type == 'expense' %}
+                <span class="badge-expense"><span class="badge-dot"></span>{{ categorie.category_type }}</span>
+                {% else %}
+                <span class="badge-revenue"><span class="badge-dot"></span>{{ categorie.category_type }}</span>
+                {% endif %}
+              </td>
+              <td>
+                <div class="flex justify-center gap-2">
+                  <button class="btn btn-secondary btn-sm">
+                    Editar
+                  </button>
+                  <button class="btn btn-danger btn-sm">
+                    Excluir
+                  </button>
+                </div>
+              </td>
+            </tr>
+             {% empty %}
+            <tr>
+              <td colspan="3" class="!py-16 text-center">
+                <div class="flex flex-col items-center gap-3 text-[#5E5E5E]">
+                  <iconify-icon icon="solar:tuning-square-2-linear" width="48" height="48"></iconify-icon>
+                  <h5 class="text-lg font-medium text-[#0C0B07]">Nenhuma categoria encontrada</h5>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
+
+{% endblock content %}

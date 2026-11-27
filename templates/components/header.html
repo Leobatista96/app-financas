@@ -1,20 +1,36 @@
-<header class="modern-header navbar sticky-top flex-md-nowrap p-0 shadow-modern" data-bs-theme="dark">
-  <div class="container-fluid">
-    <div class="d-flex align-items-center justify-content-center ">
-      <div class="d-flex mx-4 align-items-left">
-        <!-- Mobile Menu Toggle -->
-        <button class="btn btn-link text-white d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenuLabel" aria-controls="sidebarMenuLabel">
-            <i class="bi bi-list fs-4"></i>
+<!-- Navbar (pattern-nav do design system) -->
+<nav id="navbar" class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-black/10" aria-label="Navegação principal">
+  <div class="flex z-10 h-[70px] max-w-[1440px] mr-auto ml-auto pr-6 pl-6 relative items-center justify-between gap-6">
+    <a href="{% url 'dashboard-list' %}" class="text-[#0C0B07] font-semibold tracking-tight whitespace-nowrap">Gerenciamento de Finanças</a>
+    <div class="flex items-center gap-4 overflow-x-auto no-scrollbar text-sm font-medium">
+      <a href="{% url 'dashboard-list' %}" class="nav-link whitespace-nowrap hover:text-[#EF5F3C] transition-colors">Dashboard</a>
+      <a href="{% url 'transaction-list' %}" class="nav-link whitespace-nowrap hover:text-[#EF5F3C] transition-colors">Transações</a>
+      <a href="{% url 'account-list' %}" class="nav-link whitespace-nowrap hover:text-[#EF5F3C] transition-colors">Contas</a>
+      <a href="{% url 'categorie-list' %}" class="nav-link whitespace-nowrap hover:text-[#EF5F3C] transition-colors">Categorias</a>
+      <div class="dropdown">
+        <button class="whitespace-nowrap px-6 py-2.5 bg-[#0C0B07] text-white rounded-full text-[15px] font-medium hover:bg-black/80 transition-all shadow-lg shadow-black/5 flex items-center gap-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <iconify-icon icon="solar:user-circle-linear"></iconify-icon>
+          {{ user.username|title }}
         </button>
-      </div>
-      <!-- Brand/Logo -->
-      <div class="d-flex">
-        <a class="navbar-brand d-flex align-items-center px-3"
-          href="{% if user.is_authenticated %}{% url 'dashboard-list' %}{% else %}{% url 'login' %}{% endif %}">
-          <i class="bi bi-graph-up-arrow me-2 fs-4"></i>
-          <span class="fw-bold">Gerenciamento de Finanças</span>
-        </a>
+        <ul class="dropdown-menu dropdown-menu-end">
+          {% if user.is_superuser %}
+            <li>
+              <a class="dropdown-item" href="{% url 'admin:index' %}">
+                <iconify-icon icon="lucide:shield-check"></iconify-icon>Painel Administrativo
+              </a>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+          {% endif %}
+          <li>
+            <form action="{% url 'logout' %}" method="post" class="d-inline">
+              {% csrf_token %}
+              <button type="submit" class="dropdown-item">
+                <iconify-icon icon="lucide:arrow-right"></iconify-icon>Sair
+              </button>
+            </form>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
-</header>
+</nav>
