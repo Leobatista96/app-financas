@@ -673,7 +673,7 @@ const renderCategorieFormErrors = (errors) => {
     );
 
     categorieFormErrors.innerHTML = messages.length
-        ? `<strong>Não foi possível salvar a categoria. Categoria com este nome já existe.</strong><br>`
+        ? `<strong>Não foi possível salvar a categoria.</strong><br>${messages.join('<br>')}`
         : '<strong>Não foi possível salvar a categoria.</strong>';
     categorieFormErrors.classList.remove('d-none');
 };
@@ -682,6 +682,30 @@ const clearCategorieFormErrors = () => {
     if (!categorieFormErrors) return;
     categorieFormErrors.innerHTML = '';
     categorieFormErrors.classList.add('d-none');
+};
+
+// ===== MODAL ACCOUNTS =====
+const accountsFormErrors = document.getElementById('accountsFormErrors');
+
+const renderAccountsFormErrors = (errors) => {
+    if (!accountsFormErrors) return;
+
+    const messages = Object.entries(errors || {}).flatMap(([field, values]) =>
+        (Array.isArray(values) ? values : [values]).map((value) =>
+            field === '__all__' ? value : `${field}: ${value}`,
+        ),
+    );
+
+    accountsFormErrors.innerHTML = messages.length
+        ? `<strong>Não foi possível salvar a conta.</strong><br>${messages.join('<br>')}`
+        : '<strong>Não foi possível salvar a conta.</strong>';
+    accountsFormErrors.classList.remove('d-none');
+};
+
+const clearAccountsFormErrors = () => {
+    if (!accountsFormErrors) return;
+    accountsFormErrors.innerHTML = '';
+    accountsFormErrors.classList.add('d-none');
 };
 
 if (document.getElementById('categorieForm')) {
@@ -697,6 +721,7 @@ if (document.getElementById('categorieForm')) {
   document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.addaccountbutton').forEach((button) => {
       button.addEventListener('click', function () {
+        clearAccountsFormErrors();
         new bootstrap.Modal(document.getElementById('ModalAccounts')).show();
       });
     });
@@ -735,6 +760,41 @@ if (document.getElementById('categorieForm')) {
       .catch((error) => {
         console.error('Erro:', error);
         showNotification('Erro ao criar categoria', 'danger');
+      });
+  });
+
+    document.getElementById('accountsForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+          event.stopImmediatePropagation();
+
+    const form = document.getElementById('accountsForm');
+    const formData = new FormData(form);
+    const jsonData = {};
+
+    formData.forEach((value, key) => (jsonData[key] = value));
+        clearAccountsFormErrors();
+
+    fetch('/new_account/', {
+      method: 'POST',
+      body: JSON.stringify(jsonData),
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          showNotification('Conta criada com sucesso!', 'success');
+          window.location.reload();
+        } else {
+                    renderAccountsFormErrors(data.errors || data.error || {});
+          showNotification('Erro ao criar conta', 'danger');
+        }
+      })
+      .catch((error) => {
+        console.error('Erro:', error);
+        showNotification('Erro ao criar conta', 'danger');
       });
   });
 }

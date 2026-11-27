@@ -11,8 +11,10 @@ class Categorie(models.Model):
 
     user = models.ForeignKey(
         User, on_delete=models.PROTECT, related_name='user_categorie', verbose_name='Usuário')
+    # Sem unique=True global: nomes de categoria podem se repetir entre usuários.
+    # A unicidade por usuário é garantida por Meta.unique_together abaixo.
     category = models.CharField(
-        max_length=100, unique=True, verbose_name='Categoria')
+        max_length=100, verbose_name='Categoria')
     category_type = models.CharField(
         max_length=10, choices=CATEGORY_TYPE_CHOICES, default='revenue', verbose_name='Tipo de Categoria')
     created_at = models.DateTimeField(

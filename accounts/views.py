@@ -36,7 +36,7 @@ class AccountListView(LoginRequiredMixin, ListView):
         return context
 
 
-class AccountCreateView(CreateView):
+class AccountCreateView(LoginRequiredMixin, CreateView):
     model = Account
     form_class = AccountModelForm
     success_url = '/'
@@ -44,7 +44,7 @@ class AccountCreateView(CreateView):
     def post(self, request, *args, **kwargs):
         try:
             data = json.loads(request.body)
-            form = self.form_class(data)
+            form = self.form_class(data, user=request.user)
 
             if form.is_valid():
                 account = form.save(commit=False)

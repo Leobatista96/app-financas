@@ -21,6 +21,7 @@
         ></button>
       </div>
       <div class="modal-body">
+        <div id="accountsFormErrors" class="alert alert-danger d-none" role="alert"></div>
         <form id="accountsForm">
           {% csrf_token %} {{form_accounts.as_p}}
           <button type="submit" class="btn btn-success" id="saveAccounts">
