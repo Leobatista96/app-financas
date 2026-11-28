@@ -88,19 +88,22 @@ class TransactionUpdateView(LoginRequiredMixin, UpdateView):
         })
 
     def post(self, request, *args, **kwargs):
-        transaction = get_object_or_404(Transaction, pk=self.kwargs['pk'])
-        data = json.loads(request.body)
+        transaction = get_object_or_404(
+            Transaction, pk=self.kwargs['pk'], user=self.request.user)
 
-        transaction.description = data.get(
-            "description", transaction.description)
-        transaction.category_id = data.get("category", transaction.category.id)
-        transaction.account_id = data.get("account", transaction.account.id)
-        transaction.due_date = data.get("due_date", transaction.due_date)
-        transaction.value = data.get("value", transaction.value)
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({"success": False, "error": "JSON inválido"}, status=400)
 
-        transaction.save()
+        # Mesma validação do fluxo de criação: o form valida os campos e
+        # garante que conta/categoria pertençam ao usuário logado.
+        form = self.form_class(data, instance=transaction, user=request.user)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({"success": True})
 
-        return JsonResponse({"message": "Transação atualizada com sucesso"})
+        return JsonResponse({"success": False, "errors": form.errors}, status=400)
 
 
 class TransactionDeleteView(LoginRequiredMixin, DeleteView):

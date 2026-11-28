@@ -21,6 +21,7 @@
         ></button>
       </div>
       <div class="modal-body">
+        <div id="transactionFormErrors" class="alert alert-danger d-none" role="alert"></div>
         <form id="transactionForm">
           {% csrf_token %}
           <div class="mb-3">

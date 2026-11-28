@@ -1,7 +1,8 @@
 import json
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import ProtectedError, Sum
+from django.db.models import F, FloatField, ProtectedError, Q, Sum, Value
+from django.db.models.functions import Coalesce
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
@@ -16,23 +17,35 @@ from finances.forms import TransactionModelForm
 class AccountListView(LoginRequiredMixin, ListView):
     model = Account
     template_name = 'accounts.html'
+    # Nome usado pelo template ({% for account in accounts %}); expõe a queryset
+    # ANOTADA com o saldo real — não sobrescrever no get_context_data.
+    context_object_name = 'accounts'
 
     def get_queryset(self):
-        accounts = Account.objects.filter(
-            user=self.request.user).select_related('user')
-        return accounts
+        # Saldo real por conta: receitas − despesas das transações da conta,
+        # em uma única query (agregados filtrados). Contas sem movimentação = 0.
+        return (
+            Account.objects.filter(user=self.request.user)
+            .select_related('user')
+            .annotate(
+                entradas=Coalesce(
+                    Sum('transaction_accounts__value',
+                        filter=Q(transaction_accounts__category__category_type='revenue')),
+                    Value(0.0), output_field=FloatField()),
+                saidas=Coalesce(
+                    Sum('transaction_accounts__value',
+                        filter=Q(transaction_accounts__category__category_type='expense')),
+                    Value(0.0), output_field=FloatField()),
+            )
+            .annotate(saldo=F('entradas') - F('saidas'))
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        total_balance = Account.objects.filter(
-            user=self.request.user).aggregate(total=Sum('value'))['total'] or 0
         context['transactions_metrics'] = get_transactions_value(
             user=self.request.user)
         context['form'] = TransactionModelForm(user=self.request.user)
         context['form_accounts'] = AccountModelForm(user=self.request.user)
-        context['accounts'] = Account.objects.filter(user=self.request.user)
-        context['total_balance'] = total_balance
         return context
 
 

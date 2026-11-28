@@ -438,6 +438,11 @@ label {
   border-bottom: 1px solid rgba(12, 11, 7, 0.1);
   white-space: nowrap;
 }
+/* Utility text-center perde para .app-table thead th (especificidade menor);
+   esta regra garante o alinhamento centralizado dos cabeçalhos de Ações. */
+.app-table thead th.text-center {
+  text-align: center;
+}
 .app-table tbody td {
   padding: 1rem 1.25rem;
   border-bottom: 1px solid rgba(12, 11, 7, 0.1);

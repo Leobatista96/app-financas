@@ -26,17 +26,19 @@
   </div>
 
   <!-- Filtro por tipo (chips do design system) -->
-  <div class="relative z-10 flex items-center justify-between gap-4 mb-6">
+  <!-- z-20: precisa ficar acima da seção da tabela (z-10) para o dropdown aberto
+       não ser coberto — irmãos com o mesmo z-index pintam na ordem do DOM. -->
+  <div class="relative z-20 flex items-center justify-between gap-4 mb-6">
     <div class="dropdown">
       <button class="px-5 py-2.5 bg-white text-[#0C0B07] rounded-full text-sm font-medium border border-black/10 hover:bg-black/5 transition-all flex items-center gap-2" type="button" data-bs-toggle="dropdown">
         <iconify-icon icon="solar:tuning-square-2-linear"></iconify-icon>
-        Categorias
+        {% if request.GET.type == 'revenue' %}Receitas{% elif request.GET.type == 'expense' %}Despesas{% else %}Categorias{% endif %}
       </button>
+      <!-- Links reais (?tipo=...): o filtro roda no backend, junto com a paginação. -->
       <ul class="dropdown-menu">
-        <li>
-          <a role="button" id="categoriesRevenuesFilterButton" class="dropdown-item">Receitas</a>
-        </li>
-        <li><a role="button" id="categoriesExpensesFilterButton" class="dropdown-item">Despesas</a></li>
+        <li><a class="dropdown-item{% if not request.GET.type %} active{% endif %}" href="{% url 'categorie-list' %}">Todas</a></li>
+        <li><a class="dropdown-item{% if request.GET.type == 'revenue' %} active{% endif %}" href="?type=revenue">Receitas</a></li>
+        <li><a class="dropdown-item{% if request.GET.type == 'expense' %} active{% endif %}" href="?type=expense">Despesas</a></li>
       </ul>
     </div>
   </div>
@@ -68,9 +70,9 @@
               </td>
               <td>
                 {% if categorie.category_type == 'expense' %}
-                <span class="badge-expense"><span class="badge-dot"></span>{{ categorie.category_type }}</span>
+                <span class="badge-expense"><span class="badge-dot"></span>{{ categorie.get_category_type_display }}</span>
                 {% else %}
-                <span class="badge-revenue"><span class="badge-dot"></span>{{ categorie.category_type }}</span>
+                <span class="badge-revenue"><span class="badge-dot"></span>{{ categorie.get_category_type_display }}</span>
                 {% endif %}
               </td>
               <td>
@@ -97,6 +99,60 @@
           </tbody>
         </table>
       </div>
+      <!-- Paginação (pills do design system) -->
+      {% if page_obj.paginator.num_pages > 1 %}
+      <div class="flex flex-col sm:flex-row justify-between items-center gap-4 px-6 py-5 border-t border-[#0C0B07]/10">
+        <div class="text-[#5E5E5E] text-sm">
+          Página {{ page_obj.number }} de {{page_obj.paginator.num_pages }}
+          ({{ page_obj.paginator.count }} categorias)
+        </div>
+        <nav aria-label="Navegação de páginas">
+          <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="{% querystring page=1 %}" aria-label="Primeira página">
+                <iconify-icon icon="lucide:arrow-right" class="rotate-180"></iconify-icon>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="{% querystring page=page_obj.previous_page_number %}" aria-label="Página anterior">
+                <iconify-icon icon="lucide:arrow-right" class="rotate-180"></iconify-icon>
+              </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+              <span class="page-link">
+                <iconify-icon icon="lucide:arrow-right" class="rotate-180"></iconify-icon>
+              </span>
+            </li>
+            {% endif %}
+
+            <li class="page-item active">
+              <span class="page-link">{{ page_obj.number }}</span>
+            </li>
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="{% querystring page=page_obj.next_page_number %}" aria-label="Próxima página">
+                <iconify-icon icon="lucide:arrow-right"></iconify-icon>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="{% querystring page=page_obj.paginator.num_pages %}" aria-label="Última página">
+                <iconify-icon icon="lucide:arrow-right"></iconify-icon>
+              </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+              <span class="page-link">
+                <iconify-icon icon="lucide:arrow-right"></iconify-icon>
+              </span>
+            </li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+      {% endif %}
     </div>
   </div>
 </div>

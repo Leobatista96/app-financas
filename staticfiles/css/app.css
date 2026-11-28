@@ -438,6 +438,11 @@ label {
   border-bottom: 1px solid rgba(12, 11, 7, 0.1);
   white-space: nowrap;
 }
+/* Utility text-center perde para .app-table thead th (especificidade menor);
+   esta regra garante o alinhamento centralizado dos cabeçalhos de Ações. */
+.app-table thead th.text-center {
+  text-align: center;
+}
 .app-table tbody td {
   padding: 1rem 1.25rem;
   border-bottom: 1px solid rgba(12, 11, 7, 0.1);
@@ -567,4 +572,41 @@ label {
   to {
     transform: rotate(360deg);
   }
+}
+
+/* ---------- tokens do design system ausentes do CSS compilado ----------
+   O vendor (main-BsXTeVfQ.css) não contém estas utilidades de valor
+   arbitrário — sem o CDN do Tailwind em runtime (cdn.tailwindcss.com,
+   uso "play" não recomendado para produção), os botões primários
+   ("Nova Transação", usuário do header) ficam transparentes e textos,
+   fundos e bordas perdem a cor. Valores idênticos aos do design system. */
+.bg-\[\#0C0B07\] {
+  background-color: #0C0B07;
+}
+.bg-\[\#F6F6F6\] {
+  background-color: #F6F6F6;
+}
+.bg-\[\#FFE8E0\] {
+  background-color: #FFE8E0;
+}
+.bg-\[\#EF5F3C\]\/10 {
+  background-color: rgba(239, 95, 60, 0.1);
+}
+.text-\[\#0C0B07\] {
+  color: #0C0B07;
+}
+.text-\[\#5E5E5E\] {
+  color: #5E5E5E;
+}
+.text-\[\#EF5F3C\] {
+  color: #EF5F3C;
+}
+.border-\[\#0C0B07\]\/5 {
+  border-color: rgba(12, 11, 7, 0.05);
+}
+.border-\[\#0C0B07\]\/10 {
+  border-color: rgba(12, 11, 7, 0.1);
+}
+.border-\[\#EF5F3C\]\/20 {
+  border-color: rgba(239, 95, 60, 0.2);
 }

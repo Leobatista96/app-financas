@@ -12,10 +12,16 @@ from categories.models import Categorie
 class CategorieListView(LoginRequiredMixin, ListView):
     model = Categorie
     template_name = 'categories.html'
+    context_object_name = 'categories'
+    paginate_by = 5
 
     def get_queryset(self):
         categories = Categorie.objects.filter(
             user=self.request.user).select_related('user')
+        # Filtro do dropdown (?type=revenue|expense); valores inválidos são ignorados.
+        type = self.request.GET.get('type')
+        if type in ('revenue', 'expense'):
+            categories = categories.filter(category_type=type)
         return categories
 
     def get_context_data(self, **kwargs):
@@ -23,8 +29,6 @@ class CategorieListView(LoginRequiredMixin, ListView):
         context["transactions_metrics"] = get_transactions_value(
             user=self.request.user)
         context["form_categories"] = CategorieModelForm(user=self.request.user)
-        context["categories"] = Categorie.objects.filter(
-            user=self.request.user)
 
         categories_revenues_filter = Categorie.objects.filter(
             user=self.request.user, category_type='revenue')

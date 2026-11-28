@@ -38,7 +38,7 @@
       <div class="px-6 py-2">
         <div class="flex justify-between items-center py-4 border-b border-[#0C0B07]/10">
           <span class="font-mono text-[11px] tracking-wider uppercase text-[#5E5E5E]">Saldo</span>
-          <span class="font-semibold tracking-tight">R$ {{ account.value }}</span>
+          <span class="font-semibold tracking-tight{% if account.saldo < 0 %} text-expense{% endif %}">R$ {{ account.saldo|floatformat:2 }}</span>
         </div>
         <div class="flex justify-between items-center py-4">
           <span class="font-mono text-[11px] tracking-wider uppercase text-[#5E5E5E]">Categoria</span>

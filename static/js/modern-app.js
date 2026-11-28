@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeNotifications();
     getChartCategoryData();
     getMontlyChartData();
-    getCategorieRevenueExpenseFilter();
     
     // Adicionar classes de animação aos elementos
     function initializeAnimations() {
@@ -111,39 +110,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function getCategorieRevenueExpenseFilter() {
-        const revenueBtn = document.getElementById('categoriesRevenuesFilterButton');
-        const expenseBtn = document.getElementById('categoriesExpensesFilterButton');
-        const tableRows = document.querySelectorAll('.transaction-row[data-category-type]');
-
-        function filterCategories(type) {
-            tableRows.forEach(row => {
-                const categoryType = row.getAttribute('data-category-type');
-                if (type === 'all') {
-                    row.style.display = '';
-                } else if (categoryType === type) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        }
-        
-        if (revenueBtn) {
-            revenueBtn.addEventListener('click', function (e) {
-                e.preventDefault();
-                filterCategories('revenue');
-            });
-        }
-
-        if (expenseBtn) {
-            expenseBtn.addEventListener('click', function (e) {
-                e.preventDefault();
-                filterCategories('expense');
-            });
-        }
-    }
-    
     // Inicializar gráficos (Chart.js)
     function initializeCharts() {
         console.log('Iniciando gráficos');
@@ -583,11 +549,40 @@ const storage = {
     }
 };
 
+// Extrai apenas as mensagens de erro de um form, sem o nome técnico do campo.
+// Aceita dicionário {campo: [mensagens]}, string simples ou vazio.
+const flattenFormErrors = (errors) =>
+    typeof errors === 'string'
+        ? [errors]
+        : Object.values(errors || {}).flatMap((values) =>
+            Array.isArray(values) ? values : [values],
+        );
+
 // ===== MODAL TRANSACTION ===== 
+const transactionFormErrors = document.getElementById('transactionFormErrors');
+
+const renderTransactionFormErrors = (errors) => {
+    if (!transactionFormErrors) return;
+
+    const messages = flattenFormErrors(errors);
+
+    transactionFormErrors.innerHTML = messages.length
+        ? `Não foi possível salvar a transação. ${messages.join('<br>')}`
+        : '<strong>Não foi possível salvar a transação.</strong>';
+    transactionFormErrors.classList.remove('d-none');
+};
+
+const clearTransactionFormErrors = () => {
+    if (!transactionFormErrors) return;
+    transactionFormErrors.innerHTML = '';
+    transactionFormErrors.classList.add('d-none');
+};
+
 document.addEventListener('DOMContentLoaded', function () {
   // Abrir modal ao clicar no botão
   document.querySelectorAll('#newTransactionButton').forEach((button) => {
     button.addEventListener('click', function () {
+      clearTransactionFormErrors();
       new bootstrap.Modal(document.getElementById('ModalTransaction')).show();
     });
   });
@@ -608,6 +603,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let jsonData = {};
 
         formData.forEach((value, key) => (jsonData[key] = value));
+        clearTransactionFormErrors();
 
         // Get the CSRF token and URL
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
@@ -641,10 +637,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 window.location.reload();
               }, 1500);
             } else {
-              showNotification(
-                'Erro ao salvar transação: ' + JSON.stringify(data.errors),
-                'danger',
-              );
+              renderTransactionFormErrors(data.errors || data.error || {});
             }
           })
           .catch((error) => {
@@ -666,14 +659,10 @@ const categorieFormErrors = document.getElementById('categorieFormErrors');
 const renderCategorieFormErrors = (errors) => {
     if (!categorieFormErrors) return;
 
-    const messages = Object.entries(errors || {}).flatMap(([field, values]) =>
-        (Array.isArray(values) ? values : [values]).map((value) =>
-            field === '__all__' ? value : `${field}: ${value}`,
-        ),
-    );
+    const messages = flattenFormErrors(errors);
 
     categorieFormErrors.innerHTML = messages.length
-        ? `<strong>Não foi possível salvar a categoria.</strong><br>${messages.join('<br>')}`
+        ? `Não foi possível salvar a categoria. ${messages.join('<br>')}`
         : '<strong>Não foi possível salvar a categoria.</strong>';
     categorieFormErrors.classList.remove('d-none');
 };
@@ -690,14 +679,10 @@ const accountsFormErrors = document.getElementById('accountsFormErrors');
 const renderAccountsFormErrors = (errors) => {
     if (!accountsFormErrors) return;
 
-    const messages = Object.entries(errors || {}).flatMap(([field, values]) =>
-        (Array.isArray(values) ? values : [values]).map((value) =>
-            field === '__all__' ? value : `${field}: ${value}`,
-        ),
-    );
+    const messages = flattenFormErrors(errors);
 
     accountsFormErrors.innerHTML = messages.length
-        ? `<strong>Não foi possível salvar a conta.</strong><br>${messages.join('<br>')}`
+        ? `Não foi possível salvar a conta. ${messages.join('<br>')}`
         : '<strong>Não foi possível salvar a conta.</strong>';
     accountsFormErrors.classList.remove('d-none');
 };
@@ -753,8 +738,7 @@ if (document.getElementById('categorieForm')) {
           showNotification('Categoria criada com sucesso!', 'success');
           window.location.reload();
         } else {
-                    renderCategorieFormErrors(data.errors || data.error || {});
-          showNotification('Erro ao criar categoria', 'danger');
+          renderCategorieFormErrors(data.errors || data.error || {});
         }
       })
       .catch((error) => {
@@ -788,8 +772,7 @@ if (document.getElementById('categorieForm')) {
           showNotification('Conta criada com sucesso!', 'success');
           window.location.reload();
         } else {
-                    renderAccountsFormErrors(data.errors || data.error || {});
-          showNotification('Erro ao criar conta', 'danger');
+          renderAccountsFormErrors(data.errors || data.error || {});
         }
       })
       .catch((error) => {
@@ -824,7 +807,6 @@ if (document.getElementById('confirmDelete')) {
         .then((response) => response.json())
         .then((data) => {
           if (data.success) {
-            showNotification('Transação excluída com sucesso!', 'success');
             document.getElementById(`transaction-row-${transactionIdToDelete}`).remove();
           } else {
             showNotification('Erro ao excluir a transação.', 'danger');
@@ -844,6 +826,25 @@ if (document.getElementById('confirmDelete')) {
 
 // ===== MODAL TRANSACTION EDIT =====
 if (document.getElementById('editForm')) {
+  const editFormErrors = document.getElementById('editFormErrors');
+
+  const renderEditFormErrors = (errors) => {
+      if (!editFormErrors) return;
+
+      const messages = flattenFormErrors(errors);
+
+      editFormErrors.innerHTML = messages.length
+          ? `Não foi possível atualizar a transação. ${messages.join('<br>')}`
+          : '<strong>Não foi possível atualizar a transação.</strong>';
+      editFormErrors.classList.remove('d-none');
+  };
+
+  const clearEditFormErrors = () => {
+      if (!editFormErrors) return;
+      editFormErrors.innerHTML = '';
+      editFormErrors.classList.add('d-none');
+  };
+
   document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('#edit-btn').forEach((button) => {
       button.addEventListener('click', function () {
@@ -854,14 +855,13 @@ if (document.getElementById('editForm')) {
           .then((data) => {
             document.getElementById('transactionId').value = data.id;
             document.getElementById('description').value = data.description;
-            document.getElementById('category_id').value = data.category_id;
-            document.getElementById('category_name').value = data.category_name;
+            // Os selects usam o ID como value — preenche pelo ID.
+            document.getElementById('category_name').value = data.category_id;
+            document.getElementById('account_name').value = data.account_id;
             document.getElementById('due_date').value = data.due_date;
-            document.getElementById('account_id').value = data.account_id;
-            document.getElementById('account_name').value = data.account_name;
             document.getElementById('value').value = data.value;
-            document.getElementById('created_at').value = data.created_at;
 
+            clearEditFormErrors();
             new bootstrap.Modal(document.getElementById('ModalChange')).show();
           });
       });
@@ -870,13 +870,6 @@ if (document.getElementById('editForm')) {
     if (document.getElementById('saveChanges')) {
       document.getElementById('saveChanges').addEventListener('click', function () {
         const transactionId = document.getElementById('transactionId').value;
-        const description = document.getElementById('description').value;
-        const category_id = document.getElementById('category_id').value;
-        const category_name = document.getElementById('category_name').value;
-        const due_date = document.getElementById('due_date').value;
-        const account_id = document.getElementById('account_id').value;
-        const account_name = document.getElementById('account_name').value;
-        const value = document.getElementById('value').value;
 
         fetch(`/transactions/${transactionId}/update/`, {
           method: 'POST',
@@ -885,17 +878,26 @@ if (document.getElementById('editForm')) {
             'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
           },
           body: JSON.stringify({
-            description: description,
-            category_id: category_id,
-            account: account_id,
-            due_date: due_date,
-            value: value,
+            // Chaves no padrão do TransactionModelForm.
+            description: document.getElementById('description').value,
+            category: document.getElementById('category_name').value,
+            account: document.getElementById('account_name').value,
+            due_date: document.getElementById('due_date').value,
+            value: document.getElementById('value').value,
           }),
         })
           .then((response) => response.json())
           .then((data) => {
-            showNotification('Transação atualizada com sucesso!', 'success');
-            location.reload();
+            if (data.success) {
+              showNotification('Transação atualizada com sucesso!', 'success');
+              location.reload();
+            } else {
+              renderEditFormErrors(data.errors || data.error || {});
+            }
+          })
+          .catch((error) => {
+            console.error('Erro:', error);
+            showNotification('Erro ao atualizar transação', 'danger');
           });
       });
     }
@@ -927,9 +929,7 @@ if (document.getElementById('confirmDelete')) {
             })
             .then((response) => response.json())
             .then((data) => {
-                if (data.success) {
-                    showNotification('Conta excluída com sucesso!', 'success');
-                } else {
+                if (!data.success) {
                     showNotification('Erro ao excluir a conta', 'danger');
                 }
                 accountIdToDelete = null;
